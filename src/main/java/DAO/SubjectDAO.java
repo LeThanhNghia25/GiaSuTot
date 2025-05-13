@@ -14,71 +14,73 @@ public class SubjectDAO {
 
     public List<Subject> getAllSubjects() throws SQLException {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM subjects";
+        String sql = "SELECT * FROM subject";
         PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();
-        System.out.println("Fetching subjects...");
         while (rs.next()) {
-            System.out.println("Subject: " + rs.getString("name"));
             list.add(new Subject(
-                    rs.getInt("id"),
+                    rs.getString("id_sub"),
                     rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getInt("status")
+                    rs.getString("level"),
+                    rs.getString("describeSb"),
+                    rs.getDouble("fee"),
+                    rs.getString("statusSub")
             ));
         }
-        System.out.println("Total subjects: " + list.size());
         return list;
     }
 
     public void addSubject(Subject subject) throws SQLException {
-        String sql = "INSERT INTO subjects (name, description, status) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO subject (id_sub, name, level, describeSb, fee, statusSub) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, subject.getName());
-        stmt.setString(2, subject.getDescription());
-        stmt.setInt(3, subject.getStatus());
+        stmt.setString(1, subject.getId());
+        stmt.setString(2, subject.getName());
+        stmt.setString(3, subject.getLevel());
+        stmt.setString(4, subject.getDescription());
+        stmt.setDouble(5, subject.getFee());
+        stmt.setString(6, subject.getStatus());
         stmt.executeUpdate();
-        System.out.println("Added subject: " + subject.getName());
     }
 
     public void updateSubject(Subject subject) throws SQLException {
-        String sql = "UPDATE subjects SET name = ?, description = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE subject SET name = ?, level = ?, describeSb = ?, fee = ?, statusSub = ? WHERE id_sub = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, subject.getName());
-        stmt.setString(2, subject.getDescription());
-        stmt.setInt(3, subject.getStatus());
-        stmt.setInt(4, subject.getId());
+        stmt.setString(2, subject.getLevel());
+        stmt.setString(3, subject.getDescription());
+        stmt.setDouble(4, subject.getFee());
+        stmt.setString(5, subject.getStatus());
+        stmt.setString(6, subject.getId());
         stmt.executeUpdate();
-        System.out.println("Updated subject: " + subject.getName());
     }
 
-    public void hideSubject(int id) throws SQLException {
-        String sql = "UPDATE subjects SET status = 0 WHERE id = ?";
+    public void hideSubject(String id) throws SQLException {
+        String sql = "UPDATE subject SET statusSub = 'inactive' WHERE id_sub = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, id);
+        stmt.setString(1, id);
         stmt.executeUpdate();
-        System.out.println("Hid subject with id: " + id);
     }
 
-    public void restoreSubject(int id) throws SQLException {
-        String sql = "UPDATE subjects SET status = 1 WHERE id = ?";
+    public void restoreSubject(String id) throws SQLException {
+        String sql = "UPDATE subject SET statusSub = 'active' WHERE id_sub = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, id);
+        stmt.setString(1, id);
         stmt.executeUpdate();
-        System.out.println("Restored subject with id: " + id);
     }
 
-    public Subject getSubjectById(int id) throws SQLException {
-        String sql = "SELECT * FROM subjects WHERE id = ?";
+    public Subject getSubjectById(String id) throws SQLException {
+        String sql = "SELECT * FROM subject WHERE id_sub = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, id);
+        stmt.setString(1, id);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
             return new Subject(
-                    rs.getInt("id"),
+                    rs.getString("id_sub"),
                     rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getInt("status")
+                    rs.getString("level"),
+                    rs.getString("describeSb"),
+                    rs.getDouble("fee"),
+                    rs.getString("statusSub")
             );
         }
         return null;
