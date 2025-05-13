@@ -33,24 +33,36 @@
             <h6 class="m-0 font-weight-bold text-primary">Thông tin môn học</h6>
           </div>
           <div class="card-body">
-            <form action="${pageContext.request.contextPath}/admin/subject" method="post">
+            <form method="post" action="${pageContext.request.contextPath}/admin/subject">
               <input type="hidden" name="action" value="add">
               <div class="form-group">
+                <label for="id_sub">ID môn học</label>
+                <input type="text" class="form-control" id="id_sub" name="id_sub" value="${param.id_sub}" required>
+              </div>
+              <div class="form-group">
                 <label for="name">Tên môn học</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <input type="text" class="form-control" id="name" name="name" value="${param.name}" required>
+              </div>
+              <div class="form-group">
+                <label for="level">Cấp độ</label>
+                <input type="text" class="form-control" id="level" name="level" value="${param.level}">
               </div>
               <div class="form-group">
                 <label for="description">Mô tả</label>
-                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                <textarea class="form-control" id="description" name="description">${param.description}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="fee">Phí môn học (VND)</label>
+                <input type="number" step="0.01" class="form-control" id="fee" name="fee" value="${param.fee}" required>
               </div>
               <div class="form-group">
                 <label for="status">Trạng thái</label>
                 <select class="form-control" id="status" name="status">
-                  <option value="1">Đang hoạt động</option>
-                  <option value="0">Đã ẩn</option>
+                  <option value="active" <c:if test="${param.status == 'active'}">selected</c:if>>Đang hoạt động</option>
+                  <option value="inactive" <c:if test="${param.status == 'inactive'}">selected</c:if>>Khóa</option>
                 </select>
               </div>
-              <button type="submit" class="btn btn-primary">Thêm</button>
+              <button type="submit" class="btn btn-primary">Thêm môn học</button>
               <a href="${pageContext.request.contextPath}/admin/subject" class="btn btn-secondary">Hủy</a>
             </form>
           </div>

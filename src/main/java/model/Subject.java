@@ -1,30 +1,34 @@
 package model;
 
 public class Subject {
-    private int id;
+    private String id;            // id_sub
     private String name;
-    private String description;
-    private int status; // 1: không khóa, 0: khóa
+    private String level;
+    private String description;   // describeSb
+    private double fee;
+    private String status;        // statusSub (active/inactive)
 
     public Subject() {}
 
-    public Subject(int id, String name, String description, int status) {
+    public Subject(String id, String name, String level, String description, double fee, String status) {
         this.id = id;
         this.name = name;
+        this.level = level;
         this.description = description;
+        this.fee = fee;
         this.status = status;
     }
 
-    // Getter và Setter cho id
-    public int getId() {
+    // Getter & Setter cho id
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    // Getter và Setter cho name
+    // Getter & Setter cho name
     public String getName() {
         return name;
     }
@@ -33,7 +37,16 @@ public class Subject {
         this.name = name;
     }
 
-    // Getter và Setter cho description
+    // Getter & Setter cho level
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    // Getter & Setter cho description
     public String getDescription() {
         return description;
     }
@@ -42,12 +55,33 @@ public class Subject {
         this.description = description;
     }
 
-    // Getter và Setter cho status
-    public int getStatus() {
+    // Getter & Setter cho fee
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
+    }
+
+    // Getter & Setter cho status
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", level='" + level + '\'' +
+                ", description='" + description + '\'' +
+                ", fee=" + fee +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
+    public void setStatus(String status) {
         this.status = status;
     }
 }

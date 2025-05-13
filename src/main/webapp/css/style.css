@@ -43,7 +43,10 @@
     font-weight: 600;
     transition: .5s;
 }
-
+.btn-short {
+    padding: 0.25rem 1rem !important; /* Giảm padding */
+    font-size: 0.8rem !important; /* Giảm kích thước chữ */
+}
 .btn.btn-primary,
 .btn.btn-secondary {
     color: #FFFFFF;
