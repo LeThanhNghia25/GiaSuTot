@@ -62,7 +62,7 @@ CREATE TABLE Lesson (
                         statusLess VARCHAR(50),
                         TimeLess DATETIME,
                         PRIMARY KEY (id_course, id_st, TimeLess),
-                        FOREIGN KEY (id_course) REFERENCES Course(m_course),
+                        FOREIGN KEY (id_course) REFERENCES Course(id_course),
                         FOREIGN KEY (id_st) REFERENCES student(id_st)
 );
 -- Thêm vào bảng account
