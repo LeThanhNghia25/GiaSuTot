@@ -2,20 +2,23 @@ package DAO;
 
 import Utils.DBConnection;
 import model.Course;
+import model.Subject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CourseDAO {
-    private Connection conn;
+    private Connection conn = DBConnection.getConnection();
 
-    public CourseDAO() throws SQLException {
-        conn = DBConnection.getConnection();
+    public CourseDAO() {
+
     }
+
 
 
         // Phương thức để lấy tất cả dữ liệu từ bảng Course
@@ -37,6 +40,35 @@ public class CourseDAO {
 
             return courseList;
         }
+        public HashMap<String, Subject> getAllSubjects() throws SQLException {
+        HashMap<String, Subject> subjectMap = new HashMap<>();
+        List<Course> courseList = getAllCourses();
+        SubjectDAO subjectDAO = new SubjectDAO();
+        List<Subject> subjectList = subjectDAO.getAllSubjects();
+        for (Course course : courseList) {
+            for (Subject subject : subjectList) {
+                if(course.getId_subject().equals(subject.getId())){
+                    subjectMap.put(course.getId_subject(), subject);
+                }
+            }
+        }
+
+        return subjectMap;
+
+        }
+
+    public static void main(String[] args) throws SQLException {
+
+        CourseDAO courseDAO = new CourseDAO();
+        
+        List<Course> courses = courseDAO.getAllCourses();
+
+        for (Course course : courses) {
+            System.out.println(course);
+        }
+        HashMap<String, Subject> subjectMap = courseDAO.getAllSubjects();
+        for (Subject subject : subjectMap.values()) {}
+    }
 }
 
 
