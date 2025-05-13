@@ -69,6 +69,18 @@ public class Subject {
         return status;
     }
 
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", level='" + level + '\'' +
+                ", description='" + description + '\'' +
+                ", fee=" + fee +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
