@@ -1,33 +1,39 @@
 package model;
 
+import java.util.Date;
+
 public class Tutor {
-    private int id;
+    private String id_tutor;
     private String name;
     private String email;
+    private Date birth;
     private String phone;
     private String address;
     private String specialization;
-    private String description;
+    private String describeTutor;
+    private int evaluate;
 
     // Constructors
     public Tutor() {}
-    public Tutor(int id, String name, String email, String phone, String address, String specialization, String description) {
-        this.id = id;
+    public Tutor( String id_tutor, String name, String email, Date birth, String phone, String address, String specialization, String describeTutor, int evaluate) {
+        this.id_tutor = id_tutor;
         this.name = name;
         this.email = email;
+        this.birth = birth;
         this.phone = phone;
         this.address = address;
         this.specialization = specialization;
-        this.description = description;
+        this.describeTutor = describeTutor;
+        this.evaluate = evaluate;
     }
 
     // Getters and Setters
-    public int getId() {
-        return id;
+    public String getId() {
+        return id_tutor;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(String id_tutor) {
+        this.id_tutor= id_tutor;
     }
 
     public String getName() {
@@ -41,6 +47,10 @@ public class Tutor {
     public String getEmail() {
         return email;
     }
+
+    public Date getBirth() {return birth;}
+
+    public void setBirth(Date birth) {this.birth = birth;}
 
     public void setEmail(String email) {
         this.email = email;
@@ -70,12 +80,21 @@ public class Tutor {
         this.specialization = specialization;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescribeTutor() {
+        return describeTutor;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescribeTutor(String describeTutor) {
+        this.describeTutor = describeTutor;
     }
+
+    public int getEvaluate() {
+        return evaluate;
+    }
+    public void setEvaluate(int evaluate) {
+        this.evaluate = evaluate;
+    }
+
+
 
 }

@@ -1,6 +1,9 @@
+<%@ page import="model.Tutor" %>
 <!DOCTYPE html>
 <html lang="en">
-
+<%
+    Tutor tutor = (Tutor) request.getAttribute("tutor");
+%>
 <head>
     <meta charset="utf-8">
     <title>eLEARNING - eLearning HTML Template</title>
@@ -62,7 +65,7 @@
                         <a href="404.jsp" class="dropdown-item">404 Page</a>
                     </div>
                 </div>
-                <a href="contact.jsp" class="nav-item nav-link">Contact</a>
+                <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a>
             </div>
             <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
