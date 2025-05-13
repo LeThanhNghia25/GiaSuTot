@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Sửa môn học</title>
+  <title>Chỉnh sửa môn học</title>
   <link href="${pageContext.request.contextPath}/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700,900" rel="stylesheet">
   <link href="${pageContext.request.contextPath}/admin/css/sb-admin-2.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@
       <%@ include file="topbar.jsp" %>
       <!-- Main Content -->
       <div class="container-fluid">
-        <h1 class="h3 mb-4 text-gray-800">Sửa môn học</h1>
+        <h1 class="h3 mb-4 text-gray-800">Chỉnh sửa môn học</h1>
         <c:if test="${not empty error}">
           <div class="alert alert-danger">${error}</div>
         </c:if>
@@ -33,25 +33,37 @@
             <h6 class="m-0 font-weight-bold text-primary">Thông tin môn học</h6>
           </div>
           <div class="card-body">
-            <form action="${pageContext.request.contextPath}/admin/subject" method="post">
+            <form method="post" action="${pageContext.request.contextPath}/admin/subject">
               <input type="hidden" name="action" value="edit">
-              <input type="hidden" name="id" value="${subject.id}">
+              <input type="hidden" name="id_sub" value="${subject.id}">
+              <div class="form-group">
+                <label for="id_sub">ID môn học</label>
+                <input type="text" class="form-control" id="id_sub" value="${subject.id}" disabled>
+              </div>
               <div class="form-group">
                 <label for="name">Tên môn học</label>
-                <input type="text" class="form-control" id="name" name="name" value="${subject.name}" required>
+                <input type="text" class="form-control" id="name" name="name" value="${subject.name != null ? subject.name : param.name}" required>
+              </div>
+              <div class="form-group">
+                <label for="level">Cấp độ</label>
+                <input type="text" class="form-control" id="level" name="level" value="${subject.level != null ? subject.level : param.level}">
               </div>
               <div class="form-group">
                 <label for="description">Mô tả</label>
-                <textarea class="form-control" id="description" name="description" rows="4">${subject.description}</textarea>
+                <textarea class="form-control" id="description" name="description">${subject.description != null ? subject.description : param.description}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="fee">Phí môn học (VND)</label>
+                <input type="number" step="0.01" class="form-control" id="fee" name="fee" value="${subject.fee != 0 ? subject.fee : param.fee}" required>
               </div>
               <div class="form-group">
                 <label for="status">Trạng thái</label>
                 <select class="form-control" id="status" name="status">
-                  <option value="1" <c:if test="${subject.status == 1}">selected</c:if>>Đang hoạt động</option>
-                  <option value="0" <c:if test="${subject.status == 0}">selected</c:if>>Đã ẩn</option>
+                  <option value="active" <c:if test="${subject.status == 'active' || param.status == 'active'}">selected</c:if>>Đang hoạt động</option>
+                  <option value="inactive" <c:if test="${subject.status == 'inactive' || param.status == 'inactive'}">selected</c:if>>Đã ẩn</option>
                 </select>
               </div>
-              <button type="submit" class="btn btn-primary">Lưu</button>
+              <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
               <a href="${pageContext.request.contextPath}/admin/subject" class="btn btn-secondary">Hủy</a>
             </form>
           </div>

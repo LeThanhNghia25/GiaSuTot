@@ -11,7 +11,7 @@
   <!-- FontAwesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
   <!-- Custom CSS -->
-  <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+  <link href="${pageContext.request.contextPath}/admin/css/style.css" rel="stylesheet">
 </head>
 <body>
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -66,11 +66,18 @@
   <hr class="sidebar-divider">
   <!-- Tiện ích bổ sung -->
   <div class="sidebar-heading">Bổ sung</div>
-  <!-- Trang -->
+  <!-- Quản lý môn học -->
   <li class="nav-item">
     <a class="nav-link" href="${pageContext.request.contextPath}/admin/subject">
       <i class="fas fa-fw fa-folder"></i>
       <span>Quản lý môn học</span>
+    </a>
+  </li>
+  <!-- Quản lý người dùng -->
+  <li class="nav-item">
+    <a class="nav-link" href="${pageContext.request.contextPath}/admin/account">
+      <i class="fas fa-fw fa-users"></i>
+      <span>Quản lý người dùng</span>
     </a>
   </li>
   <!-- Biểu đồ -->
