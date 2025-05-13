@@ -79,22 +79,49 @@ INSERT INTO account (id_acc, email, pass, role, statusAcc) VALUES
                                                                ('acc010', 'student4@example.com', 'pass10', 1, 'inactive');
 
 INSERT INTO student (id_st, name, birth, describeSt, id_acc) VALUES
-                                                                 ('st001', 'Nguyen Van A', '2005-01-01', 'Yêu thích Toán', 'acc001'),
-                                                                 ('st002', 'Le Thi B',     '2006-03-15', 'Học sinh giỏi Văn', 'acc002'),
-                                                                 ('st003', 'Tran Van C',   '2004-07-21', 'Thích học nhóm', 'acc003'),
-                                                                 ('st004', 'Pham Thi D',   '2005-10-05', 'Năng động, tự tin', 'acc010');
+                                                                 ('st001', 'Nguyen Văn Nghĩa', '2005-01-01', 'Yêu thích Toán', 'acc001'),
+                                                                 ('st002', 'Lê Thi Liên',     '2006-03-15', 'Học sinh giỏi Văn', 'acc002'),
+                                                                 ('st003', 'Trần Văn Nhớ',   '2004-07-21', 'Thích học nhóm', 'acc003'),
+                                                                 ('st004', 'Phạm Thị Dung',   '2005-10-05', 'Năng động, tự tin', 'acc004',
+                                                                ('st005', 'Nguyễn Trung Nhân', '2005-01-01', 'Yêu thích Toán', 'acc005'),
+                                                                 ('st006', 'Trương Thị Mai',     '2006-03-15', 'Học sinh giỏi Văn', 'acc006'),
+                                                                 ('st007', 'Trần Dần',   '2004-07-21', 'Thích học nhóm', 'acc007'),
+                                                                 ('st008', 'Lê Trung Dũng',   '2005-10-05', 'Năng động, tự tin', 'acc008'),
+                                                                  ('st009', 'Mai Nguyễn',     '2006-03-15', 'Học sinh giỏi Văn', 'acc0069'),
+                                                                  ('st010', 'Trương Hoàng Thủ',   '2004-07-21', 'Thích học nhóm', 'acc010'),
+                                                                  ('st011', 'Nguyễn Đình Nguyên',   '2005-10-05', 'Năng động, tự tin', 'acc011');
+
 
 INSERT INTO tutor (id_tutor, name, email, birth, phone, address, specialization, describeTutor, id_acc, evaluate) VALUES
-                                                                                                                      ('tut001', 'Nguyen Tuan', 'tutor1@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 'acc004', 5),
-                                                                                                                      ('tut002', 'Tran Thi Mai', 'tutor2@example.com', '1988-05-12', '0901000002', 'HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 'acc005', 4),
-                                                                                                                      ('tut003', 'Le Hoang', 'tutor3@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'GV trường chuyên', 'acc006', 3),
-                                                                                                                      ('tut004', 'Pham Minh', 'tutor4@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 'acc009', 4);
+                                                                                                                      ('tut001', 'Nguyễn Tuấn Cảnh', 'nguyencanh@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 'acc001', 5),
+                                                                                                                      ('tut002', 'Tran Thị Mai', 'tranmai@example.com', '1988-05-12', '0901000002', 'HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 'acc002', 4),
+                                                                                                                      ('tut003', 'Lê Hoàng Minh', 'hoangminh3@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'GV trường chuyên', 'acc003', 3),
+                                                                                                                      ('tut004', 'Phạm Minh Hương', 'minhhuong@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 'acc004', 4),
+                                                                                                                    ('tut005', 'Nguyễn Thủ', 'nguyenthu@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 'acc005', 5),
+                                                                                                                      ('tut006', 'Trương Cao Đạt', 'caodat@example.com', '1988-05-12', '0901000002', 'HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 'acc006', 4),
+                                                                                                                      ('tut007', 'Đinh Thị Ngọc', 'ngocdinh@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'GV trường chuyên', 'acc007', 3),
+                                                                                                                      ('tut008', 'Lê Nghĩa', 'nghiale@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 'acc008', 4)
+                                                                                                                    ('tut009', 'Trần Nguyên Vẹn', 'nguyenven@example.com', '1988-05-12', '0901000002', 'HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 'acc009', 4),
+                                                                                                                      ('tut010', 'Mai Hạnh Phúc', 'hanhphuc@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'GV trường chuyên', 'acc010', 3),
+                                                                                                                      ('tut011', 'Mai Thắng', 'thang@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 'acc011', 4);
 
 
 INSERT INTO subject (id_sub, name, level, describeSb, fee, statusSub) VALUES
                                                                           ('sub001', 'Toán', 'Lớp 10', 'Học Toán nâng cao lớp 10', 200000.00, 'active'),
                                                                           ('sub002', 'Tiếng Anh', 'Giao tiếp', 'Tiếng Anh giao tiếp cơ bản', 180000.00, 'active'),
-                                                                          ('sub003', 'Hóa học', 'Cơ bản', 'Học hóa cơ bản lớp 10', 190000.00, 'inactive');
+                                                                          ('sub003', 'Hóa học', 'Cơ bản', 'Học hóa cơ bản lớp 10', 190000.00, 'inactive'),
+                                                                            ('sub004', 'Vật lý', 'Lớp 10', 'Học Vật lý cao lớp 12', 200000.00, 'active'),
+                                                                          ('sub005', 'Ngữ văn', 'Nâng cao', 'Học Ngữ văn nâng cao lớp 11', 200000.00, 'active'),
+                                                                          ('sub006', 'Sinh học', 'Cơ bản', 'Học hóa cơ bản lớp 10', 190000.00, 'inactive'),
+                                                                        ('sub007', 'Toán', 'Lớp 5', 'Học Toán nâng cao lớp 5', 200000.00, 'active'),
+                                                                          ('sub008', 'Tiếng Anh', 'Giao tiếp', 'Tiếng Anh giao tiếp nâng cao lớp 5', 180000.00, 'active'),
+                                                                          ('sub009', 'Toán', 'Cơ bản', 'Toán cơ bản lớp 6', 190000.00, 'inactive'),
+                                                                        ('sub010', 'Vật lý', 'Lớp 11', 'Học Vật lý nâng cao lớp 8', 200000.00, 'active'),
+                                                                          ('sub011', 'Hóa học', 'Cơ bản', 'Học hóa học cơ bản lớp 9', 180000.00, 'active'),
+                                                                          ('sub012', 'Sinh học', 'Cơ bản', 'Sinh học cơ bản lớp 8', 190000.00, 'inactive'),
+                                                                          ('sub013', 'Toán', 'Lớp 10', 'Học Toán nâng cao lớp 10', 200000.00, 'active'),
+                                                                          ('sub014', 'Tiếng Anh', 'Cơ bản', 'Tiếng Anh cơ bản lớp 10', 180000.00, 'active'),
+                                                                          ('sub015', 'Hóa học', 'Cơ bản', 'Học hóa cơ bản lớp 7', 190000.00, 'inactive');
 
 
 INSERT INTO Course (id_course, id_sub, id_tutor, timeCourse) VALUES
