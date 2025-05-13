@@ -40,15 +40,15 @@ public class CourseDAO {
 
             return courseList;
         }
-        public HashMap<String, Subject> getAllSubjects() throws SQLException {
-        HashMap<String, Subject> subjectMap = new HashMap<>();
+        public HashMap<Course, Subject> getAllSubjects() throws SQLException {
+        HashMap<Course, Subject> subjectMap = new HashMap<>();
         List<Course> courseList = getAllCourses();
         SubjectDAO subjectDAO = new SubjectDAO();
         List<Subject> subjectList = subjectDAO.getAllSubjects();
         for (Course course : courseList) {
             for (Subject subject : subjectList) {
                 if(course.getId_subject().equals(subject.getId())){
-                    subjectMap.put(course.getId_subject(), subject);
+                    subjectMap.put(course, subject);
                 }
             }
         }
@@ -60,15 +60,18 @@ public class CourseDAO {
     public static void main(String[] args) throws SQLException {
 
         CourseDAO courseDAO = new CourseDAO();
-        
+
         List<Course> courses = courseDAO.getAllCourses();
 
         for (Course course : courses) {
             System.out.println(course);
         }
-        HashMap<String, Subject> subjectMap = courseDAO.getAllSubjects();
-        for (Subject subject : subjectMap.values()) {}
+        HashMap<Course, Subject> subjectMap = courseDAO.getAllSubjects();
+        for (Course key : subjectMap.keySet()) {
+            System.out.println("Key: " + key + ", Value: " + subjectMap.get(key));
+        }
+        }
     }
-}
+
 
 
