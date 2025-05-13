@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Quản lý môn học</title>
+  <title>Quản lý người dùng</title>
   <link href="${pageContext.request.contextPath}/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700,900" rel="stylesheet">
   <link href="${pageContext.request.contextPath}/admin/css/sb-admin-2.min.css" rel="stylesheet">
@@ -24,11 +24,10 @@
       <%@ include file="topbar.jsp" %>
       <!-- Main Content -->
       <div class="container-fluid">
-        <h1 class="h3 mb-4 text-gray-800">Quản lý môn học</h1>
-        <a href="${pageContext.request.contextPath}/admin/subject?action=add" class="btn btn-success mb-3">+ Thêm môn học</a>
+        <h1 class="h3 mb-4 text-gray-800">Quản lý người dùng</h1>
         <div class="card shadow mb-4">
           <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Danh sách môn học</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -36,38 +35,53 @@
                 <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Tên môn</th>
-                  <th>Mô tả</th>
+                  <th>Email</th>
+                  <th>Vai trò</th>
                   <th>Trạng thái</th>
                   <th>Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="subject" items="${subjects}">
+                <c:forEach var="account" items="${accounts}">
                   <tr>
-                    <td>${subject.id}</td>
-                    <td>${subject.name}</td>
-                    <td>${subject.description}</td>
+                    <td>${account.id}</td>
+                    <td>${account.email}</td>
                     <td>
                       <c:choose>
-                        <c:when test="${subject.status == 'active'}">
-                          <span class="badge badge-success">Đang hoạt động</span>
+                        <c:when test="${account.role == 0}">
+                          Admin
+                        </c:when>
+                        <c:when test="${account.role == 1}">
+                          Học sinh
+                        </c:when>
+                        <c:when test="${account.role == 2}">
+                          Gia sư
                         </c:when>
                         <c:otherwise>
-                          <span class="badge badge-secondary">Đã ẩn</span>
+                          Không xác định
                         </c:otherwise>
                       </c:choose>
                     </td>
                     <td>
-                      <a href="${pageContext.request.contextPath}/admin/subject?action=edit&id=${subject.id}" class="btn btn-sm btn-primary">Sửa</a>
                       <c:choose>
-                        <c:when test="${subject.status == 'active'}">
-                          <a href="${pageContext.request.contextPath}/admin/subject?action=delete&id=${subject.id}" class="btn btn-sm btn-danger"
-                             onclick="return confirm('Bạn có chắc muốn ẩn môn học này không?')">Ẩn</a>
+                        <c:when test="${account.status == 'active'}">
+                          <span class="badge badge-success">Đang hoạt động</span>
                         </c:when>
                         <c:otherwise>
-                          <a href="${pageContext.request.contextPath}/admin/subject?action=restore&id=${subject.id}" class="btn btn-sm btn-success"
-                             onclick="return confirm('Bạn có chắc muốn hiện lại môn học này không?')">Hiện</a>
+                          <span class="badge badge-secondary">Khóa</span>
+                        </c:otherwise>
+                      </c:choose>
+                    </td>
+                    <td>
+                      <a href="${pageContext.request.contextPath}/admin/account?action=edit&id=${account.id}" class="btn btn-sm btn-primary">Sửa</a>
+                      <c:choose>
+                        <c:when test="${account.status == 'active'}">
+                          <a href="${pageContext.request.contextPath}/admin/account?action=delete&id=${account.id}" class="btn btn-sm btn-danger"
+                             onclick="return confirm('Bạn có chắc muốn khóa tài khoản này không?')">Khóa</a>
+                        </c:when>
+                        <c:otherwise>
+                          <a href="${pageContext.request.contextPath}/admin/account?action=restore&id=${account.id}" class="btn btn-sm btn-success"
+                             onclick="return confirm('Bạn có chắc muốn mở khóa lại tài khoản này không?')">Mở khóa</a>
                         </c:otherwise>
                       </c:choose>
                     </td>
@@ -75,8 +89,8 @@
                 </c:forEach>
                 </tbody>
               </table>
-              <c:if test="${empty subjects}">
-                <div class="text-center text-muted">Không có môn học nào hoặc lỗi: ${subjects}</div>
+              <c:if test="${empty accounts}">
+                <div class="text-center text-muted">Không có người dùng nào.</div>
               </c:if>
             </div>
           </div>
