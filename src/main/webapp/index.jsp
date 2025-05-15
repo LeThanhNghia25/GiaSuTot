@@ -67,9 +67,15 @@
             <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
         </div>
         <!-- Thêm thanh tìm kiếm -->
-        <form class="d-flex ms-3" role="search">
-            <input class="form-control me-2" type="search" placeholder="Tìm kiếm khóa học..." aria-label="Search">
-            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+        <form action="searchServlet" method="get" class="input-group mb-3">
+            <input type="text" class="form-control bg-light border-0 small"
+                   placeholder="Tìm kiếm môn học..."
+                   aria-label="Tìm kiếm"
+                   aria-describedby="basic-addon2"
+                   name="subName">
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search fa-sm"></i>
+            </button>
         </form>
 
         <!-- Nút Đăng nhập -->
