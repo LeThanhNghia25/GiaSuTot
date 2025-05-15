@@ -35,54 +35,9 @@
 </head>
 
 <body>
-<!-- Spinner Start -->
-<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div>
-<!-- Spinner End -->
-
-<!-- Navbar Start -->
-<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-    <a href="index.jsp" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-        <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>GIASUTOT</h2>
-    </a>
-    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="index.jsp" class="nav-item nav-link active">Trang chủ</a>
-            <a href="about.jsp" class="nav-item nav-link">Về chúng tôi</a>
-            <a href="courses.jsp" class="nav-item nav-link">Khóa học</a>
-<%--            <div class="nav-item dropdown">--%>
-<%--                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>--%>
-<%--                <div class="dropdown-menu fade-down m-0">--%>
-<%--                    <a href="team.jsp" class="dropdown-item">Our Team</a>--%>
-<%--                    <a href="testimonial.jsp" class="dropdown-item">Testimonial</a>--%>
-<%--                    <a href="404.jsp" class="dropdown-item">404 Page</a>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-            <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
-        </div>
-        <!-- Thêm thanh tìm kiếm -->
-        <form action="searchServlet" method="get" class="input-group mb-3">
-            <input type="text" class="form-control bg-light border-0 small"
-                   placeholder="Tìm kiếm môn học..."
-                   aria-label="Tìm kiếm"
-                   aria-describedby="basic-addon2"
-                   name="subName">
-            <button class="btn btn-primary" type="submit">
-                <i class="fas fa-search fa-sm"></i>
-            </button>
-        </form>
-
-        <!-- Nút Đăng nhập -->
-        <a href="" class="btn btn-primary btn-short py-4 px-lg-5 d-none d-lg-block">Đăng nhập<i class="fa fa-arrow-right ms-2"></i></a>
-    </div>
-</nav>
-<!-- Navbar End -->
+<!-- Header Start -->
+    <%@ include file="header.jsp" %>
+<!-- Header End -->
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -502,81 +457,7 @@
         
 
     <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Liên kết nhanh</h4>
-                    <a class="btn btn-link" href="">Về chúng tôi</a>
-                    <a class="btn btn-link" href="">Liên hệ</a>
-                    <a class="btn btn-link" href="">Chính sách bảo mật</a>
-                    <a class="btn btn-link" href="">Điều khoản & Điều kiện</a>
-                    <a class="btn btn-link" href="">Câu hỏi thường gặp</a>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Liên hệ</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Đường, TP. Hồ Chí Minh, Việt Nam</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
-                    <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Thư viện ảnh</h4>
-                    <div class="row g-2 pt-2">
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/course-1.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/course-2.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/course-3.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/course-2.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/course-3.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/course-1.jpg" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Bản tin</h4>
-                    <p>Đăng ký để nhận thông tin mới nhất về các khóa học và ưu đãi.</p>
-                    <div class="position-relative mx-auto" style="max-width: 400px;">
-                        <input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="text" placeholder="Email của bạn">
-                        <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Đăng ký</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        © <a class="border-bottom" href="#">Tên Trang Web</a>, Bản quyền thuộc về chúng tôi.
-                        Thiết kế bởi <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <div class="footer-menu">
-                            <a href="">Trang chủ</a>
-                            <a href="">Cookies</a>
-                            <a href="">Hỗ trợ</a>
-                            <a href="">Câu hỏi thường gặp</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <%@ include file="footer.jsp" %>
     <!-- Footer End -->
 
 
