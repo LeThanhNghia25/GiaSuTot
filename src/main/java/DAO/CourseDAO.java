@@ -3,6 +3,7 @@ package DAO;
 import Utils.DBConnection;
 import model.Course;
 import model.Subject;
+import model.Tutor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,7 +57,17 @@ public class CourseDAO {
         return subjectMap;
 
         }
+    public HashMap<Course, Subject> FindByName(String subName) throws SQLException {
+        HashMap<Course, Subject> subjectMap = new CourseDAO().getAllSubjects();
+        HashMap<Course, Subject> result = new HashMap<>();
+        for (Course key : subjectMap.keySet()) {
+          if(subName.equals(subjectMap.get(key).getName())){
+              result.put(key, subjectMap.get(key));
+          }
+        }
 
+        return result;
+    }
     public static void main(String[] args) throws SQLException {
 
         CourseDAO courseDAO = new CourseDAO();
@@ -70,7 +81,13 @@ public class CourseDAO {
         for (Course key : subjectMap.keySet()) {
             System.out.println("Key: " + key + ", Value: " + subjectMap.get(key));
         }
+        HashMap<Course, Subject> findSub = courseDAO.FindByName("Hóa học");
+        for (Course key : findSub.keySet()) {
+            System.out.println("Key: " + key + ", Value: " + findSub.get(key));
+
         }
+    }
+
     }
 
 

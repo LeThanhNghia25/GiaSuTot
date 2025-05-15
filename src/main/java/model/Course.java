@@ -1,5 +1,8 @@
 package model;
 
+import Controller.TutorController;
+import DAO.TutorDAO;
+
 import java.util.Date;
 
 public class Course {
@@ -46,7 +49,10 @@ public class Course {
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
-
+    public Tutor getTutor() {
+        TutorDAO dao = new TutorDAO();
+        return dao.getTutorById(this.id_tutor);
+    }
     @Override
     public String toString() {
         return "Course{" +
