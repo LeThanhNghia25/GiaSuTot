@@ -40,7 +40,7 @@
             <p class="text-muted mb-4"><%= tutor.getAddress() %></p>
             <div class="d-flex justify-content-center mb-2">
               <button type="button" class="btn btn-primary">Theo dõi</button>
-              <button type="button" class="btn btn-outline-primary ms-1">Nhắn tin</button>
+              <button type="button" class="btn btn-primary">Nhắn tin</button>
             </div>
           </div>
         </div>
@@ -57,76 +57,110 @@
       </div>
 
       <div class="col-lg-8">
+        <!-- Thông tin cá nhân -->
         <div class="card mb-4">
           <div class="card-body">
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Họ và tên</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0"><%= tutor.getName() %></p>
-              </div>
+            <div class="d-flex justify-content-between">
+              <h5>Thông tin cá nhân</h5>
+              <button type="button" class="btn btn-warning btn-sm" onclick="toggleEditForm()">Chỉnh sửa</button>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Ngày sinh</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0"><%= tutor.getBirth() %></p>
-              </div>
+              <div class="col-sm-3"><p class="mb-0">Họ và tên</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getName() %></p></div>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Email</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0"><%= tutor.getEmail() %></p>
-              </div>
+              <div class="col-sm-3"><p class="mb-0">Ngày sinh</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getBirth() %></p></div>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Số điện thoại</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0"><%= tutor.getPhone() %></p>
-              </div>
+              <div class="col-sm-3"><p class="mb-0">Email</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getEmail() %></p></div>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Địa chỉ</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0"><%= tutor.getAddress() %></p>
-              </div>
+              <div class="col-sm-3"><p class="mb-0">Số điện thoại</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getPhone() %></p></div>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Chuyên môn</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0"><%= tutor.getSpecialization() %></p>
-              </div>
+              <div class="col-sm-3"><p class="mb-0">Địa chỉ</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getAddress() %></p></div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3"><p class="mb-0">Chuyên môn</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getSpecialization() %></p></div>
             </div>
           </div>
         </div>
 
-        <div class="card">
+        <!-- Mô tả thêm -->
+        <div class="card mb-4">
           <div class="card-body">
             <h5 class="mb-3">Mô tả thêm</h5>
-            <p class="text-muted">
-              <%= tutor.getDescribeTutor() %>
-            </p>
+            <p class="text-muted"><%= tutor.getDescribeTutor() %></p>
+          </div>
+        </div>
+
+        <!-- Form chỉnh sửa thông tin (ẩn ban đầu) -->
+        <div class="card mb-4" id="editForm">
+          <div class="card-body">
+            <h5 class="mb-3">Chỉnh sửa thông tin cá nhân</h5>
+            <form action="editTutor" method="post">
+              <input type="hidden" name="id" value="<%= tutor.getId() %>">
+
+              <div class="mb-3">
+                <label class="form-label">Họ và tên</label>
+                <input type="text" class="form-control" name="name" value="<%= tutor.getName() %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Ngày sinh</label>
+                <input type="date" class="form-control" name="birth" value="<%= tutor.getBirth() %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" value="<%= tutor.getEmail() %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Số điện thoại</label>
+                <input type="text" class="form-control" name="phone" value="<%= tutor.getPhone() %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Địa chỉ</label>
+                <input type="text" class="form-control" name="address" value="<%= tutor.getAddress() %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Chuyên môn</label>
+                <input type="text" class="form-control" name="specialization" value="<%= tutor.getSpecialization() %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Mô tả</label>
+                <textarea class="form-control" name="describe" rows="3"><%= tutor.getDescribeTutor() %></textarea>
+              </div>
+              <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+              <button type="button" class="btn btn-secondary ms-2" onclick="toggleEditForm()">Hủy</button>
+            </form>
           </div>
         </div>
       </div>
+
     </div>
     <% } %>
   </div>
 </section>
+<script>
+  function toggleEditForm() {
+    const editForm = document.getElementById("editForm");
+    if (editForm.style.display === "none" || editForm.style.display === "") {
+      editForm.style.display = "block";
+    } else {
+      editForm.style.display = "none";
+    }
+  }
+</script>
+
 </body>
 </html>
