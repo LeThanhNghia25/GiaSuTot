@@ -93,7 +93,7 @@ INSERT INTO student (id_st, name, birth, describeSt, id_acc) VALUES
 
 
 INSERT INTO tutor (id_tutor, name, email, birth, phone, address, specialization, describeTutor, id_acc, evaluate) VALUES
-                                                                                                                      ('tut001', 'Nguyễn Tuấn Cảnh', 'nguyencanh@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 'acc001', 5),
+                                                                                                                          ('tut001', 'Nguyễn Tuấn Cảnh', 'nguyencanh@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 'acc001', 5),
                                                                                                                       ('tut002', 'Tran Thị Mai', 'tranmai@example.com', '1988-05-12', '0901000002', 'HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 'acc002', 4),
                                                                                                                       ('tut003', 'Lê Hoàng Minh', 'hoangminh3@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'GV trường chuyên', 'acc003', 3),
                                                                                                                       ('tut004', 'Phạm Minh Hương', 'minhhuong@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 'acc004', 4),

@@ -49,6 +49,30 @@ public class TutorDAO {
         return tutor;
     }
 
+    public void updateTutor(Tutor tutor) {
+        String sql = "UPDATE tutor SET name=?, email=?, birth=?, phone=?, address=?, specialization=?, describeTutor=? WHERE id_tutor=?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, tutor.getName());
+            stmt.setString(2, tutor.getEmail());
+            stmt.setDate(3, new java.sql.Date(tutor.getBirth().getTime()));
+            stmt.setString(4, tutor.getPhone());
+            stmt.setString(5, tutor.getAddress());
+            stmt.setString(6, tutor.getSpecialization());
+            stmt.setString(7, tutor.getDescribeTutor());
+            stmt.setString(8, tutor.getId());
+
+            stmt.executeUpdate();
+            System.out.println("Tutor updated successfully.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static void main(String[] args) {
         TutorDAO tutorDAO = new TutorDAO();
         String testId = "tut001";

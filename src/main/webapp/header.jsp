@@ -37,7 +37,7 @@
           <a href="404.jsp" class="dropdown-item">404 Page</a>
         </div>
       </div>
-      <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
+      <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a>
     </div>
     <!-- Thanh tìm kiếm -->
     <form class="d-flex ms-3 me-3" role="search">

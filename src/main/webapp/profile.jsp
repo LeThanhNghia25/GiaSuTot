@@ -5,6 +5,33 @@
   <title>Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTUc8a3WY7eE3zC5GfCgAC0zw09Vqx4+l+5a+9TNY+X3qQgk7cA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .overlay-form {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%;
+      max-width: 600px;
+      z-index: 1050;
+      background-color: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 18px;
+    }
+
+    .overlay-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1040;
+    }
+  </style>
 </head>
 <body>
 <%
@@ -23,6 +50,7 @@
         </nav>
       </div>
     </div>
+
 
     <% if (tutor == null) { %>
     <div class="alert alert-danger" role="alert">
@@ -58,7 +86,7 @@
 
       <div class="col-lg-8">
         <!-- Thông tin cá nhân -->
-        <div class="card mb-4">
+        <div class="card mb-4" id="profileInfo">
           <div class="card-body">
             <div class="d-flex justify-content-between">
               <h5>Thông tin cá nhân</h5>
@@ -98,67 +126,78 @@
         </div>
 
         <!-- Mô tả thêm -->
-        <div class="card mb-4">
+        <div class="card mb-4" id="profileInfo">
           <div class="card-body">
             <h5 class="mb-3">Mô tả thêm</h5>
             <p class="text-muted"><%= tutor.getDescribeTutor() %></p>
           </div>
         </div>
-
-        <!-- Form chỉnh sửa thông tin (ẩn ban đầu) -->
-        <div class="card mb-4" id="editForm">
-          <div class="card-body">
-            <h5 class="mb-3">Chỉnh sửa thông tin cá nhân</h5>
-            <form action="editTutor" method="post">
-              <input type="hidden" name="id" value="<%= tutor.getId() %>">
-
-              <div class="mb-3">
-                <label class="form-label">Họ và tên</label>
-                <input type="text" class="form-control" name="name" value="<%= tutor.getName() %>">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Ngày sinh</label>
-                <input type="date" class="form-control" name="birth" value="<%= tutor.getBirth() %>">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" name="email" value="<%= tutor.getEmail() %>">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Số điện thoại</label>
-                <input type="text" class="form-control" name="phone" value="<%= tutor.getPhone() %>">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Địa chỉ</label>
-                <input type="text" class="form-control" name="address" value="<%= tutor.getAddress() %>">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Chuyên môn</label>
-                <input type="text" class="form-control" name="specialization" value="<%= tutor.getSpecialization() %>">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Mô tả</label>
-                <textarea class="form-control" name="describe" rows="3"><%= tutor.getDescribeTutor() %></textarea>
-              </div>
-              <button type="submit" class="btn btn-success">Lưu thay đổi</button>
-              <button type="button" class="btn btn-secondary ms-2" onclick="toggleEditForm()">Hủy</button>
-            </form>
-          </div>
-        </div>
       </div>
-
     </div>
+
+    <!-- Backdrop -->
+    <div id="backdrop" class="overlay-backdrop" style="display: none;"></div>
+
+    <!-- Form chỉnh sửa dạng overlay -->
+    <div id="editForm" class="overlay-form" style="display: none;">
+      <h5 class="mb-3">Chỉnh sửa thông tin cá nhân</h5>
+      <form action="tutor" method="post">
+        <input type="hidden" name="id_tutor" value="<%= tutor.getId() %>">
+
+        <div class="mb-3">
+          <label class="form-label">Họ và tên</label>
+          <input type="text" class="form-control" name="name" value="<%= tutor.getName() %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Ngày sinh</label>
+          <input type="date" class="form-control" name="birth" value="<%= tutor.getBirth() %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" value="<%= tutor.getEmail() %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Số điện thoại</label>
+          <input type="text" class="form-control" name="phone" value="<%= tutor.getPhone() %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Địa chỉ</label>
+          <input type="text" class="form-control" name="address" value="<%= tutor.getAddress() %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Chuyên môn</label>
+          <input type="text" class="form-control" name="specialization" value="<%= tutor.getSpecialization() %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mô tả</label>
+          <textarea class="form-control" name="describeTutor" rows="3"><%= tutor.getDescribeTutor() %></textarea>
+        </div>
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>
+          <button type="button" class="btn btn-secondary" onclick="toggleEditForm()">Hủy</button>
+        </div>
+
+      </form>
+    </div>
+
     <% } %>
   </div>
 </section>
+
 <script>
   function toggleEditForm() {
     const editForm = document.getElementById("editForm");
-    if (editForm.style.display === "none" || editForm.style.display === "") {
-      editForm.style.display = "block";
-    } else {
-      editForm.style.display = "none";
-    }
+    const profileInfoElements = document.querySelectorAll("#profileInfo");
+    const backdrop = document.getElementById("backdrop");
+
+    const isHidden = editForm.style.display === "none" || editForm.style.display === "";
+
+    editForm.style.display = isHidden ? "block" : "none";
+    backdrop.style.display = isHidden ? "block" : "none";
+
+    profileInfoElements.forEach(elem => {
+      elem.style.display = isHidden ? "none" : "block";
+    });
   }
 </script>
 
