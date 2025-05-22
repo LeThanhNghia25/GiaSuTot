@@ -40,8 +40,8 @@
       <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
     </div>
     <!-- Thanh tìm kiếm -->
-    <form class="d-flex ms-3 me-3" role="search">
-      <input class="form-control me-2" type="search" placeholder="Tìm kiếm khóa học..." aria-label="Search">
+    <form class="d-flex ms-3 me-3" role="search" method="post" action="searchServlet">
+      <input class="form-control me-2" name="subName" type="search" placeholder="Tìm kiếm khóa học..." aria-label="Search">
       <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
     </form>
 
