@@ -1,201 +1,148 @@
--- Chức năng của từng bảng
-
--- Bảng account
--- Chức năng: Lưu trữ thông tin tài khoản người dùng trong hệ thống, bao gồm cả học sinh, gia sư và admin.
--- Vai trò:
--- Quản lý thông tin đăng nhập (email, mật khẩu).
--- Phân quyền người dùng qua role (1: student, 2: tutor, 3: admin).
--- Theo dõi trạng thái tài khoản (status_acc: active/inactive).
-
--- Bảng student
--- Chức năng: Lưu trữ thông tin cá nhân của học sinh.
--- Vai trò:
--- Quản lý thông tin cơ bản (tên, ngày sinh, mô tả).
--- Liên kết với tài khoản qua id_acc để xác định học sinh nào có tài khoản trong hệ thống.
-
--- Bảng subject
--- Chức năng: Lưu trữ thông tin về các môn học mà hệ thống cung cấp.
--- Vai trò:
--- Quản lý danh sách môn học (tên, cấp độ, mô tả, phí).
--- Theo dõi trạng thái môn học (status_sub: active/inactive) để quyết định môn nào đang được cung cấp.
-
--- Bảng tutor
--- Chức năng: Lưu trữ thông tin cá nhân và chuyên môn của gia sư.
--- Vai trò:
--- Quản lý thông tin gia sư (tên, email, ngày sinh, số điện thoại, địa chỉ, chuyên môn, mô tả).
--- Liên kết với tài khoản qua id_acc.
--- Lưu trữ đánh giá (evaluate) để xếp hạng chất lượng gia sư.
-
--- Bảng course
--- Chức năng: Lưu trữ thông tin về các khóa học được tổ chức.
--- Vai trò:
--- Quản lý khóa học cụ thể (môn học, gia sư, thời gian bắt đầu).
--- Liên kết với subject (môn học) và tutor (gia sư) để xác định khóa học thuộc môn nào và do ai phụ trách.
-
--- Bảng registered_subjects
--- Chức năng: Lưu trữ thông tin đăng ký khóa học của học sinh.
--- Vai trò:
--- Theo dõi học sinh đăng ký khóa học nào (id_course, id_st).
--- Quản lý ngày đăng ký, số buổi học, và trạng thái đăng ký (status_rsub: registered/completed/cancelled).
-
--- Bảng lesson
--- Chức năng: Lưu trữ thông tin chi tiết về từng buổi học trong khóa học mà học sinh tham gia.
--- Vai trò:
--- Quản lý trạng thái buổi học (status_less: completed/absent/scheduled).
--- Ghi nhận thời gian cụ thể của từng buổi (time_less).
--- Liên kết với course và student để biết buổi học thuộc khóa nào và học sinh nào tham gia.
-
--- Tổng kết
--- account: Quản lý tài khoản và phân quyền người dùng.
--- student: Lưu thông tin học sinh.
--- tutor: Lưu thông tin gia sư.
--- subject: Quản lý danh sách môn học.
--- course: Quản lý khóa học (môn học + gia sư + thời gian).
--- registered_subjects: Theo dõi học sinh đăng ký khóa học.
--- lesson: Quản lý chi tiết các buổi học trong khóa học.
-
 CREATE TABLE account (
                          id_acc CHAR(20) PRIMARY KEY,
-                         email VARCHAR(100) NOT NULL,
-                         pass VARCHAR(100) NOT NULL,
-                         role INT DEFAULT 1 CHECK (role IN (1, 2, 3)), -- 1: student, 2: tutor, 3: admin
-                         status_acc VARCHAR(50) NOT NULL CHECK (status_acc IN ('active', 'inactive'))
+                         email VARCHAR(100),
+                         pass VARCHAR(100),
+                         role INT DEFAULT (1),
+                         statusAcc VARCHAR(50)
 );
-
 CREATE TABLE student (
                          id_st CHAR(20) PRIMARY KEY,
-                         name VARCHAR(100) NOT NULL,
-                         birth DATE NOT NULL,
-                         describe_st TEXT,
+                         name VARCHAR(100),
+                         birth DATE,
+                         describeSt TEXT,
                          id_acc CHAR(20),
                          FOREIGN KEY (id_acc) REFERENCES account(id_acc)
 );
-
 CREATE TABLE subject (
                          id_sub CHAR(20) PRIMARY KEY,
-                         name VARCHAR(100) NOT NULL,
-                         level VARCHAR(50) NOT NULL,
-                         describe_sb TEXT,
-                         fee DECIMAL(10, 2) NOT NULL,
-                         status_sub VARCHAR(50) NOT NULL CHECK (status_sub IN ('active', 'inactive'))
+                         name VARCHAR(100),
+                         level VARCHAR(50),
+                         describeSb TEXT,
+                         fee DECIMAL(10, 2),
+                         statusSub VARCHAR(50)
 );
 
 CREATE TABLE tutor (
                        id_tutor CHAR(20) PRIMARY KEY,
-                       name VARCHAR(100) NOT NULL,
+                       name VARCHAR(100),
                        email VARCHAR(100) NOT NULL,
-                       birth DATE NOT NULL,
-                       phone VARCHAR(20) NOT NULL,
-                       address VARCHAR(255) NOT NULL,
-                       specialization VARCHAR(255) NOT NULL,
-                       describe_tutor TEXT,
+                       birth DATE,
+                       phone VARCHAR(20),
+                       address  VARCHAR(255),
+                       specialization  VARCHAR(255),
+                       describeTutor TEXT,
                        id_acc CHAR(20),
-                       evaluate INT CHECK (evaluate BETWEEN 1 AND 5),
+                       evaluate INT,
                        FOREIGN KEY (id_acc) REFERENCES account(id_acc)
 );
 
-CREATE TABLE course (
+CREATE TABLE Course (
                         id_course CHAR(20) PRIMARY KEY,
                         id_sub CHAR(20),
                         id_tutor CHAR(20),
-                        time_course DATETIME NOT NULL,
+                        timeCourse DATETIME,
                         FOREIGN KEY (id_sub) REFERENCES subject(id_sub),
                         FOREIGN KEY (id_tutor) REFERENCES tutor(id_tutor)
 );
 
-CREATE TABLE registered_subjects (
+CREATE TABLE Registered_Subjects (
                                      id_course CHAR(20),
                                      id_st CHAR(20),
-                                     registration_date DATE NOT NULL,
-                                     number_of_lessons INT NOT NULL,
-                                     status_rsub VARCHAR(50) NOT NULL CHECK (status_rsub IN ('registered', 'completed', 'cancelled')),
+                                     registrationDate DATE,
+                                     numberOfLessons INT,
+                                     statusRSub VARCHAR(50),
                                      PRIMARY KEY (id_course, id_st),
-                                     FOREIGN KEY (id_course) REFERENCES course(id_course),
+                                     FOREIGN KEY (id_course) REFERENCES Course(id_course),
                                      FOREIGN KEY (id_st) REFERENCES student(id_st)
 );
 
-CREATE TABLE lesson (
+CREATE TABLE Lesson (
                         id_course CHAR(20),
                         id_st CHAR(20),
-                        status_less VARCHAR(50) NOT NULL CHECK (status_less IN ('completed', 'absent', 'scheduled')),
-                        time_less DATETIME NOT NULL,
-                        PRIMARY KEY (id_course, id_st, time_less),
-                        FOREIGN KEY (id_course) REFERENCES course(id_course),
+                        statusLess VARCHAR(50),
+                        TimeLess DATETIME,
+                        PRIMARY KEY (id_course, id_st, TimeLess),
+                        FOREIGN KEY (id_course) REFERENCES Course(id_course),
                         FOREIGN KEY (id_st) REFERENCES student(id_st)
 );
+-- Thêm vào bảng account
+INSERT INTO account (id_acc, email, pass, role, statusAcc) VALUES
+                                                               ('acc001', 'student1@example.com', 'pass1', 1, 'active'),
+                                                               ('acc002', 'student2@example.com', 'pass2', 1, 'active'),
+                                                               ('acc003', 'student3@example.com', 'pass3', 1, 'inactive'),
+                                                               ('acc004', 'tutor1@example.com',   'pass4', 2, 'active'),
+                                                               ('acc005', 'tutor2@example.com',   'pass5', 2, 'active'),
+                                                               ('acc006', 'tutor3@example.com',   'pass6', 2, 'inactive'),
+                                                               ('acc007', 'admin1@example.com',   'pass7', 3, 'active'),
+                                                               ('acc008', 'admin2@example.com',   'pass8', 3, 'active'),
+                                                               ('acc009', 'tutor4@example.com',   'pass9', 2, 'active'),
+                                                               ('acc010', 'student4@example.com', 'pass10', 1, 'inactive');
 
-INSERT INTO account (id_acc, email, pass, role, status_acc) VALUES
-                                                                ('acc001', 'student1@example.com', 'pass1', 1, 'active'),
-                                                                ('acc002', 'student2@example.com', 'pass2', 1, 'active'),
-                                                                ('acc003', 'student3@example.com', 'pass3', 1, 'inactive'),
-                                                                ('acc004', 'tutor1@example.com', 'pass4', 2, 'active'),
-                                                                ('acc005', 'tutor2@example.com', 'pass5', 2, 'active'),
-                                                                ('acc006', 'tutor3@example.com', 'pass6', 2, 'inactive'),
-                                                                ('acc007', 'admin1@example.com', 'pass7', 3, 'active'),
-                                                                ('acc008', 'admin2@example.com', 'pass8', 3, 'active'),
-                                                                ('acc009', 'tutor4@example.com', 'pass9', 2, 'active'),
-                                                                ('acc010', 'student4@example.com', 'pass10', 1, 'inactive'),
-                                                                ('acc011', 'student5@example.com', 'pass11', 1, 'active'),
-                                                                ('acc012', 'student6@example.com', 'pass12', 1, 'active'),
-                                                                ('acc013', 'student7@example.com', 'pass13', 1, 'active'),
-                                                                ('acc014', 'student8@example.com', 'pass14', 1, 'active'),
-                                                                ('acc015', 'tutor5@example.com', 'pass15', 2, 'active'),
-                                                                ('acc016', 'tutor6@example.com', 'pass16', 2, 'active'),
-                                                                ('acc017', 'tutor7@example.com', 'pass17', 2, 'active'),
-                                                                ('acc018', 'tutor8@example.com', 'pass18', 2, 'active'),
-                                                                ('acc019', 'tutor9@example.com', 'pass19', 2, 'active'),
-                                                                ('acc020', 'tutor10@example.com', 'pass20', 2, 'active');
+INSERT INTO student (id_st, name, birth, describeSt, id_acc) VALUES
+                                                                 ('st001', 'Nguyen Văn Nghĩa', '2005-01-01', 'Yêu thích Toán', 'acc001'),
+                                                                 ('st002', 'Lê Thi Liên',     '2006-03-15', 'Học sinh giỏi Văn', 'acc002'),
+                                                                 ('st003', 'Trần Văn Nhớ',   '2004-07-21', 'Thích học nhóm', 'acc003'),
+                                                                 ('st004', 'Phạm Thị Dung',   '2005-10-05', 'Năng động, tự tin', 'acc004'),
+                                                                ('st005', 'Nguyễn Trung Nhân', '2005-01-01', 'Yêu thích Toán', 'acc005'),
+                                                                 ('st006', 'Trương Thị Mai',     '2006-03-15', 'Học sinh giỏi Văn', 'acc006'),
+                                                                 ('st007', 'Trần Dần',   '2004-07-21', 'Thích học nhóm', 'acc007'),
+                                                                 ('st008', 'Lê Trung Dũng',   '2005-10-05', 'Năng động, tự tin', 'acc008'),
+                                                                  ('st009', 'Mai Nguyễn',     '2006-03-15', 'Học sinh giỏi Văn', 'acc0069'),
+                                                                  ('st010', 'Trương Hoàng Thủ',   '2004-07-21', 'Thích học nhóm', 'acc010'),
+                                                                  ('st011', 'Nguyễn Đình Nguyên',   '2005-10-05', 'Năng động, tự tin', 'acc011');
 
-INSERT INTO student (id_st, name, birth, describe_st, id_acc) VALUES
-                                                                  ('st001', 'Nguyen Van Nghia', '2005-01-01', 'Yeu thich Toan', 'acc001'),
-                                                                  ('st002', 'Le Thi Lien', '2006-03-15', 'Hoc sinh gioi Van', 'acc002'),
-                                                                  ('st003', 'Tran Van Nho', '2004-07-21', 'Thich hoc nhom', 'acc003'),
-                                                                  ('st004', 'Pham Thi Dung', '2005-10-05', 'Nang dong, tu tin', 'acc010'),
-                                                                  ('st005', 'Nguyen Trung Nhan', '2005-01-01', 'Yeu thich Toan', 'acc011'),
-                                                                  ('st006', 'Truong Thi Mai', '2006-03-15', 'Hoc sinh gioi Van', 'acc012'),
-                                                                  ('st007', 'Tran Dan', '2004-07-21', 'Thich hoc nhom', 'acc013'),
-                                                                  ('st008', 'Le Trung Dung', '2005-10-05', 'Nang dong, tu tin', 'acc014');
-INSERT INTO tutor (id_tutor, name, email, birth, phone, address, specialization, describe_tutor, id_acc, evaluate) VALUES
-                                                                                                                       ('tut001', 'Nguyen Tuan Canh', 'tut1@example.com', '1990-01-01', '0901000001', 'Ha Noi', 'Toan', '10 nam kinh nghiem day Toan', 'acc004', 5),
-                                                                                                                       ('tut002', 'Tran Thi Mai', 'tut2@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 'acc005', 4),
-                                                                                                                       ('tut003', 'Le Hoang Minh', 'tut3@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 'acc006', 3),
-                                                                                                                       ('tut004', 'Pham Minh Huong', 'tut4@example.com', '1991-09-20', '0901000004', 'Hue', 'Toan', 'Nhiet huyet, vui ve', 'acc009', 4),
-                                                                                                                       ('tut005', 'Nguyen Thu', 'tut5@example.com', '1990-01-01', '0901000001', 'Ha Noi', 'Toan', '10 nam kinh nghiem day Toan', 'acc015', 5),
-                                                                                                                       ('tut006', 'Truong Cao Dat', 'tut6@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 'acc016', 4),
-                                                                                                                       ('tut007', 'Dinh Thi Ngoc', 'tut7@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 'acc017', 3),
-                                                                                                                       ('tut008', 'Le Nghia', 'tut8@example.com', '1991-09-20', '0901000004', 'Hue', 'Toan', 'Nhiet huyet, vui ve', 'acc018', 4),
-                                                                                                                       ('tut009', 'Tran Nguyen Ven', 'tut9@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 'acc019', 4),
-                                                                                                                       ('tut010', 'Mai Hanh Phuc', 'tut10@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 'acc020', 3);
-INSERT INTO subject (id_sub, name, level, describe_sb, fee, status_sub) VALUES
-                                                                            ('sub001', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 200000.00, 'active'),
-                                                                            ('sub002', 'Tieng Anh', 'Giao tiep', 'Tieng Anh giao tiep co ban', 180000.00, 'active'),
-                                                                            ('sub003', 'Hoa hoc', 'Co ban', 'Hoc hoa co ban lop 10', 190000.00, 'inactive'),
-                                                                            ('sub004', 'Vat ly', 'Lop 10', 'Hoc Vat ly cao lop 12', 200000.00, 'active'),
-                                                                            ('sub005', 'Ngu van', 'Nang cao', 'Hoc Ngu van nang cao lop 11', 200000.00, 'active'),
-                                                                            ('sub006', 'Sinh hoc', 'Co ban', 'Hoc hoa co ban lop 10', 190000.00, 'inactive'),
-                                                                            ('sub007', 'Toan', 'Lop 5', 'Hoc Toan nang cao lop 5', 200000.00, 'active'),
-                                                                            ('sub008', 'Tieng Anh', 'Giao tiep', 'Tieng Anh giao tiep nang cao lop 5', 180000.00, 'active'),
-                                                                            ('sub009', 'Toan', 'Co ban', 'Toan co ban lop 6', 190000.00, 'inactive'),
-                                                                            ('sub010', 'Vat ly', 'Lop 11', 'Hoc Vat ly nang cao lop 8', 200000.00, 'active'),
-                                                                            ('sub011', 'Hoa hoc', 'Co ban', 'Hoc hoa hoc co ban lop 9', 180000.00, 'active'),
-                                                                            ('sub012', 'Sinh hoc', 'Co ban', 'Sinh hoc co ban lop 8', 190000.00, 'inactive'),
-                                                                            ('sub013', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 200000.00, 'active'),
-                                                                            ('sub014', 'Tieng Anh', 'Co ban', 'Tieng Anh co ban lop 10', 180000.00, 'active'),
-                                                                            ('sub015', 'Hoa hoc', 'Co ban', 'Hoc hoa co ban lop 7', 190000.00, 'inactive');
 
-INSERT INTO course (id_course, id_sub, id_tutor, time_course) VALUES
-                                                                  ('course001', 'sub001', 'tut001', '2025-05-01 08:00:00'),
-                                                                  ('course002', 'sub002', 'tut002', '2025-05-02 09:00:00'),
-                                                                  ('course003', 'sub003', 'tut003', '2025-05-03 10:00:00');
+INSERT INTO tutor (id_tutor, name, email, birth, phone, address, specialization, describeTutor, id_acc, evaluate) VALUES
+                                                                                                                      ('tut001', 'Nguyễn Tuấn Cảnh', 'nguyencanh@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 'acc001', 5),
+                                                                                                                      ('tut002', 'Tran Thị Mai', 'tranmai@example.com', '1988-05-12', '0901000002', 'HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 'acc002', 4),
+                                                                                                                      ('tut003', 'Lê Hoàng Minh', 'hoangminh3@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'GV trường chuyên', 'acc003', 3),
+                                                                                                                      ('tut004', 'Phạm Minh Hương', 'minhhuong@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 'acc004', 4),
+                                                                                                                    ('tut005', 'Nguyễn Thủ', 'nguyenthu@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 'acc005', 5),
+                                                                                                                      ('tut006', 'Trương Cao Đạt', 'caodat@example.com', '1988-05-12', '0901000002', 'HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 'acc006', 4),
+                                                                                                                      ('tut007', 'Đinh Thị Ngọc', 'ngocdinh@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'GV trường chuyên', 'acc007', 3),
+                                                                                                                      ('tut008', 'Lê Nghĩa', 'nghiale@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 'acc008', 4)
+                                                                                                                    ('tut009', 'Trần Nguyên Vẹn', 'nguyenven@example.com', '1988-05-12', '0901000002', 'HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 'acc009', 4),
+                                                                                                                      ('tut010', 'Mai Hạnh Phúc', 'hanhphuc@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'GV trường chuyên', 'acc010', 3),
+                                                                                                                      ('tut011', 'Mai Thắng', 'thang@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 'acc011', 4);
 
-INSERT INTO registered_subjects (id_course, id_st, registration_date, number_of_lessons, status_rsub) VALUES
-                                                                                                          ('course001', 'st001', '2025-04-25', 10, 'registered'),
-                                                                                                          ('course002', 'st002', '2025-04-26', 8, 'completed'),
-                                                                                                          ('course003', 'st003', '2025-04-27', 5, 'cancelled');
 
-INSERT INTO lesson (id_course, id_st, status_less, time_less) VALUES
-                                                                  ('course001', 'st001', 'completed', '2025-05-01 08:00:00'),
-                                                                  ('course001', 'st001', 'completed', '2025-05-03 08:00:00'),
-                                                                  ('course002', 'st002', 'completed', '2025-05-02 09:00:00'),
-                                                                  ('course002', 'st002', 'absent', '2025-05-04 09:00:00'),
-                                                                  ('course001', 'st003', 'scheduled', '2025-05-05 08:00:00');
+INSERT INTO subject (id_sub, name, level, describeSb, fee, statusSub) VALUES
+                                                                          ('sub001', 'Toán', 'Lớp 10', 'Học Toán nâng cao lớp 10', 200000.00, 'active'),
+                                                                          ('sub002', 'Tiếng Anh', 'Giao tiếp', 'Tiếng Anh giao tiếp cơ bản', 180000.00, 'active'),
+                                                                          ('sub003', 'Hóa học', 'Cơ bản', 'Học hóa cơ bản lớp 10', 190000.00, 'inactive'),
+                                                                            ('sub004', 'Vật lý', 'Lớp 10', 'Học Vật lý cao lớp 12', 200000.00, 'active'),
+                                                                          ('sub005', 'Ngữ văn', 'Nâng cao', 'Học Ngữ văn nâng cao lớp 11', 200000.00, 'active'),
+                                                                          ('sub006', 'Sinh học', 'Cơ bản', 'Học hóa cơ bản lớp 10', 190000.00, 'inactive'),
+                                                                        ('sub007', 'Toán', 'Lớp 5', 'Học Toán nâng cao lớp 5', 200000.00, 'active'),
+                                                                          ('sub008', 'Tiếng Anh', 'Giao tiếp', 'Tiếng Anh giao tiếp nâng cao lớp 5', 180000.00, 'active'),
+                                                                          ('sub009', 'Toán', 'Cơ bản', 'Toán cơ bản lớp 6', 190000.00, 'inactive'),
+                                                                        ('sub010', 'Vật lý', 'Lớp 11', 'Học Vật lý nâng cao lớp 8', 200000.00, 'active'),
+                                                                          ('sub011', 'Hóa học', 'Cơ bản', 'Học hóa học cơ bản lớp 9', 180000.00, 'active'),
+                                                                          ('sub012', 'Sinh học', 'Cơ bản', 'Sinh học cơ bản lớp 8', 190000.00, 'inactive'),
+                                                                          ('sub013', 'Toán', 'Lớp 10', 'Học Toán nâng cao lớp 10', 200000.00, 'active'),
+                                                                          ('sub014', 'Tiếng Anh', 'Cơ bản', 'Tiếng Anh cơ bản lớp 10', 180000.00, 'active'),
+                                                                          ('sub015', 'Hóa học', 'Cơ bản', 'Học hóa cơ bản lớp 7', 190000.00, 'inactive');
+
+
+INSERT INTO Course (id_course, id_sub, id_tutor, timeCourse) VALUES
+                                                                 ('course001', 'sub001', 'tut001', '2025-05-01 08:00:00'),
+                                                                 ('course002', 'sub002', 'tut002', '2025-05-02 09:00:00'),
+                                                                 ('course003', 'sub003', 'tut003', '2025-05-03 10:00:00');
+
+
+INSERT INTO Registered_Subjects (id_course, id_st, registrationDate, numberOfLessons, statusRSub) VALUES
+                                                                                                      ('course001', 'st001', '2025-05-01', 10, 'active'),
+                                                                                                      ('course002', 'st002', '2025-05-02', 8, 'active'),
+                                                                                                      ('course001', 'st003', '2025-05-03', 6, 'inactive'),
+                                                                                                      ('course003', 'st004', '2025-05-04', 12, 'active');
+
+
+INSERT INTO Lesson (id_course, id_st, statusLess, TimeLess) VALUES
+                                                                ('course001', 'st001', 'completed', '2025-05-01 08:00:00'),
+                                                                ('course001', 'st001', 'completed', '2025-05-03 08:00:00'),
+                                                                ('course002', 'st002', 'completed', '2025-05-02 09:00:00'),
+                                                                ('course002', 'st002', 'absent',    '2025-05-04 09:00:00'),
+                                                                ('course001', 'st003', 'scheduled', '2025-05-05 08:00:00'),
+                                                                ('course003', 'st004', 'completed', '2025-05-04 10:00:00'),
+                                                                ('course003', 'st004', 'scheduled', '2025-05-06 10:00:00');
+

@@ -1,0 +1,146 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 900px;
+    margin: 50px auto;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    border-radius: 8px;
+}
+
+/* Login Page */
+.login-page .form-container {
+    width: 50%;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.login-page .form-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.login-page .form-container p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #555;
+}
+
+/* Input Fields */
+.login-page input[type="text"],
+.login-page input[type="email"],
+.login-page input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.login-page label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Buttons */
+.login-page .btn {
+    padding: 12px 20px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.login-page .btn:hover {
+    background: #444;
+    transform: translateY(-2px);
+}
+
+.login-page .btn-outline {
+    padding: 12px 20px;
+    background: white;
+    color: black;
+    border: 1px solid black;
+    margin-right: 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.login-page .btn-outline:hover {
+    background: #f2f2f2;
+    transform: translateY(-2px);
+}
+
+/* Switch Panel */
+.login-page .switch-panel {
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+/* Hidden Class */
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+/* Link Styles */
+.login-page .link-style {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.login-page .link-style:hover {
+    color: #007bff;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .login-page .container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .login-page .form-container,
+    .login-page .switch-panel {
+        width: 100%;
+    }
+}
+
+/* Specific Styles for Form Container */
+.login-page .form-container {
+    width: 50%;
+}
+
+.login-page .form-container h2 {
+    margin-bottom: 20px;
+}
+
+.login-page .form-container p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
