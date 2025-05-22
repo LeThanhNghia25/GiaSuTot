@@ -22,16 +22,16 @@ public class SubjectDAO {
                     rs.getString("id_sub"),
                     rs.getString("name"),
                     rs.getString("level"),
-                    rs.getString("describeSb"),
+                    rs.getString("describe_sb"),
                     rs.getDouble("fee"),
-                    rs.getString("statusSub")
+                    rs.getString("status_sub")
             ));
         }
         return list;
     }
 
     public void addSubject(Subject subject) throws SQLException {
-        String sql = "INSERT INTO subject (id_sub, name, level, describeSb, fee, statusSub) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO subject (id_sub, name, level, describe_sb, fee, status_sub) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, subject.getId());
         stmt.setString(2, subject.getName());
@@ -43,7 +43,7 @@ public class SubjectDAO {
     }
 
     public void updateSubject(Subject subject) throws SQLException {
-        String sql = "UPDATE subject SET name = ?, level = ?, describeSb = ?, fee = ?, statusSub = ? WHERE id_sub = ?";
+        String sql = "UPDATE subject SET name = ?, level = ?, describe_sb = ?, fee = ?, status_sub = ? WHERE id_sub = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, subject.getName());
         stmt.setString(2, subject.getLevel());
@@ -55,14 +55,14 @@ public class SubjectDAO {
     }
 
     public void hideSubject(String id) throws SQLException {
-        String sql = "UPDATE subject SET statusSub = 'inactive' WHERE id_sub = ?";
+        String sql = "UPDATE subject SET status_sub = 'inactive' WHERE id_sub = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, id);
         stmt.executeUpdate();
     }
 
     public void restoreSubject(String id) throws SQLException {
-        String sql = "UPDATE subject SET statusSub = 'active' WHERE id_sub = ?";
+        String sql = "UPDATE subject SET status_sub = 'inactive' WHERE id_sub = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, id);
         stmt.executeUpdate();
@@ -78,9 +78,9 @@ public class SubjectDAO {
                     rs.getString("id_sub"),
                     rs.getString("name"),
                     rs.getString("level"),
-                    rs.getString("describeSb"),
+                    rs.getString("describe_sb"),
                     rs.getDouble("fee"),
-                    rs.getString("statusSub")
+                    rs.getString("status_sub")
             );
         }
         return null;
