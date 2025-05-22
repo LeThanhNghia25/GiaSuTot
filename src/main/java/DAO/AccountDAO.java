@@ -23,7 +23,7 @@ public class AccountDAO {
                         rs.getString("email"),
                         rs.getString("pass"),
                         rs.getInt("role"),
-                        rs.getString("statusAcc")
+                        rs.getString("status_acc")
                 ));
             }
             System.out.println("Total accounts retrieved: " + list.size());

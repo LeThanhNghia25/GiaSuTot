@@ -36,7 +36,7 @@ public class CourseDAO {
                     course.setId(resultSet.getString("id_course"));
                     course.setId_subject(resultSet.getString("id_sub"));
                     course.setId_tutor(resultSet.getString("id_tutor"));
-                    course.setDateTime(resultSet.getTimestamp("timeCourse")); // Lấy timestamp và chuyển sang Date
+                    course.setDateTime(resultSet.getTimestamp("time_course")); // Lấy timestamp và chuyển sang Date
                     courseList.add(course);
                 }
 
@@ -62,11 +62,14 @@ public class CourseDAO {
         HashMap<Course, Subject> subjectMap = new CourseDAO().getAllSubjects();
         HashMap<Course, Subject> result = new HashMap<>();
         for (Course key : subjectMap.keySet()) {
-            String findname = subName.toLowerCase();
-            String sName = subjectMap.get(key).getName().toLowerCase();
+            String findname = subName.toLowerCase().trim();
+            String sName = subjectMap.get(key).getName().toLowerCase().trim();
           if(sName.contains(findname) && subjectMap.get(key).getStatus().equals("active")){
               result.put(key, subjectMap.get(key));
           }
+        }
+        if (result.isEmpty()) {
+            throw new RuntimeException("Trong");
         }
 
         return result;
@@ -84,10 +87,10 @@ public class CourseDAO {
         for (Course key : subjectMap.keySet()) {
             System.out.println("Key: " + key + ", Value: " + subjectMap.get(key));
         }
-        HashMap<Course, Subject> findSub = courseDAO.FindByName("Hóa học");
+        HashMap<Course, Subject> findSub = courseDAO.FindByName("toan");
         for (Course key : findSub.keySet()) {
             System.out.println("Key: " + key + ", Value: " + findSub.get(key));
-
+//
         }
     }
 

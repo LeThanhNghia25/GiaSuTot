@@ -22,9 +22,9 @@ public class SubjectDAO {
                     rs.getString("id_sub"),
                     rs.getString("name"),
                     rs.getString("level"),
-                    rs.getString("describeSb"),
+                    rs.getString("describe_sb"),
                     rs.getDouble("fee"),
-                    rs.getString("statusSub")
+                    rs.getString("status_sub")
             ));
         }
         return list;
@@ -78,9 +78,9 @@ public class SubjectDAO {
                     rs.getString("id_sub"),
                     rs.getString("name"),
                     rs.getString("level"),
-                    rs.getString("describeSb"),
+                    rs.getString("describe_sb"),
                     rs.getDouble("fee"),
-                    rs.getString("statusSub")
+                    rs.getString("status_sub")
             );
         }
         return null;

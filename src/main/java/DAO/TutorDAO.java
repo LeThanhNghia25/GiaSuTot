@@ -30,7 +30,7 @@ public class TutorDAO {
                             rs.getString("phone"),
                             rs.getString("address"),
                             rs.getString("specialization"),
-                            rs.getString("describeTutor"),
+                            rs.getString("describe_tutor"),
                             rs.getInt("evaluate")
                     );
                     System.out.println("Tutor found: " + tutor.getName());
