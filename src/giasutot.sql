@@ -1,3 +1,59 @@
+-- Chức năng của từng bảng
+
+-- Bảng account
+-- Chức năng: Lưu trữ thông tin tài khoản người dùng trong hệ thống, bao gồm cả học sinh, gia sư và admin.
+-- Vai trò:
+-- Quản lý thông tin đăng nhập (email, mật khẩu).
+-- Phân quyền người dùng qua role (1: student, 2: tutor, 3: admin).
+-- Theo dõi trạng thái tài khoản (status_acc: active/inactive).
+
+-- Bảng student
+-- Chức năng: Lưu trữ thông tin cá nhân của học sinh.
+-- Vai trò:
+-- Quản lý thông tin cơ bản (tên, ngày sinh, mô tả).
+-- Liên kết với tài khoản qua id_acc để xác định học sinh nào có tài khoản trong hệ thống.
+
+-- Bảng subject
+-- Chức năng: Lưu trữ thông tin về các môn học mà hệ thống cung cấp.
+-- Vai trò:
+-- Quản lý danh sách môn học (tên, cấp độ, mô tả, phí).
+-- Theo dõi trạng thái môn học (status_sub: active/inactive) để quyết định môn nào đang được cung cấp.
+
+-- Bảng tutor
+-- Chức năng: Lưu trữ thông tin cá nhân và chuyên môn của gia sư.
+-- Vai trò:
+-- Quản lý thông tin gia sư (tên, email, ngày sinh, số điện thoại, địa chỉ, chuyên môn, mô tả).
+-- Liên kết với tài khoản qua id_acc.
+-- Lưu trữ đánh giá (evaluate) để xếp hạng chất lượng gia sư.
+
+-- Bảng course
+-- Chức năng: Lưu trữ thông tin về các khóa học được tổ chức.
+-- Vai trò:
+-- Quản lý khóa học cụ thể (môn học, gia sư, thời gian bắt đầu).
+-- Liên kết với subject (môn học) và tutor (gia sư) để xác định khóa học thuộc môn nào và do ai phụ trách.
+
+-- Bảng registered_subjects
+-- Chức năng: Lưu trữ thông tin đăng ký khóa học của học sinh.
+-- Vai trò:
+-- Theo dõi học sinh đăng ký khóa học nào (id_course, id_st).
+-- Quản lý ngày đăng ký, số buổi học, và trạng thái đăng ký (status_rsub: registered/completed/cancelled).
+
+-- Bảng lesson
+-- Chức năng: Lưu trữ thông tin chi tiết về từng buổi học trong khóa học mà học sinh tham gia.
+-- Vai trò:
+-- Quản lý trạng thái buổi học (status_less: completed/absent/scheduled).
+-- Ghi nhận thời gian cụ thể của từng buổi (time_less).
+-- Liên kết với course và student để biết buổi học thuộc khóa nào và học sinh nào tham gia.
+
+-- Tổng kết
+-- account: Quản lý tài khoản và phân quyền người dùng.
+-- student: Lưu thông tin học sinh.
+-- tutor: Lưu thông tin gia sư.
+-- subject: Quản lý danh sách môn học.
+-- course: Quản lý khóa học (môn học + gia sư + thời gian).
+-- registered_subjects: Theo dõi học sinh đăng ký khóa học.
+-- lesson: Quản lý chi tiết các buổi học trong khóa học.
+
 CREATE TABLE account (
                          id_acc CHAR(20) PRIMARY KEY,
                          email VARCHAR(100) NOT NULL,
