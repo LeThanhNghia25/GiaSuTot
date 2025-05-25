@@ -119,7 +119,7 @@
           <div class="card-body">
             <h5 class="mb-3">Mô tả thêm</h5>
             <p class="text-muted">
-              <%= tutor.getDescribeTutor() %>
+              <%= tutor.getdescribe_tutor() %>
             </p>
           </div>
         </div>

@@ -1,7 +1,6 @@
 package Controller;
 
 import DAO.CourseDAO;
-import DAO.SubjectDAO;
 import model.Course;
 import model.Subject;
 
@@ -14,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
+
 @WebServlet("/searchServlet")
 public class CourseController extends HttpServlet {
     private CourseDAO courseDAO = new CourseDAO();

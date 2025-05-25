@@ -7,10 +7,10 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
-public class SubjectDAO {
+public class AdminSubjectDAO {
     private Connection conn;
 
-    public SubjectDAO() throws SQLException {
+    public AdminSubjectDAO() throws SQLException {
         conn = DBConnection.getConnection();
     }
 
@@ -156,7 +156,7 @@ public class SubjectDAO {
             ps.setString(2, student.getName());
             ps.setDate(3, Date.valueOf(student.getBirth()));
             ps.setString(4, student.getDescribe());
-            ps.setString(5, student.getAccountId());
+            ps.setString(5, student.getaccount_id());
             ps.executeUpdate();
         }
     }
