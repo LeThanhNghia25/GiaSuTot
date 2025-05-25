@@ -3,7 +3,6 @@ package DAO;
 import Utils.DBConnection;
 import model.Course;
 import model.Subject;
-import model.Tutor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,8 +43,8 @@ public class CourseDAO {
         public HashMap<Course, Subject> getAllSubjects() throws SQLException {
         HashMap<Course, Subject> subjectMap = new HashMap<>();
         List<Course> courseList = getAllCourses();
-        SubjectDAO subjectDAO = new SubjectDAO();
-        List<Subject> subjectList = subjectDAO.getAllSubjects();
+        AdminSubjectDAO adminSubjectDAO = new AdminSubjectDAO();
+        List<Subject> subjectList = adminSubjectDAO.getAllSubjects();
         for (Course course : courseList) {
             for (Subject subject : subjectList) {
                 if(course.getId_subject().equals(subject.getId())){

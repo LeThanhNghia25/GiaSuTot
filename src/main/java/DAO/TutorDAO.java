@@ -6,10 +6,9 @@ import Utils.DBConnection;
 import java.sql.*;
 
 public class TutorDAO {
-
     public Tutor getTutorById(String id_tutor) {
         Tutor tutor = null;
-        String sql = "SELECT * FROM tutor WHERE id_tutor = ?";
+        String sql = "SELECT * FROM tutor WHERE id_tu = ?";
 
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) {
@@ -22,20 +21,62 @@ public class TutorDAO {
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    tutor = new Tutor(
-                            rs.getString("id_tutor"),
-                            rs.getString("name"),
-                            rs.getString("email"),
-                            rs.getDate("birth"),
-                            rs.getString("phone"),
-                            rs.getString("address"),
-                            rs.getString("specialization"),
-                            rs.getString("describeTutor"),
-                            rs.getInt("evaluate")
-                    );
+                    tutor = new Tutor();
+                    tutor.setId(rs.getString("id_tu"));
+                    tutor.setName(rs.getString("name"));
+                    tutor.setEmail(rs.getString("email"));
+                    tutor.setBirth(rs.getDate("birth"));
+                    tutor.setPhone(rs.getString("phone"));
+                    tutor.setAddress(rs.getString("address"));
+                    tutor.setSpecialization(rs.getString("specialization"));
+                    tutor.setDescribeTutor(rs.getString("describeTutor"));
+                    tutor.setEvaluate(rs.getInt("evaluate"));
+                    tutor.setAccountId(rs.getString("id_acc"));
                     System.out.println("Tutor found: " + tutor.getName());
                 } else {
                     System.out.println("No tutor found with id: " + id_tutor);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return tutor;
+    }
+
+    public Tutor getTutorByAccountId(String accountId) {
+        Tutor tutor = null;
+        String sql = "SELECT * FROM tutor WHERE id_acc = ?";
+
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) {
+                System.err.println("Failed to establish database connection");
+                return null;
+            }
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, accountId);
+                System.out.println("Executing query for tutor with account id: " + accountId);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    tutor = new Tutor();
+                    tutor.setId(rs.getString("id_tu"));
+                    tutor.setName(rs.getString("name"));
+                    tutor.setEmail(rs.getString("email"));
+                    tutor.setBirth(rs.getDate("birth"));
+                    tutor.setPhone(rs.getString("phone"));
+                    tutor.setAddress(rs.getString("address"));
+                    tutor.setSpecialization(rs.getString("specialization"));
+                    tutor.setDescribeTutor(rs.getString("describeTutor"));
+                    tutor.setEvaluate(rs.getInt("evaluate"));
+                    tutor.setAccountId(rs.getString("id_acc"));
+                    System.out.println("Tutor found: " + tutor.getName());
+                } else {
+                    System.out.println("No tutor found with account id: " + accountId);
                 }
             }
         } catch (SQLException e) {
@@ -64,6 +105,7 @@ public class TutorDAO {
             System.out.println("Address: " + tutor.getAddress());
             System.out.println("Specialization: " + tutor.getSpecialization());
             System.out.println("Description: " + tutor.getDescribeTutor());
+            System.out.println("Account ID: " + tutor.getAccountId());
         } else {
             System.out.println("Failed to retrieve tutor with id: " + testId);
         }

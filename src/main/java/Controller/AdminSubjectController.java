@@ -1,6 +1,6 @@
 package Controller;
 
-import DAO.SubjectDAO;
+import DAO.AdminSubjectDAO;
 import model.Subject;
 
 import jakarta.servlet.ServletException;
@@ -14,12 +14,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/admin/subject")
-public class SubjectController extends HttpServlet {
-    private SubjectDAO subjectDAO;
+public class AdminSubjectController extends HttpServlet {
+    private AdminSubjectDAO adminSubjectDAO;
 
     public void init() {
         try {
-            subjectDAO = new SubjectDAO();
+            adminSubjectDAO = new AdminSubjectDAO();
             System.out.println("SubjectDAO initialized successfully at " + new java.util.Date());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,10 +46,10 @@ public class SubjectController extends HttpServlet {
 
                 if (isSearch) {
                     // Gọi hàm tìm kiếm trong DAO
-                    subjects = subjectDAO.searchSubjects(tenMonHoc, lop, tinh, tenGiaoVien);
+                    subjects = adminSubjectDAO.searchSubjects(tenMonHoc, lop, tinh, tenGiaoVien);
                     request.setAttribute("searchMessage", "Kết quả tìm kiếm");
                 } else {
-                    subjects = subjectDAO.getAllSubjects();
+                    subjects = adminSubjectDAO.getAllSubjects();
                 }
 
                 request.setAttribute("subjects", subjects);
@@ -59,7 +59,7 @@ public class SubjectController extends HttpServlet {
                 request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
             } else if (action.equals("edit")) {
                 String id = request.getParameter("id");
-                Subject subject = subjectDAO.getSubjectById(id);
+                Subject subject = adminSubjectDAO.getSubjectById(id);
                 if (subject != null) {
                     request.setAttribute("subject", subject);
                     request.getRequestDispatcher("/admin/edit-subject.jsp").forward(request, response);
@@ -69,11 +69,11 @@ public class SubjectController extends HttpServlet {
                 }
             } else if (action.equals("delete")) {
                 String id = request.getParameter("id");
-                subjectDAO.hideSubject(id);
+                adminSubjectDAO.hideSubject(id);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
             } else if (action.equals("restore")) {
                 String id = request.getParameter("id");
-                subjectDAO.restoreSubject(id);
+                adminSubjectDAO.restoreSubject(id);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
             }
         } catch (SQLException e) {
@@ -123,14 +123,14 @@ public class SubjectController extends HttpServlet {
                     return;
                 }
 
-                if (subjectDAO.getSubjectById(id) != null) {
+                if (adminSubjectDAO.getSubjectById(id) != null) {
                     request.setAttribute("error", "ID môn học đã tồn tại.");
                     request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
                     return;
                 }
 
                 Subject subject = new Subject(id, name, level, description, fee, status);
-                subjectDAO.addSubject(subject);
+                adminSubjectDAO.addSubject(subject);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
 
             } else if (action.equals("edit")) {
@@ -175,7 +175,7 @@ public class SubjectController extends HttpServlet {
                 }
 
                 Subject subject = new Subject(id, name, level, description, fee, status);
-                subjectDAO.updateSubject(subject);
+                adminSubjectDAO.updateSubject(subject);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
             }
         } catch (SQLException e) {

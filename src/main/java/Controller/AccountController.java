@@ -13,12 +13,12 @@ import model.Student;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
 
-@WebServlet(name = "AccountController", urlPatterns = {"/admin/account", "/signup-user"})
+@WebServlet(name = "AccountController", urlPatterns = {"/account", "/signup-user"})
 public class AccountController extends HttpServlet {
     private AccountDAO accountDAO;
 
+    @Override
     public void init() {
         try {
             accountDAO = new AccountDAO();
@@ -27,6 +27,7 @@ public class AccountController extends HttpServlet {
             e.printStackTrace();
         }
     }
+
     // Hiển thị trang login/register hoặc các trang quản lý tài khoản
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -68,7 +69,6 @@ public class AccountController extends HttpServlet {
                     request.setAttribute("error", "Email hoặc mật khẩu không đúng, hoặc tài khoản chưa kích hoạt.");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 }
-
             } else if ("register".equals(action)) {
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
@@ -93,7 +93,7 @@ public class AccountController extends HttpServlet {
 
                 try {
                     // Tạo account mới
-                    String idAcc = accountDAO.generateAccountId();
+                    String idAcc = accountDAO.generateaccount_id();
                     Account acc = new Account(idAcc, email, password, 1, "inactive"); // role = 1, status = inactive
                     accountDAO.insertAccount(acc);
 
@@ -105,15 +105,12 @@ public class AccountController extends HttpServlet {
 
                     // Forward đến StudentController để lưu student
                     request.getRequestDispatcher("/student").forward(request, response);
-
                 } catch (SQLException e) {
                     e.printStackTrace();
                     request.setAttribute("error_register", "Lỗi đăng ký: " + e.getMessage());
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 }
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());
@@ -121,4 +118,3 @@ public class AccountController extends HttpServlet {
         }
     }
 }
-

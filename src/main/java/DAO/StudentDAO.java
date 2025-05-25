@@ -24,15 +24,15 @@ public class StudentDAO {
     }
 
     public boolean insertStudent(Student student) throws SQLException {
-        String sql = "INSERT INTO student (id_st, name, birth, describeSt, id_acc) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO student (id_st, name, birth, describe_st, id_acc) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, student.getId());
             ps.setString(2, student.getName());
             ps.setDate(3, java.sql.Date.valueOf(student.getBirth()));
             ps.setString(4, student.getDescribe());
-            ps.setString(5, student.getAccountId());
-            ps.executeUpdate();
+            ps.setString(5, student.getaccount_id());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
         }
-        return false;
     }
 }

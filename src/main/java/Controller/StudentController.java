@@ -40,12 +40,13 @@ public class StudentController extends HttpServlet {
             student.setName(name);
             student.setBirth(birth);
             student.setDescribe(describe);
-            student.setAccountId(idAcc);
+            student.setaccount_id(idAcc);
 
             studentDAO.insertStudent(student);
 
-            // Sau khi lưu thành công, chuyển về trang login
-            response.sendRedirect(request.getContextPath() + "/login.jsp?action=login");
+            // Sau khi lưu thành công, chuyển về trang login với thông báo thành công
+            request.getSession().setAttribute("success", "Đăng ký thành công, vui lòng đăng nhập.");
+            response.sendRedirect(request.getContextPath() + "/account?action=login");
 
         } catch (SQLException e) {
             e.printStackTrace();

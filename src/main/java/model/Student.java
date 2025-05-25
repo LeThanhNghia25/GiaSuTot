@@ -8,16 +8,16 @@ public class Student {
     private String name;          // name
     private LocalDate birth;      // birth
     private String describe;      // describeSt
-    private String accountId;     // id_acc (liên kết với account)
+    private String account_id;     // id_acc (liên kết với account)
 
     public Student() {}
 
-    public Student(String id, String name, LocalDate birth, String describe, String accountId) {
+    public Student(String id, String name, LocalDate birth, String describe, String account_id) {
         this.id = id;
         this.name = name;
         this.birth = birth;
         this.describe = describe;
-        this.accountId = accountId;
+        this.account_id = account_id;
     }
 
     // Getters and Setters
@@ -53,11 +53,11 @@ public class Student {
         this.describe = describe;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getaccount_id() {
+        return account_id;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setaccount_id(String account_id) {
+        this.account_id = account_id;
     }
 }
