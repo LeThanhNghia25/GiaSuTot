@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class CourseDAO {
     private Connection conn = DBConnection.getConnection();
@@ -62,9 +61,7 @@ public class CourseDAO {
         HashMap<Course, Subject> subjectMap = new CourseDAO().getAllSubjects();
         HashMap<Course, Subject> result = new HashMap<>();
         for (Course key : subjectMap.keySet()) {
-            String findname = subName.toLowerCase();
-            String sName = subjectMap.get(key).getName().toLowerCase();
-          if(sName.contains(findname) && subjectMap.get(key).getStatus().equals("active")){
+          if(subName.equals(subjectMap.get(key).getName())){
               result.put(key, subjectMap.get(key));
           }
         }
