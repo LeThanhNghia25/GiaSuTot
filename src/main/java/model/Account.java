@@ -1,7 +1,7 @@
 package model;
 
 public class Account {
-    private String id;
+    private String id_acc;
     private String email;
     private String password;
     private int role;
@@ -10,7 +10,7 @@ public class Account {
     public Account() {}
 
     public Account(String id, String email, String password, int role, String status) {
-        this.id = id;
+        this.id_acc = id_acc;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -19,11 +19,11 @@ public class Account {
 
     // Getter & Setter cho id
     public String getId() {
-        return id;
+        return id_acc;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String id_acc) {
+        this.id_acc =id_acc;
     }
 
     // Getter & Setter cho email

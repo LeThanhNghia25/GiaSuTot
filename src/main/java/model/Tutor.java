@@ -15,7 +15,7 @@ public class Tutor {
     private int bank_code;
     private String bank_name;
     private int evaluate;
-
+    private String id_acc;
 
 
     // Constructors
@@ -120,6 +120,12 @@ public class Tutor {
         this.evaluate = evaluate;
     }
 
+    public String getAccountId() {
+        return id_acc;
+    }
 
+    public void setAccountId(String id_acc) {
+        this.id_acc = id_acc;
+    }
 
 }

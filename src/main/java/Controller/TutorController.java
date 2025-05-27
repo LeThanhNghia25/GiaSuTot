@@ -27,22 +27,33 @@ public class TutorController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("Handling GET request for /profile");
-        String id_tutor = "tut001"; // Hardcode id_tutor để test
-        System.out.println("Fetching tutor with id: " + id_tutor);
-        Tutor tutor = tutorDAO.getTutorById(id_tutor); // Truy vấn thông tin gia sư từ database
-        System.out.println("Tutor fetched: " + (tutor != null ? tutor.getName() : "null"));
 
-        if (tutor == null) {
-            System.out.println("No tutor found with id: " + id_tutor);
-        } else {
-            System.out.println("Tutor found: " + tutor.getName());
+        // Lấy đối tượng Account từ session
+        model.Account account = (model.Account) request.getSession().getAttribute("account");
+
+        if (account == null) {
+            System.out.println("No account found in session, redirecting to login.");
+            response.sendRedirect("login.jsp"); // Chuyển hướng nếu chưa đăng nhập
+            return;
         }
 
-        request.setAttribute("tutor", tutor); // Gắn tutor vào request
-        request.setAttribute("message", "Cập nhật thông tin thành công!");
+        String id_acc = account.getId(); // Lấy id_acc từ Account
+        System.out.println("Fetching tutor with account id: " + id_acc);
+
+        Tutor tutor = tutorDAO.getTutorByAccountId(id_acc); // Truy vấn thông tin Tutor theo id_acc
+
+        if (tutor == null) {
+            System.out.println("No tutor found with account id: " + id_acc);
+            request.setAttribute("error", "Không tìm thấy thông tin gia sư.");
+        } else {
+            System.out.println("Tutor found: " + tutor.getName());
+            request.setAttribute("tutor", tutor);
+        }
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
         dispatcher.forward(request, response);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

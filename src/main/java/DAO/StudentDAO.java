@@ -3,6 +3,7 @@ package DAO;
 import Utils.DBConnection;
 import model.Student;
 import java.sql.*;
+import java.time.LocalDate;
 
 public class StudentDAO {
     private Connection conn;
@@ -30,9 +31,31 @@ public class StudentDAO {
             ps.setString(2, student.getName());
             ps.setDate(3, java.sql.Date.valueOf(student.getBirth()));
             ps.setString(4, student.getDescribe());
-            ps.setString(5, student.getaccount_id());
+            ps.setString(5, student.getAccountId());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         }
+    }
+
+    public Student getStudentByAccountId(String id_acc) throws SQLException {
+        String sql = "SELECT * FROM student WHERE id_acc = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, id_acc);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String id_st = rs.getString("id_st");
+                String name = rs.getString("name");
+                LocalDate birth = rs.getDate("birth").toLocalDate();
+                String describe = rs.getString("describeSt");
+
+                return new Student(id_st, name, birth, describe, id_acc);
+            }
+        }
+
+        return null; // không tìm thấy
     }
 }
