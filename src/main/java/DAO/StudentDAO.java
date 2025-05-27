@@ -51,7 +51,7 @@ public class StudentDAO {
                 String id_st = rs.getString("id_st");
                 String name = rs.getString("name");
                 LocalDate birth = rs.getDate("birth").toLocalDate();
-                String describe = rs.getString("describeSt");
+                String describe = rs.getString("describe_st");
                 Account acc = new Account(); // Tạo đối tượng Account đơn giản
                 acc.setId(id_acc);
                 return new Student(id_st, name, birth, describe, acc);
