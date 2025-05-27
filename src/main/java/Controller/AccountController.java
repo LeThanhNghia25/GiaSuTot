@@ -1,6 +1,9 @@
 package Controller;
 
 import DAO.AccountDAO;
+import DAO.StudentDAO;
+import DAO.TutorDAO;
+import jakarta.servlet.http.HttpSession;
 import model.Account;
 
 import jakarta.servlet.ServletException;
@@ -9,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Student;
+import model.Tutor;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,11 +21,14 @@ import java.time.LocalDate;
 @WebServlet(name = "AccountController", urlPatterns = {"/account", "/signup-user"})
 public class AccountController extends HttpServlet {
     private AccountDAO accountDAO;
-
+    private TutorDAO tutorDAO;
+    private StudentDAO studentDAO;
     @Override
     public void init() {
         try {
             accountDAO = new AccountDAO();
+            tutorDAO = new TutorDAO();
+            studentDAO = new StudentDAO();
             System.out.println("AccountDAO initialized successfully at " + new java.util.Date());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,9 +69,22 @@ public class AccountController extends HttpServlet {
                 Account acc = accountDAO.getAccountByEmail(email);
 
                 if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatus())) {
+                    HttpSession session = request.getSession();
                     request.getSession().setAttribute("account", acc);
+                    System.out.println("Login successful. Account ID: " + acc.getId());
+                    if (acc.getRole() == 1) { // Student
+                        Student student = studentDAO.getStudentByAccountId(acc.getId());
+                        if (student != null) {
+                            session.setAttribute("userName", student.getName());
+                        }
+                    } else if (acc.getRole() == 2) { // Tutor
+                        Tutor tutor = tutorDAO.getTutorByAccountId(acc.getId());
+                        if (tutor != null) {
+                            session.setAttribute("userName", tutor.getName());
+                        }
+                    }
                     // Login thành công, chuyển hướng tới trang chính (ví dụ)
-                    response.sendRedirect(request.getContextPath() + "/about.jsp");
+                    response.sendRedirect(request.getContextPath() + "/index.jsp");
                 } else {
                     request.setAttribute("error", "Email hoặc mật khẩu không đúng, hoặc tài khoản chưa kích hoạt.");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);

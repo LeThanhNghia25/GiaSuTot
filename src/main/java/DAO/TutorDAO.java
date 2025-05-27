@@ -6,9 +6,10 @@ import Utils.DBConnection;
 import java.sql.*;
 
 public class TutorDAO {
+
     public Tutor getTutorById(String id_tutor) {
         Tutor tutor = null;
-        String sql = "SELECT * FROM tutor WHERE id_tu = ?";
+        String sql = "SELECT * FROM tutor WHERE id_tutor = ?";
 
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) {
@@ -21,16 +22,20 @@ public class TutorDAO {
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    tutor = new Tutor();
-                    tutor.setId(rs.getString("id_tu"));
-                    tutor.setName(rs.getString("name"));
-                    tutor.setEmail(rs.getString("email"));
-                    tutor.setBirth(rs.getDate("birth"));
-                    tutor.setPhone(rs.getString("phone"));
-                    tutor.setAddress(rs.getString("address"));
-                    tutor.setSpecialization(rs.getString("specialization"));
-                    tutor.setDescribeTutor(rs.getString("describeTutor"));
-                    tutor.setEvaluate(rs.getInt("evaluate"));
+                    tutor = new Tutor(
+                            rs.getString("id_tutor"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getDate("birth"),
+                            rs.getString("phone"),
+                            rs.getString("address"),
+                            rs.getString("specialization"),
+                            rs.getString("describe_tutor"),
+                            rs.getInt("cccd"),
+                            rs.getInt("bank_code"),
+                            rs.getString("bank_name"),
+                            rs.getInt("evaluate")
+                    );
                     tutor.setAccountId(rs.getString("id_acc"));
                     System.out.println("Tutor found: " + tutor.getName());
                 } else {
@@ -48,7 +53,7 @@ public class TutorDAO {
         return tutor;
     }
 
-    public Tutor getTutorByAccountId(String accountId) {
+    public Tutor getTutorByAccountId(String id_acc) {
         Tutor tutor = null;
         String sql = "SELECT * FROM tutor WHERE id_acc = ?";
 
@@ -57,38 +62,64 @@ public class TutorDAO {
                 System.err.println("Failed to establish database connection");
                 return null;
             }
+
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, accountId);
-                System.out.println("Executing query for tutor with account id: " + accountId);
+                stmt.setString(1, id_acc);
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    tutor = new Tutor();
-                    tutor.setId(rs.getString("id_tu"));
-                    tutor.setName(rs.getString("name"));
-                    tutor.setEmail(rs.getString("email"));
-                    tutor.setBirth(rs.getDate("birth"));
-                    tutor.setPhone(rs.getString("phone"));
-                    tutor.setAddress(rs.getString("address"));
-                    tutor.setSpecialization(rs.getString("specialization"));
-                    tutor.setDescribeTutor(rs.getString("describeTutor"));
-                    tutor.setEvaluate(rs.getInt("evaluate"));
+                    tutor = new Tutor(
+                            rs.getString("id_tutor"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getDate("birth"),
+                            rs.getString("phone"),
+                            rs.getString("address"),
+                            rs.getString("specialization"),
+                            rs.getString("describe_tutor"),
+                            rs.getInt("cccd"),
+                            rs.getInt("bank_code"),
+                            rs.getString("bank_name"),
+                            rs.getInt("evaluate")
+                    );
                     tutor.setAccountId(rs.getString("id_acc"));
-                    System.out.println("Tutor found: " + tutor.getName());
-                } else {
-                    System.out.println("No tutor found with account id: " + accountId);
                 }
             }
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return tutor;
     }
+
+
+    public void updateTutor(Tutor tutor) {
+        String sql = "UPDATE tutor SET name=?, email=?, birth=?, phone=?, address=?, specialization=?, describe_tutor=?, cccd=?, bank_code=?, bank_name=? WHERE id_tutor=?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, tutor.getName());
+            stmt.setString(2, tutor.getEmail());
+            stmt.setDate(3, new java.sql.Date(tutor.getBirth().getTime()));
+            stmt.setString(4, tutor.getPhone());
+            stmt.setString(5, tutor.getAddress());
+            stmt.setString(6, tutor.getSpecialization());
+            stmt.setString(7, tutor.getDescribeTutor());
+            stmt.setInt(8, tutor.getCccd());
+            stmt.setInt(9, tutor.getBankCode());
+            stmt.setString(10, tutor.getBankName());
+            stmt.setString(11, tutor.getId());
+
+            stmt.executeUpdate();
+            System.out.println("Tutor updated successfully.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         TutorDAO tutorDAO = new TutorDAO();
@@ -105,6 +136,9 @@ public class TutorDAO {
             System.out.println("Address: " + tutor.getAddress());
             System.out.println("Specialization: " + tutor.getSpecialization());
             System.out.println("Description: " + tutor.getDescribeTutor());
+            System.out.println("CCCD: " + tutor.getCccd());
+            System.out.println("Bank Code: " + tutor.getBankCode());
+            System.out.println("Bank Name: " + tutor.getBankName());
             System.out.println("Account ID: " + tutor.getAccountId());
         } else {
             System.out.println("Failed to retrieve tutor with id: " + testId);

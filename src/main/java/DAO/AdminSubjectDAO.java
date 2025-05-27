@@ -137,28 +137,5 @@ public class AdminSubjectDAO {
         return null;
     }
 
-    public String generateStudentId() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM student";
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                int count = rs.getInt(1) + 1;
-                return String.format("st%03d", count);
-            }
-        }
-        return null;
-    }
-
-    public void insertStudent(Student student) throws SQLException {
-        String sql = "INSERT INTO student (id_st, name, birth, describeSt, id_acc) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, student.getId());
-            ps.setString(2, student.getName());
-            ps.setDate(3, Date.valueOf(student.getBirth()));
-            ps.setString(4, student.getDescribe());
-            ps.setString(5, student.getaccount_id());
-            ps.executeUpdate();
-        }
-    }
 }
 

@@ -110,13 +110,13 @@
                     <h1>Chào mừng, trở lại!</h1>
                     <p>Nhập thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web</p>
                     <button id="login">Đăng nhập</button>
-                    <button id="homes"><a href="about.jsp" style="text-decoration: none ;color: #FFFFFF">Trang chủ</a></button>
+                    <button id="homes"><a href="index.jsp" style="text-decoration: none ;color: #FFFFFF">Trang chủ</a></button>
                 </div>
                 <div class="toggle-panel toggle-right">
                     <h1>Chào bạn!</h1>
                     <p>Đăng ký với thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web</p>
                     <button id="register">Đăng kí</button>
-                    <button id="HOME"><a href="about.jsp" style="text-decoration: none ;color: #FFFFFF" >Trang chủ</a></button>
+                    <button id="HOME"><a href="index.jsp" style="text-decoration: none ;color: #FFFFFF" >Trang chủ</a></button>
                 </div>
             </div>
         </div>

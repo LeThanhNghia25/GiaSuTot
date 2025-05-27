@@ -38,7 +38,7 @@
           <a href="404.jsp" class="dropdown-item">404 Page</a>
         </div>
       </div>
-      <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
+      <a href="" class="nav-item nav-link">Profile</a>
     </div>
 
     <!-- Thanh tìm kiếm -->
@@ -57,10 +57,18 @@
     <c:choose>
       <c:when test="${not empty sessionScope.account}">
         <!-- Nếu đã đăng nhập, hiển thị tên người dùng và nút Đăng xuất -->
-        <div class="d-flex align-items-center py-4 px-lg-5 d-none d-lg-block">
-          <span class="text-primary me-3">Xin chào, <c:out value="${sessionScope.userName}"/></span>
-          <a href="${pageContext.request.contextPath}/account?action=logout" class="btn btn-danger btn-short">Đăng xuất<i class="fa fa-sign-out-alt ms-2"></i></a>
+        <div class="dropdown py-4 px-lg-5 d-none d-lg-block">
+          <a class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-user me-2"></i>
+            <span>Xin chào, <c:out value="${sessionScope.userName}"/></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
+          </ul>
         </div>
+
       </c:when>
       <c:otherwise>
         <!-- Nếu chưa đăng nhập, hiển thị nút Đăng nhập -->

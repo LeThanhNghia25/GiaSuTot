@@ -89,6 +89,9 @@ CREATE TABLE tutor (
                        address VARCHAR(255) NOT NULL,
                        specialization VARCHAR(255) NOT NULL,
                        describe_tutor TEXT,
+                       cccd INT(12) NOT NULL ,
+                       bank_code INT(15) NOT NULL,
+                       bank_name VARCHAR(255) NOT NULL,
                        id_acc CHAR(20),
                        evaluate INT CHECK (evaluate BETWEEN 1 AND 5),
                        FOREIGN KEY (id_acc) REFERENCES account(id_acc)
@@ -155,17 +158,17 @@ INSERT INTO student (id_st, name, birth, describe_st, id_acc) VALUES
                                                                   ('st006', 'Truong Thi Mai', '2006-03-15', 'Hoc sinh gioi Van', 'acc012'),
                                                                   ('st007', 'Tran Dan', '2004-07-21', 'Thich hoc nhom', 'acc013'),
                                                                   ('st008', 'Le Trung Dung', '2005-10-05', 'Nang dong, tu tin', 'acc014');
-INSERT INTO tutor (id_tutor, name, email, birth, phone, address, specialization, describe_tutor, id_acc, evaluate) VALUES
-                                                                                                                       ('tut001', 'Nguyen Tuan Canh', 'tut1@example.com', '1990-01-01', '0901000001', 'Ha Noi', 'Toan', '10 nam kinh nghiem day Toan', 'acc004', 5),
-                                                                                                                       ('tut002', 'Tran Thi Mai', 'tut2@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 'acc005', 4),
-                                                                                                                       ('tut003', 'Le Hoang Minh', 'tut3@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 'acc006', 3),
-                                                                                                                       ('tut004', 'Pham Minh Huong', 'tut4@example.com', '1991-09-20', '0901000004', 'Hue', 'Toan', 'Nhiet huyet, vui ve', 'acc009', 4),
-                                                                                                                       ('tut005', 'Nguyen Thu', 'tut5@example.com', '1990-01-01', '0901000001', 'Ha Noi', 'Toan', '10 nam kinh nghiem day Toan', 'acc015', 5),
-                                                                                                                       ('tut006', 'Truong Cao Dat', 'tut6@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 'acc016', 4),
-                                                                                                                       ('tut007', 'Dinh Thi Ngoc', 'tut7@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 'acc017', 3),
-                                                                                                                       ('tut008', 'Le Nghia', 'tut8@example.com', '1991-09-20', '0901000004', 'Hue', 'Toan', 'Nhiet huyet, vui ve', 'acc018', 4),
-                                                                                                                       ('tut009', 'Tran Nguyen Ven', 'tut9@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 'acc019', 4),
-                                                                                                                       ('tut010', 'Mai Hanh Phuc', 'tut10@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 'acc020', 3);
+INSERT INTO tutor (id_tutor, name, email, birth, phone, address, specialization, describe_tutor, cccd, bank_code, bank_name, id_acc, evaluate) VALUES
+                                                                                                                                                   ('tut001', 'Nguyen Tuan Canh', 'tut1@example.com', '1990-01-01', '0901000001', 'Ha Noi', 'Toan', '10 nam kinh nghiem day Toan',740024681397,34568947,"bidv", 'acc004', 5),
+                                                                                                                                                   ('tut002', 'Tran Thi Mai', 'tut2@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 740024681312, 24025002,"sacombank",'acc005', 4),
+                                                                                                                                                   ('tut003', 'Le Hoang Minh', 'tut3@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 740024681356, 29032002,"techcombank",'acc006', 3),
+                                                                                                                                                   ('tut004', 'Pham Minh Huong', 'tut4@example.com', '1991-09-20', '0901000004', 'Hue', 'Toan', 'Nhiet huyet, vui ve', 740024681332, 123456789,"mb",'acc009', 4),
+                                                                                                                                                   ('tut005', 'Nguyen Thu', 'tut5@example.com', '1990-01-01', '0901000001', 'Ha Noi', 'Toan', '10 nam kinh nghiem day Toan', 740024681374, 68686868,"tp bank",'acc015', 5),
+                                                                                                                                                   ('tut006', 'Truong Cao Dat', 'tut6@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 740024681385, 39393939,"agribank",'acc016', 4),
+                                                                                                                                                   ('tut007', 'Dinh Thi Ngoc', 'tut7@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 740024681318, 147852369,"bidv",'acc017', 3),
+                                                                                                                                                   ('tut008', 'Le Nghia', 'tut8@example.com', '1991-09-20', '0901000004', 'Hue', 'Toan', 'Nhiet huyet, vui ve', 740024681370, 369258147,"mb",'acc018', 4),
+                                                                                                                                                   ('tut009', 'Tran Nguyen Ven', 'tut9@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 740024681329, 26032002,"sacombank",'acc019', 4),
+                                                                                                                                                   ('tut010', 'Mai Hanh Phuc', 'tut10@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 740024681317, 07042004,"tp bank",'acc020', 3);
 INSERT INTO subject (id_sub, name, level, describe_sb, fee, status_sub) VALUES
                                                                             ('sub001', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 200000.00, 'active'),
                                                                             ('sub002', 'Tieng Anh', 'Giao tiep', 'Tieng Anh giao tiep co ban', 180000.00, 'active'),
