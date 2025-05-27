@@ -114,6 +114,21 @@
             </div>
             <hr>
             <div class="row">
+              <div class="col-sm-3"><p class="mb-0">CCCD</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getCccd() %></p></div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3"><p class="mb-0">Số tài khoản</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getBankCode() %></p></div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3"><p class="mb-0">Tên ngân hàng</p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getBankName() %></p></div>
+            </div>
+            <hr>
+            <div class="row">
               <div class="col-sm-3"><p class="mb-0">Địa chỉ</p></div>
               <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getAddress() %></p></div>
             </div>
@@ -154,12 +169,31 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Email</label>
-          <input type="email" class="form-control" name="email" value="<%= tutor.getEmail() %>">
+          <input type="email" class="form-control" name="email" value="<%= tutor.getEmail()%>">
         </div>
         <div class="mb-3">
           <label class="form-label">Số điện thoại</label>
           <input type="text" class="form-control" name="phone" value="<%= tutor.getPhone() %>">
         </div>
+        <div class="mb-3">
+          <label class="form-label">CCCD</label>
+          <input type="text" class="form-control" name="cccd" value="<%= tutor.getCccd() %>"readonly>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Số tài khoản</label>
+          <input type="text" class="form-control" name="bank_code" value="<%= tutor.getBankCode() %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tên ngân hàng</label>
+          <select class="form-select" name="bank_name">
+            <option value="BIDV" <%= "BIDV".equals(tutor.getBankName()) ? "selected" : "" %>>BIDV</option>
+            <option value="Techcombank" <%= "Techcombank".equals(tutor.getBankName()) ? "selected" : "" %>>Techcombank</option>
+            <option value="MB" <%= "MB".equals(tutor.getBankName()) ? "selected" : "" %>>MB</option>
+            <option value="TPBank" <%= "TPBank".equals(tutor.getBankName()) ? "selected" : "" %>>TPBank</option>
+            <option value="Sacombank" <%= "Sacombank".equals(tutor.getBankName()) ? "selected" : "" %>>Sacombank</option>
+          </select>
+        </div>
+
         <div class="mb-3">
           <label class="form-label">Địa chỉ</label>
           <input type="text" class="form-control" name="address" value="<%= tutor.getAddress() %>">
@@ -170,7 +204,7 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Mô tả</label>
-          <textarea class="form-control" name="describeTutor" rows="3"><%= tutor.getDescribeTutor() %></textarea>
+          <textarea class="form-control" name="describe_tutor" rows="3"><%= tutor.getDescribeTutor() %></textarea>
         </div>
         <div class="d-flex justify-content-center">
           <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>

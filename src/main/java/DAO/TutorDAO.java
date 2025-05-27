@@ -30,7 +30,10 @@ public class TutorDAO {
                             rs.getString("phone"),
                             rs.getString("address"),
                             rs.getString("specialization"),
-                            rs.getString("describeTutor"),
+                            rs.getString("describe_tutor"),
+                            rs.getInt("cccd"),
+                            rs.getInt("bank_code"),
+                            rs.getString("bank_name"),
                             rs.getInt("evaluate")
                     );
                     System.out.println("Tutor found: " + tutor.getName());
@@ -50,7 +53,7 @@ public class TutorDAO {
     }
 
     public void updateTutor(Tutor tutor) {
-        String sql = "UPDATE tutor SET name=?, email=?, birth=?, phone=?, address=?, specialization=?, describeTutor=? WHERE id_tutor=?";
+        String sql = "UPDATE tutor SET name=?, email=?, birth=?, phone=?, address=?, specialization=?, describe_tutor=?, cccd=?, bank_code=?, bank_name=? WHERE id_tutor=?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -62,7 +65,10 @@ public class TutorDAO {
             stmt.setString(5, tutor.getAddress());
             stmt.setString(6, tutor.getSpecialization());
             stmt.setString(7, tutor.getDescribeTutor());
-            stmt.setString(8, tutor.getId());
+            stmt.setInt(8, tutor.getCccd());
+            stmt.setInt(9, tutor.getBankCode());
+            stmt.setString(10, tutor.getBankName());
+            stmt.setString(11, tutor.getId());
 
             stmt.executeUpdate();
             System.out.println("Tutor updated successfully.");
@@ -88,6 +94,9 @@ public class TutorDAO {
             System.out.println("Address: " + tutor.getAddress());
             System.out.println("Specialization: " + tutor.getSpecialization());
             System.out.println("Description: " + tutor.getDescribeTutor());
+            System.out.println("CCCD: " + tutor.getCccd());
+            System.out.println("Bank Code: " + tutor.getBankCode());
+            System.out.println("Bank Name: " + tutor.getBankName());
         } else {
             System.out.println("Failed to retrieve tutor with id: " + testId);
         }

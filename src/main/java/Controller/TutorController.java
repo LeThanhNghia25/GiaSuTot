@@ -55,8 +55,10 @@ public class TutorController extends HttpServlet {
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             String specialization = request.getParameter("specialization");
-            String describeTutor = request.getParameter("describeTutor");
-
+            String describe_tutor = request.getParameter("describe_tutor");
+            int cccd = Integer.parseInt(request.getParameter("cccd"));
+            int bank_code = Integer.parseInt(request.getParameter("bank_code"));
+            String bank_name = request.getParameter("bank_name");
             String birthStr = request.getParameter("birth");
             Date birth = null;
             if (birthStr != null && !birthStr.trim().isEmpty()) {
@@ -70,7 +72,7 @@ public class TutorController extends HttpServlet {
             }
 
 
-            Tutor updatedTutor = new Tutor(id_tutor, name, email, birth, phone, address, specialization, describeTutor, 0);
+            Tutor updatedTutor = new Tutor(id_tutor, name, email, birth, phone, address, specialization, describe_tutor, cccd, bank_code, bank_name, 0);
             tutorDAO.updateTutor(updatedTutor);
 
             // Load lại thông tin từ DB sau khi cập nhật

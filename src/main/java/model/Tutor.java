@@ -10,12 +10,17 @@ public class Tutor {
     private String phone;
     private String address;
     private String specialization;
-    private String describeTutor;
+    private String describe_tutor;
+    private int cccd;
+    private int bank_code;
+    private String bank_name;
     private int evaluate;
+
+
 
     // Constructors
     public Tutor() {}
-    public Tutor( String id_tutor, String name, String email, Date birth, String phone, String address, String specialization, String describeTutor, int evaluate) {
+    public Tutor( String id_tutor, String name, String email, Date birth, String phone, String address, String specialization, String describe_tutor, int cccd ,int bank_code, String bank_name, int evaluate) {
         this.id_tutor = id_tutor;
         this.name = name;
         this.email = email;
@@ -23,7 +28,10 @@ public class Tutor {
         this.phone = phone;
         this.address = address;
         this.specialization = specialization;
-        this.describeTutor = describeTutor;
+        this.describe_tutor = describe_tutor;
+        this.cccd = cccd;
+        this.bank_code = bank_code;
+        this.bank_name = bank_name;
         this.evaluate = evaluate;
     }
 
@@ -81,12 +89,29 @@ public class Tutor {
     }
 
     public String getDescribeTutor() {
-        return describeTutor;
+        return describe_tutor;
     }
 
-    public void setDescribeTutor(String describeTutor) {
-        this.describeTutor = describeTutor;
+    public void setDescribeTutor(String describe_tutor) {
+        this.describe_tutor = describe_tutor;
     }
+
+    public int getCccd() { return cccd;}
+    public void setCccd(int cccd) {
+        this.cccd = cccd;
+    }
+
+    public int getBankCode() { return bank_code;}
+    public void setBankCode(int bank_code) {
+        this.bank_code = bank_code;
+    }
+
+
+    public String getBankName() { return bank_name;}
+    public void setBankName(String bank_name) {
+        this.bank_name = bank_name;
+    }
+
 
     public int getEvaluate() {
         return evaluate;
