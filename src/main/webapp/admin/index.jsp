@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
+<html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,14 +10,17 @@
 
     <title>Quản trị SB 2 - Bảng điều khiển</title>
 
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
+    <!-- Custom fonts for this template -->
+    <link href="${pageContext.request.contextPath}/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="${pageContext.request.contextPath}/admin/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Truyền contextPath cho JavaScript -->
+    <script>
+        var contextPath = "${pageContext.request.contextPath}";
+    </script>
 </head>
 
 <body id="page-top">
@@ -39,10 +44,10 @@
                 </button>
 
                 <!-- Topbar Search -->
-                <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
+                        <label for="topbarSearch" class="sr-only">Tìm kiếm</label>
+                        <input type="text" class="form-control bg-light border-0 small" id="topbarSearch" placeholder="Tìm kiếm..."
                                aria-label="Tìm kiếm" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button">
@@ -56,16 +61,16 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                     <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdownMobile" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
-                        <!-- Dropdown - Messages -->
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                             aria-labelledby="searchDropdown">
+                             aria-labelledby="searchDropdownMobile">
                             <form class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small"
+                                    <label for="mobileSearch" class="sr-only">Tìm kiếm</label>
+                                    <input type="text" class="form-control bg-light border-0 small" id="mobileSearch"
                                            placeholder="Tìm kiếm..." aria-label="Tìm kiếm"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
@@ -83,15 +88,11 @@
                         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
                             <span class="badge badge-danger badge-counter">3+</span>
                         </a>
-                        <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header">
-                                Trung tâm thông báo
-                            </h6>
+                            <h6 class="dropdown-header">Trung tâm thông báo</h6>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="mr-3">
                                     <div class="icon-circle bg-primary">
@@ -120,7 +121,6 @@
                                         <i class="fas fa-exclamation-triangle text-white"></i>
                                     </div>
                                 </div>
-                                <div`aria-hidden="true">
                                 <div>
                                     <div class="small text-gray-500">2 Tháng 12, 2019</div>
                                     Cảnh báo chi tiêu: Chúng tôi nhận thấy chi tiêu bất thường cao cho tài khoản của bạn.
@@ -135,60 +135,48 @@
                         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-envelope fa-fw"></i>
-                            <!-- Counter - Messages -->
                             <span class="badge badge-danger badge-counter">7</span>
                         </a>
-                        <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header">
-                                Trung tâm tin nhắn
-                            </h6>
+                            <h6 class="dropdown-header">Trung tâm tin nhắn</h6>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                         alt="...">
+                                    <img class="rounded-circle" src="${pageContext.request.contextPath}/admin/img/undraw_profile_1.svg" alt="Hình ảnh người dùng Emily">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div class="font-weight-bold">
-                                    <div class="text-truncate">Xin chào! Tôi đang tự hỏi liệu bạn có thể giúp tôi với một
-                                        vấn đề mà tôi đang gặp phải không.</div>
+                                    <div class="text-truncate">Xin chào! Tôi đang tự hỏi liệu bạn có thể giúp tôi với một vấn đề mà tôi đang gặp phải không.</div>
                                     <div class="small text-gray-500">Emily Fowler · 58 phút</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                         alt="...">
+                                    <img class="rounded-circle" src="${pageContext.request.contextPath}/admin/img/undraw_profile_2.svg" alt="Hình ảnh người dùng Jae">
                                     <div class="status-indicator"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">Tôi có những bức ảnh bạn đã đặt hàng tháng trước, bạn
-                                        muốn tôi gửi chúng cho bạn bằng cách nào?</div>
+                                    <div class="text-truncate">Tôi có những bức ảnh bạn đã đặt hàng tháng trước, bạn muốn tôi gửi chúng cho bạn bằng cách nào?</div>
                                     <div class="small text-gray-500">Jae Chun · 1 ngày</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                         alt="...">
+                                    <img class="rounded-circle" src="${pageContext.request.contextPath}/admin/img/undraw_profile_3.svg" alt="Hình ảnh người dùng Morgan">
                                     <div class="status-indicator bg-warning"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">Báo cáo tháng trước trông rất tuyệt, tôi rất hài lòng với
-                                        tiến độ cho đến nay, hãy tiếp tục làm tốt!</div>
+                                    <div class="text-truncate">Báo cáo tháng trước trông rất tuyệt, tôi rất hài lòng với tiến độ cho đến nay, hãy tiếp tục làm tốt!</div>
                                     <div class="small text-gray-500">Morgan Alvarez · 2 ngày</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                         alt="...">
+                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="Hình ảnh chú chó Chicken">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">Tôi có phải là một chú chó ngoan không? Lý do tôi hỏi là vì ai đó
-                                        nói với tôi rằng mọi người nói điều này với tất cả các chú chó, ngay cả khi chúng không ngoan...</div>
+                                    <div class="text-truncate">Tôi có phải là một chú chó ngoan không? Lý do tôi hỏi là vì ai đó nói với tôi rằng mọi người nói điều này với tất cả các chú chó, ngay cả khi chúng không ngoan...</div>
                                     <div class="small text-gray-500">Chicken the Dog · 2 tuần</div>
                                 </div>
                             </a>
@@ -202,13 +190,10 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                            <img class="img-profile rounded-circle"
-                                 src="img/undraw_profile.svg">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">${sessionScope.userName}</span>
+                            <img class="img-profile rounded-circle" src="${pageContext.request.contextPath}/admin/img/undraw_profile.svg" alt="Hình ảnh người dùng">
                         </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="#">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Hồ sơ
@@ -237,8 +222,9 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Bảng điều khiển</h1>
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i> Tạo báo cáo</a>
+                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                        <i class="fas fa-download fa-sm text-white-50"></i> Tạo báo cáo
+                    </a>
                 </div>
 
                 <!-- Content Row -->
@@ -250,7 +236,8 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Thu nhập (Hàng tháng)</div>
+                                            Thu nhập (Hàng tháng)
+                                        </div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
                                     </div>
                                     <div class="col-auto">
@@ -268,7 +255,8 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Thu nhập (Hàng năm)</div>
+                                            Thu nhập (Hàng năm)
+                                        </div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
                                     </div>
                                     <div class="col-auto">
@@ -285,8 +273,7 @@
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Nhiệm vụ
-                                        </div>
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Nhiệm vụ</div>
                                         <div class="row no-gutters align-items-center">
                                             <div class="col-auto">
                                                 <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
@@ -315,7 +302,8 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Yêu cầu đang chờ xử lý</div>
+                                            Yêu cầu đang chờ xử lý
+                                        </div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
                                     </div>
                                     <div class="col-auto">
@@ -329,56 +317,58 @@
 
                 <!-- Content Row -->
                 <div class="row">
-                    <!-- Area Chart -->
+                    <!-- Bar Chart -->
                     <div class="col-xl-8 col-lg-7">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
-                            <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Tổng quan thu nhập</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Tiêu đề thả xuống:</div>
-                                        <a class="dropdown-item" href="#">Hành động</a>
-                                        <a class="dropdown-item" href="#">Hành động khác</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Một thứ khác ở đây</a>
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo tháng</h6>
+                                <div class="d-flex align-items-center">
+                                    <select id="yearFilter" class="form-control mr-2" style="width: auto;">
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025" selected>2025</option>
+                                        <option value="2026">2026</option>
+                                    </select>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink1"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink1">
+                                            <div class="dropdown-header">Hành động:</div>
+                                            <a class="dropdown-item" href="#">Xem chi tiết</a>
+                                            <a class="dropdown-item" href="#">Xuất dữ liệu</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
                                 <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
+                                    <canvas id="myBarChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Pie Chart -->
+                    <!-- Pie Chart (Chưa thực hiện) -->
                     <div class="col-xl-4 col-lg-5">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
-                            <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Nguồn doanh thu</h6>
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Học viên theo môn học</h6>
                                 <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Tiêu đề thả xuống:</div>
-                                        <a class="dropdown-item" href="#">Hành động</a>
-                                        <a class="dropdown-item" href="#">Hành động khác</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Một thứ khác ở đây</a>
+                                         aria-labelledby="dropdownMenuLink2">
+                                        <div class="dropdown-header">Hành động:</div>
+                                        <a class="dropdown-item" href="#">Xem chi tiết</a>
+                                        <a class="dropdown-item" href="#">Xuất dữ liệu</a>
                                     </div>
                                 </div>
                             </div>
@@ -387,16 +377,8 @@
                                 <div class="chart-pie pt-4 pb-2">
                                     <canvas id="myPieChart"></canvas>
                                 </div>
-                                <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Trực tiếp
-                                        </span>
-                                    <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Mạng xã hội
-                                        </span>
-                                    <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Giới thiệu
-                                        </span>
+                                <div class="mt-4 text-center small" id="pieChartLegend">
+                                    <!-- Legend sẽ được tạo động sau -->
                                 </div>
                             </div>
                         </div>
@@ -440,28 +422,25 @@
             <div class="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn sẵn sàng kết thúc phiên hiện tại.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                <a class="btn btn-primary" href="login.jsp">Đăng xuất</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Bootstrap core JavaScript -->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript -->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="${pageContext.request.contextPath}/admin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages -->
-<script src="js/sb-admin-2.min.js"></script>
+<script src="${pageContext.request.contextPath}/admin/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
+<script src="${pageContext.request.contextPath}/admin/vendor/chart.js/Chart.min.js"></script>
 
-<!-- Page level custom scripts -->
-<script src="js/demo/chart-area-demo.js"></script>
-<script src="js/demo/chart-pie-demo.js"></script>
+<!-- Custom script for column chart -->
+<script src="${pageContext.request.contextPath}/admin/js/chart/column-chart.js"></script>
 </body>
-
 </html>
