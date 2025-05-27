@@ -1,6 +1,6 @@
 package Controller;
 
-import DAO.SubjectDAO;
+import DAO.AdminSubjectDAO;
 import model.Subject;
 
 import jakarta.servlet.ServletException;
@@ -14,12 +14,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/admin/subject")
-public class SubjectController extends HttpServlet {
-    private SubjectDAO subjectDAO;
+public class AdminSubjectController extends HttpServlet {
+    private AdminSubjectDAO adminSubjectDAO;
 
     public void init() {
         try {
-            subjectDAO = new SubjectDAO();
+            adminSubjectDAO = new AdminSubjectDAO();
             System.out.println("SubjectDAO initialized successfully at " + new java.util.Date());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -30,16 +30,36 @@ public class SubjectController extends HttpServlet {
         String action = request.getParameter("action");
         try {
             if (action == null || action.isEmpty()) {
-                System.out.println("Fetching subjects at " + new java.util.Date());
-                List<Subject> subjects = subjectDAO.getAllSubjects();
-                System.out.println("Subjects size: " + (subjects != null ? subjects.size() : "null"));
+                // Lấy tham số tìm kiếm từ form
+                String tenMonHoc = request.getParameter("tenMonHoc");
+                String lop = request.getParameter("lop");
+                String tinh = request.getParameter("tinh");  // nếu là trạng thái
+                String tenGiaoVien = request.getParameter("tenGiaoVien");  // nếu có, không thì bỏ
+
+                List<Subject> subjects;
+
+                // Kiểm tra có tham số tìm kiếm hay không
+                boolean isSearch = (tenMonHoc != null && !tenMonHoc.trim().isEmpty()) ||
+                        (lop != null && !lop.trim().isEmpty()) ||
+                        (tinh != null && !tinh.trim().isEmpty()) ||
+                        (tenGiaoVien != null && !tenGiaoVien.trim().isEmpty());
+
+                if (isSearch) {
+                    // Gọi hàm tìm kiếm trong DAO
+                    subjects = adminSubjectDAO.searchSubjects(tenMonHoc, lop, tinh, tenGiaoVien);
+                    request.setAttribute("searchMessage", "Kết quả tìm kiếm");
+                } else {
+                    subjects = adminSubjectDAO.getAllSubjects();
+                }
+
                 request.setAttribute("subjects", subjects);
                 request.getRequestDispatcher("/admin/subject-management.jsp").forward(request, response);
+
             } else if (action.equals("add")) {
                 request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
             } else if (action.equals("edit")) {
                 String id = request.getParameter("id");
-                Subject subject = subjectDAO.getSubjectById(id);
+                Subject subject = adminSubjectDAO.getSubjectById(id);
                 if (subject != null) {
                     request.setAttribute("subject", subject);
                     request.getRequestDispatcher("/admin/edit-subject.jsp").forward(request, response);
@@ -49,11 +69,11 @@ public class SubjectController extends HttpServlet {
                 }
             } else if (action.equals("delete")) {
                 String id = request.getParameter("id");
-                subjectDAO.hideSubject(id);
+                adminSubjectDAO.hideSubject(id);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
             } else if (action.equals("restore")) {
                 String id = request.getParameter("id");
-                subjectDAO.restoreSubject(id);
+                adminSubjectDAO.restoreSubject(id);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
             }
         } catch (SQLException e) {
@@ -74,14 +94,12 @@ public class SubjectController extends HttpServlet {
                 String feeStr = request.getParameter("fee");
                 String status = request.getParameter("status");
 
-                // Kiểm tra các trường bắt buộc
                 if (id == null || id.trim().isEmpty() || name == null || name.trim().isEmpty()) {
                     request.setAttribute("error", "ID và tên môn học không được để trống.");
                     request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
                     return;
                 }
 
-                // Kiểm tra fee
                 double fee;
                 try {
                     if (feeStr == null || feeStr.trim().isEmpty()) {
@@ -99,23 +117,20 @@ public class SubjectController extends HttpServlet {
                     return;
                 }
 
-                // Kiểm tra status
                 if (status == null || (!status.equals("active") && !status.equals("inactive"))) {
                     request.setAttribute("error", "Trạng thái không hợp lệ.");
                     request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
                     return;
                 }
 
-                // Kiểm tra trùng id_sub
-                if (subjectDAO.getSubjectById(id) != null) {
+                if (adminSubjectDAO.getSubjectById(id) != null) {
                     request.setAttribute("error", "ID môn học đã tồn tại.");
                     request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
                     return;
                 }
 
                 Subject subject = new Subject(id, name, level, description, fee, status);
-                System.out.println("Adding subject: " + subject.getId() + ", " + subject.getName());
-                subjectDAO.addSubject(subject);
+                adminSubjectDAO.addSubject(subject);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
 
             } else if (action.equals("edit")) {
@@ -126,7 +141,6 @@ public class SubjectController extends HttpServlet {
                 String feeStr = request.getParameter("fee");
                 String status = request.getParameter("status");
 
-                // Kiểm tra các trường bắt buộc
                 if (name == null || name.trim().isEmpty()) {
                     request.setAttribute("error", "Tên môn học không được để trống.");
                     request.setAttribute("subject", new Subject(id, name, level, description, 0, status));
@@ -134,7 +148,6 @@ public class SubjectController extends HttpServlet {
                     return;
                 }
 
-                // Kiểm tra fee
                 double fee;
                 try {
                     if (feeStr == null || feeStr.trim().isEmpty()) {
@@ -154,7 +167,6 @@ public class SubjectController extends HttpServlet {
                     return;
                 }
 
-                // Kiểm tra status
                 if (status == null || (!status.equals("active") && !status.equals("inactive"))) {
                     request.setAttribute("error", "Trạng thái không hợp lệ.");
                     request.setAttribute("subject", new Subject(id, name, level, description, fee, status));
@@ -163,8 +175,7 @@ public class SubjectController extends HttpServlet {
                 }
 
                 Subject subject = new Subject(id, name, level, description, fee, status);
-                System.out.println("Updating subject: " + subject.getId() + ", " + subject.getName());
-                subjectDAO.updateSubject(subject);
+                adminSubjectDAO.updateSubject(subject);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
             }
         } catch (SQLException e) {

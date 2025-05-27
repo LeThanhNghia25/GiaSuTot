@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
   <title>Header</title>
@@ -39,17 +40,87 @@
       </div>
       <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a>
     </div>
+
     <!-- Thanh tìm kiếm -->
-    <form class="d-flex ms-3 me-3" role="search">
-      <input class="form-control me-2" type="search" placeholder="Tìm kiếm khóa học..." aria-label="Search">
+    <form class="d-flex ms-3 me-2" role="search" method="GET" action="courses.jsp">
+      <input class="form-control me-2" type="search" name="search" placeholder="Tìm kiếm khóa học..." aria-label="Search"
+             value="${param.search != null ? param.search : ''}">
       <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
     </form>
 
-    <!-- Nút Đăng nhập -->
-    <a href="" class="btn btn-primary btn-short py-4 px-lg-5 d-none d-lg-block">Đăng nhập<i class="fa fa-arrow-right ms-2"></i></a>
+    <!-- Nút Bộ lọc mở modal -->
+    <button type="button" class="btn btn-outline-primary me-3" data-bs-toggle="modal" data-bs-target="#modalBoLoc">
+      <i class="fa fa-filter"></i> Bộ lọc
+    </button>
+
+    <!-- Kiểm tra trạng thái đăng nhập -->
+    <c:choose>
+      <c:when test="${not empty sessionScope.account}">
+        <!-- Nếu đã đăng nhập, hiển thị tên người dùng và nút Đăng xuất -->
+        <div class="d-flex align-items-center py-4 px-lg-5 d-none d-lg-block">
+          <span class="text-primary me-3">Xin chào, <c:out value="${sessionScope.userName}"/></span>
+          <a href="${pageContext.request.contextPath}/account?action=logout" class="btn btn-danger btn-short">Đăng xuất<i class="fa fa-sign-out-alt ms-2"></i></a>
+        </div>
+      </c:when>
+      <c:otherwise>
+        <!-- Nếu chưa đăng nhập, hiển thị nút Đăng nhập -->
+        <a href="${pageContext.request.contextPath}/account?action=login" class="btn btn-primary btn-short py-4 px-lg-5 d-none d-lg-block">Đăng nhập<i class="fa fa-arrow-right ms-2"></i></a>
+      </c:otherwise>
+    </c:choose>
   </div>
 </nav>
 <!-- Navbar End -->
+
+<!-- Modal Bộ lọc -->
+<div class="modal fade" id="modalBoLoc" tabindex="-1" aria-labelledby="modalBoLocLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formBoLoc" method="GET" action="courses.jsp">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalBoLocLabel">Bộ lọc khóa học</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Tên môn học -->
+          <div class="mb-3">
+            <label for="tenMonHoc" class="form-label">Tên môn học</label>
+            <input type="text" class="form-control" id="tenMonHoc" name="tenMon" placeholder="Nhập tên môn học"
+                   value="${param.tenMon != null ? param.tenMon : ''}">
+          </div>
+          <!-- Lớp -->
+          <div class="mb-3">
+            <label for="lop" class="form-label">Lớp</label>
+            <select id="lop" name="lop" class="form-select">
+              <option value="">-- Chọn lớp --</option>
+              <option value="6" ${param.lop == '6' ? 'selected' : ''}>Lớp 6</option>
+              <option value="7" ${param.lop == '7' ? 'selected' : ''}>Lớp 7</option>
+              <option value="8" ${param.lop == '8' ? 'selected' : ''}>Lớp 8</option>
+              <option value="9" ${param.lop == '9' ? 'selected' : ''}>Lớp 9</option>
+              <option value="10" ${param.lop == '10' ? 'selected' : ''}>Lớp 10</option>
+              <option value="11" ${param.lop == '11' ? 'selected' : ''}>Lớp 11</option>
+              <option value="12" ${param.lop == '12' ? 'selected' : ''}>Lớp 12</option>
+            </select>
+          </div>
+          <!-- Tỉnh/Thành phố -->
+          <div class="mb-3">
+            <label for="tinh" class="form-label">Tỉnh/Thành phố</label>
+            <select id="tinh" name="tinh" class="form-select">
+              <option value="">-- Chọn tỉnh --</option>
+              <option value="HCM" ${param.tinh == 'HCM' ? 'selected' : ''}>TP.HCM</option>
+              <option value="HN" ${param.tinh == 'HN' ? 'selected' : ''}>Hà Nội</option>
+              <option value="DN" ${param.tinh == 'DN' ? 'selected' : ''}>Đà Nẵng</option>
+              <!-- Thêm tỉnh khác -->
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="submit" class="btn btn-primary">Áp dụng bộ lọc</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- Bootstrap JS và Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
