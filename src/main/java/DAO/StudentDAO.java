@@ -39,11 +39,12 @@ public class StudentDAO {
     }
 
     public Student getStudentByAccountId(String id_acc) throws SQLException {
-        String sql = "SELECT * FROM student WHERE id_acc = ?";
+        String sql = "SELECT s.id_st, s.name, s.birth, s.describe_st, a.email " +
+                "FROM student s JOIN account a ON s.id_acc = a.id_acc " +
+                "WHERE s.id_acc = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, id_acc);
             ResultSet rs = stmt.executeQuery();
 
@@ -52,12 +53,15 @@ public class StudentDAO {
                 String name = rs.getString("name");
                 LocalDate birth = rs.getDate("birth").toLocalDate();
                 String describe = rs.getString("describe_st");
-                Account acc = new Account(); // Tạo đối tượng Account đơn giản
+                String email = rs.getString("email");
+
+                Account acc = new Account();
                 acc.setId(id_acc);
+                acc.setEmail(email); // Thiết lập email
+
                 return new Student(id_st, name, birth, describe, acc);
             }
         }
-
         return null; // không tìm thấy
     }
 

@@ -45,11 +45,11 @@ public class StudentController extends HttpServlet {
             } else {
                 request.setAttribute("student", student);
             }
-            request.getRequestDispatcher("/student.jsp").forward(request, response);
+            request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi khi lấy thông tin học viên: " + e.getMessage());
-            request.getRequestDispatcher("/student.jsp").forward(request, response);
+            request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
         }
     }
 //    @Override
@@ -97,31 +97,46 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 
     private void handleUpdateStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
+            // Lấy thông tin từ form
             String id_st = request.getParameter("id_st");
             String name = request.getParameter("name");
             LocalDate birth = LocalDate.parse(request.getParameter("birth"));
             String describe = request.getParameter("describe");
             String email = request.getParameter("email");
 
-            // Tạo đối tượng Account chỉ với email (vì đã login, id đã có)
-            Account acc = studentDAO.getAccountByEmail(email);
-            if (acc == null) {
-                request.setAttribute("error", "Không tìm thấy tài khoản.");
-                request.getRequestDispatcher("/student.jsp").forward(request, response);
+            // Kiểm tra session để lấy tài khoản đã đăng nhập
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("account");
+            if (account == null) {
+                request.setAttribute("error", "Vui lòng đăng nhập để chỉnh sửa thông tin.");
+                request.getRequestDispatcher("/account?action=login").forward(request, response);
                 return;
             }
 
+            // Lấy id_acc từ tài khoản đã đăng nhập
+            String id_acc = account.getId();
+
+            // Kiểm tra xem học viên có tồn tại không
+            Student existingStudent = studentDAO.getStudentByAccountId(id_acc);
+            if (existingStudent == null) {
+                request.setAttribute("error", "Không tìm thấy thông tin học viên.");
+                request.getRequestDispatcher("student_profile.jsp").forward(request, response);
+                return;
+            }
+
+            // Tạo đối tượng Student và cập nhật thông tin
             Student student = new Student();
             student.setId(id_st);
             student.setName(name);
             student.setBirth(birth);
             student.setDescribe(describe);
-            student.setAccountId(acc);
+            student.setAccountId(account);
 
+            // Cập nhật thông tin trong cơ sở dữ liệu
             studentDAO.updateStudent(student);
 
             // Cập nhật lại thông tin và chuyển về profile
-            request.setAttribute("student", studentDAO.getStudentByAccountId(acc.getId()));
+            request.setAttribute("student", studentDAO.getStudentByAccountId(id_acc));
             request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
 
         } catch (Exception e) {

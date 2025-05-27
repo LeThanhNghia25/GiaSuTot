@@ -70,17 +70,7 @@
                         </div>
                     </div>
                 </div>
-<%--                <div class="card mb-4 mb-lg-0">--%>
-<%--                    <div class="card-body p-0">--%>
-<%--                        <ul class="list-group list-group-flush rounded-3">--%>
-<%--                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">--%>
-<%--                                <i class="fas fa-star text-warning"></i>--%>
-<%--                                <p class="mb-0">Đánh giá:<%= tutor.getEvaluate() %> </p>--%>
-<%--                            </li>--%>
-<%--                        </ul>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
+            </div>
 
             <div class="col-lg-8">
                 <!-- Thông tin cá nhân -->
