@@ -138,11 +138,11 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" value="<%= student.getAccountId().getEmail()%>readonly">
+                    <input type="email" class="form-control" name="email" value="<%= student.getAccountId().getEmail()%> readonly">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mô tả</label>
-                    <textarea class="form-control" name="describe_tutor" rows="3"><%= student.getDescribe() %></textarea>
+                    <textarea class="form-control" name="describe" rows="3"><%= student.getDescribe() %></textarea>
                 </div>
                 <div class="d-flex justify-content-center">
                     <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>

@@ -26,7 +26,7 @@ public class StudentDAO {
     }
 
     public boolean insertStudent(Student student) throws SQLException {
-        String sql = "INSERT INTO student (id_st, name, birth, describe_st, id_acc) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO student (id_st, name, birth, describe, id_acc) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, student.getId());
             ps.setString(2, student.getName());

@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.StudentDAO;
+import jakarta.servlet.http.HttpSession;
 import model.Account;
 import model.Student;
 
@@ -27,6 +28,30 @@ public class StudentController extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            request.setAttribute("error", "Vui lòng đăng nhập để xem thông tin cá nhân.");
+            request.getRequestDispatcher("/account?action=login").forward(request, response);
+            return;
+        }
+
+        try {
+            Student student = studentDAO.getStudentByAccountId(account.getId());
+            if (student == null) {
+                request.setAttribute("error", "Không tìm thấy thông tin học viên.");
+            } else {
+                request.setAttribute("student", student);
+            }
+            request.getRequestDispatcher("/student.jsp").forward(request, response);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi khi lấy thông tin học viên: " + e.getMessage());
+            request.getRequestDispatcher("/student.jsp").forward(request, response);
+        }
+    }
 //    @Override
 //    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        // Lấy dữ liệu được set attribute từ AccountController
@@ -82,7 +107,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             Account acc = studentDAO.getAccountByEmail(email);
             if (acc == null) {
                 request.setAttribute("error", "Không tìm thấy tài khoản.");
-                request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
+                request.getRequestDispatcher("/student.jsp").forward(request, response);
                 return;
             }
 
