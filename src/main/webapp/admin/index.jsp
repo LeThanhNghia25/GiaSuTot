@@ -353,32 +353,40 @@
                         </div>
                     </div>
 
-                    <!-- Pie Chart (Chưa thực hiện) -->
+                    <!-- Pie Chart -->
                     <div class="col-xl-4 col-lg-5">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Học viên theo môn học</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink2">
-                                        <div class="dropdown-header">Hành động:</div>
-                                        <a class="dropdown-item" href="#">Xem chi tiết</a>
-                                        <a class="dropdown-item" href="#">Xuất dữ liệu</a>
+                                <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo môn học (<span id="pieChartYear">2025</span>)</h6>
+                                <div class="d-flex align-items-center">
+                                    <select id="pieChartYearFilter" class="form-control mr-2" style="width: auto;">
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025" selected>2025</option>
+                                        <option value="2026">2026</option>
+                                    </select>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink2">
+                                            <div class="dropdown-header">Hành động:</div>
+                                            <a class="dropdown-item" href="#">Xem chi tiết</a>
+                                            <a class="dropdown-item" href="#">Xuất dữ liệu</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
-                                <div class="chart-pie pt-4 pb-2">
+                                <div class="chart-pie pt-4 pb-2" style="height: 300px; width: 100%;">
                                     <canvas id="myPieChart"></canvas>
                                 </div>
                                 <div class="mt-4 text-center small" id="pieChartLegend">
-                                    <!-- Legend sẽ được tạo động sau -->
+                                    <!-- Legend sẽ được tạo động bởi Chart.js -->
                                 </div>
                             </div>
                         </div>
@@ -393,7 +401,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Bản quyền © Trang web của bạn 2021</span>
+                    <span>Bản quyền © Trang web của bạn 2025</span>
                 </div>
             </div>
         </footer>
@@ -438,9 +446,10 @@
 <script src="${pageContext.request.contextPath}/admin/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="${pageContext.request.contextPath}/admin/vendor/chart.js/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
-<!-- Custom script for column chart -->
-<script src="${pageContext.request.contextPath}/admin/js/chart/column-chart.js"></script>
+<!-- Custom scripts for charts -->
+<script src="${pageContext.request.contextPath}/admin/js/chart/bar-chart.js"></script>
+<script src="${pageContext.request.contextPath}/admin/js/chart/pie-chart.js"></script>
 </body>
 </html>
