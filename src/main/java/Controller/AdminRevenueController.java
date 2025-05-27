@@ -25,7 +25,9 @@ public class AdminRevenueController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Map<String, Double> monthlyRevenue = revenueDAO.getMonthlyRevenue();
+            // Lấy năm từ request, mặc định là năm hiện tại (2025)
+            int year = request.getParameter("year") != null ? Integer.parseInt(request.getParameter("year")) : 2025;
+            Map<String, Double> monthlyRevenue = revenueDAO.getMonthlyRevenue(year);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             String json = new Gson().toJson(monthlyRevenue);
@@ -33,6 +35,8 @@ public class AdminRevenueController extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid year parameter");
         }
     }
 }

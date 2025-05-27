@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
+<html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,12 +10,17 @@
 
     <title>Quản trị SB 2 - Bảng điều khiển</title>
 
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom fonts for this template -->
+    <link href="${pageContext.request.contextPath}/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="${pageContext.request.contextPath}/admin/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Truyền contextPath cho JavaScript -->
+    <script>
+        var contextPath = "${pageContext.request.contextPath}";
+    </script>
 </head>
 
 <body id="page-top">
@@ -39,7 +46,8 @@
                 <!-- Topbar Search -->
                 <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
+                        <label for="topbarSearch" class="sr-only">Tìm kiếm</label>
+                        <input type="text" class="form-control bg-light border-0 small" id="topbarSearch" placeholder="Tìm kiếm..."
                                aria-label="Tìm kiếm" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button">
@@ -53,15 +61,16 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                     <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdownMobile" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                             aria-labelledby="searchDropdown">
+                             aria-labelledby="searchDropdownMobile">
                             <form class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small"
+                                    <label for="mobileSearch" class="sr-only">Tìm kiếm</label>
+                                    <input type="text" class="form-control bg-light border-0 small" id="mobileSearch"
                                            placeholder="Tìm kiếm..." aria-label="Tìm kiếm"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
@@ -133,7 +142,7 @@
                             <h6 class="dropdown-header">Trung tâm tin nhắn</h6>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
+                                    <img class="rounded-circle" src="${pageContext.request.contextPath}/admin/img/undraw_profile_1.svg" alt="Hình ảnh người dùng Emily">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div class="font-weight-bold">
@@ -143,7 +152,7 @@
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
+                                    <img class="rounded-circle" src="${pageContext.request.contextPath}/admin/img/undraw_profile_2.svg" alt="Hình ảnh người dùng Jae">
                                     <div class="status-indicator"></div>
                                 </div>
                                 <div>
@@ -153,7 +162,7 @@
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
+                                    <img class="rounded-circle" src="${pageContext.request.contextPath}/admin/img/undraw_profile_3.svg" alt="Hình ảnh người dùng Morgan">
                                     <div class="status-indicator bg-warning"></div>
                                 </div>
                                 <div>
@@ -163,7 +172,7 @@
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="...">
+                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="Hình ảnh chú chó Chicken">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div>
@@ -182,7 +191,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">${sessionScope.userName}</span>
-                            <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" src="${pageContext.request.contextPath}/admin/img/undraw_profile.svg" alt="Hình ảnh người dùng">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="#">
@@ -213,8 +222,9 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Bảng điều khiển</h1>
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i> Tạo báo cáo</a>
+                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                        <i class="fas fa-download fa-sm text-white-50"></i> Tạo báo cáo
+                    </a>
                 </div>
 
                 <!-- Content Row -->
@@ -226,7 +236,8 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Thu nhập (Hàng tháng)</div>
+                                            Thu nhập (Hàng tháng)
+                                        </div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
                                     </div>
                                     <div class="col-auto">
@@ -244,7 +255,8 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Thu nhập (Hàng năm)</div>
+                                            Thu nhập (Hàng năm)
+                                        </div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
                                     </div>
                                     <div class="col-auto">
@@ -261,8 +273,7 @@
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Nhiệm vụ
-                                        </div>
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Nhiệm vụ</div>
                                         <div class="row no-gutters align-items-center">
                                             <div class="col-auto">
                                                 <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
@@ -291,7 +302,8 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Yêu cầu đang chờ xử lý</div>
+                                            Yêu cầu đang chờ xử lý
+                                        </div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
                                     </div>
                                     <div class="col-auto">
@@ -311,16 +323,24 @@
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo tháng</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Hành động:</div>
-                                        <a class="dropdown-item" href="#">Xem chi tiết</a>
-                                        <a class="dropdown-item" href="#">Xuất dữ liệu</a>
+                                <div class="d-flex align-items-center">
+                                    <select id="yearFilter" class="form-control mr-2" style="width: auto;">
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025" selected>2025</option>
+                                        <option value="2026">2026</option>
+                                    </select>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink1"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink1">
+                                            <div class="dropdown-header">Hành động:</div>
+                                            <a class="dropdown-item" href="#">Xem chi tiết</a>
+                                            <a class="dropdown-item" href="#">Xuất dữ liệu</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -340,12 +360,12 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Học viên theo môn học</h6>
                                 <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
+                                         aria-labelledby="dropdownMenuLink2">
                                         <div class="dropdown-header">Hành động:</div>
                                         <a class="dropdown-item" href="#">Xem chi tiết</a>
                                         <a class="dropdown-item" href="#">Xuất dữ liệu</a>
@@ -409,117 +429,18 @@
 </div>
 
 <!-- Bootstrap core JavaScript -->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript -->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="${pageContext.request.contextPath}/admin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages -->
-<script src="js/sb-admin-2.min.js"></script>
+<script src="${pageContext.request.contextPath}/admin/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
+<script src="${pageContext.request.contextPath}/admin/vendor/chart.js/Chart.min.js"></script>
 
-<!-- Custom script for bar chart -->
-<script>
-    // Gọi AJAX để lấy dữ liệu doanh thu
-    $(document).ready(function() {
-        $.ajax({
-            url: '${pageContext.request.contextPath}/revenue-data',
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                // Chuẩn bị dữ liệu cho biểu đồ
-                var labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
-                var revenueData = Array(12).fill(0);
-
-                for (var month in data) {
-                    var monthIndex = parseInt(month) - 1; // Điều chỉnh từ 1-12 về 0-11
-                    revenueData[monthIndex] = data[month] || 0;
-                }
-
-                // Vẽ biểu đồ cột
-                var ctx = document.getElementById("myBarChart").getContext("2d");
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Doanh thu (VNĐ)',
-                            data: revenueData,
-                            backgroundColor: 'rgba(78, 115, 223, 0.8)',
-                            borderColor: 'rgba(78, 115, 223, 1)',
-                            borderWidth: 1,
-                            hoverBackgroundColor: 'rgba(78, 115, 223, 1)'
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                    callback: function(value) {
-                                        return number_format(value, 0, '.', ',') + ' VNĐ';
-                                    }
-                                },
-                                gridLines: {
-                                    color: 'rgb(234, 236, 244)',
-                                    zeroLineColor: 'rgb(234, 236, 244)',
-                                    drawBorder: false,
-                                    borderDash: [2]
-                                }
-                            }],
-                            xAxes: [{
-                                gridLines: {
-                                    display: false
-                                }
-                            }]
-                        },
-                        legend: {
-                            display: true,
-                            position: 'top'
-                        },
-                        tooltips: {
-                            callbacks: {
-                                label: function(tooltipItem, data) {
-                                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
-                                    return label + ': ' + number_format(tooltipItem.yLabel, 0, '.', ',') + ' VNĐ';
-                                }
-                            }
-                        }
-                    }
-                });
-
-                // Hàm định dạng số
-                function number_format(number, decimals, dec_point, thousands_sep) {
-                    number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
-                    var n = !isFinite(+number) ? 0 : +number,
-                        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-                        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-                        dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-                        s = '',
-                        toFixedFix = function(n, prec) {
-                            var k = Math.pow(10, prec);
-                            return '' + Math.round(n * k) / k;
-                        };
-                    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-                    if (s[0].length > 3) {
-                        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-                    }
-                    if ((s[1] || '').length < prec) {
-                        s[1] = s[1] || '';
-                        s[1] += new Array(prec - s[1].length + 1).join('0');
-                    }
-                    return s.join(dec);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Lỗi khi lấy dữ liệu doanh thu:', error);
-            }
-        });
-    });
-</script>
+<!-- Custom script for column chart -->
+<script src="${pageContext.request.contextPath}/admin/js/chart/column-chart.js"></script>
 </body>
 </html>
