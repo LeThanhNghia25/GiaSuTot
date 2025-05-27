@@ -10,9 +10,7 @@
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -39,8 +37,7 @@
                 </button>
 
                 <!-- Topbar Search -->
-                <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div class="input-group">
                         <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
                                aria-label="Tìm kiếm" aria-describedby="basic-addon2">
@@ -60,7 +57,6 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
-                        <!-- Dropdown - Messages -->
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
                             <form class="form-inline mr-auto w-100 navbar-search">
@@ -83,15 +79,11 @@
                         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
                             <span class="badge badge-danger badge-counter">3+</span>
                         </a>
-                        <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header">
-                                Trung tâm thông báo
-                            </h6>
+                            <h6 class="dropdown-header">Trung tâm thông báo</h6>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="mr-3">
                                     <div class="icon-circle bg-primary">
@@ -120,7 +112,6 @@
                                         <i class="fas fa-exclamation-triangle text-white"></i>
                                     </div>
                                 </div>
-                                <div`aria-hidden="true">
                                 <div>
                                     <div class="small text-gray-500">2 Tháng 12, 2019</div>
                                     Cảnh báo chi tiêu: Chúng tôi nhận thấy chi tiêu bất thường cao cho tài khoản của bạn.
@@ -135,60 +126,48 @@
                         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-envelope fa-fw"></i>
-                            <!-- Counter - Messages -->
                             <span class="badge badge-danger badge-counter">7</span>
                         </a>
-                        <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header">
-                                Trung tâm tin nhắn
-                            </h6>
+                            <h6 class="dropdown-header">Trung tâm tin nhắn</h6>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                         alt="...">
+                                    <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div class="font-weight-bold">
-                                    <div class="text-truncate">Xin chào! Tôi đang tự hỏi liệu bạn có thể giúp tôi với một
-                                        vấn đề mà tôi đang gặp phải không.</div>
+                                    <div class="text-truncate">Xin chào! Tôi đang tự hỏi liệu bạn có thể giúp tôi với một vấn đề mà tôi đang gặp phải không.</div>
                                     <div class="small text-gray-500">Emily Fowler · 58 phút</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                         alt="...">
+                                    <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
                                     <div class="status-indicator"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">Tôi có những bức ảnh bạn đã đặt hàng tháng trước, bạn
-                                        muốn tôi gửi chúng cho bạn bằng cách nào?</div>
+                                    <div class="text-truncate">Tôi có những bức ảnh bạn đã đặt hàng tháng trước, bạn muốn tôi gửi chúng cho bạn bằng cách nào?</div>
                                     <div class="small text-gray-500">Jae Chun · 1 ngày</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                         alt="...">
+                                    <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
                                     <div class="status-indicator bg-warning"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">Báo cáo tháng trước trông rất tuyệt, tôi rất hài lòng với
-                                        tiến độ cho đến nay, hãy tiếp tục làm tốt!</div>
+                                    <div class="text-truncate">Báo cáo tháng trước trông rất tuyệt, tôi rất hài lòng với tiến độ cho đến nay, hãy tiếp tục làm tốt!</div>
                                     <div class="small text-gray-500">Morgan Alvarez · 2 ngày</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                         alt="...">
+                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="...">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">Tôi có phải là một chú chó ngoan không? Lý do tôi hỏi là vì ai đó
-                                        nói với tôi rằng mọi người nói điều này với tất cả các chú chó, ngay cả khi chúng không ngoan...</div>
+                                    <div class="text-truncate">Tôi có phải là một chú chó ngoan không? Lý do tôi hỏi là vì ai đó nói với tôi rằng mọi người nói điều này với tất cả các chú chó, ngay cả khi chúng không ngoan...</div>
                                     <div class="small text-gray-500">Chicken the Dog · 2 tuần</div>
                                 </div>
                             </a>
@@ -202,13 +181,10 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                            <img class="img-profile rounded-circle"
-                                 src="img/undraw_profile.svg">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">${sessionScope.userName}</span>
+                            <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                         </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="#">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Hồ sơ
@@ -329,13 +305,12 @@
 
                 <!-- Content Row -->
                 <div class="row">
-                    <!-- Area Chart -->
+                    <!-- Bar Chart -->
                     <div class="col-xl-8 col-lg-7">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
-                            <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Tổng quan thu nhập</h6>
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo tháng</h6>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -343,30 +318,27 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                          aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Tiêu đề thả xuống:</div>
-                                        <a class="dropdown-item" href="#">Hành động</a>
-                                        <a class="dropdown-item" href="#">Hành động khác</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Một thứ khác ở đây</a>
+                                        <div class="dropdown-header">Hành động:</div>
+                                        <a class="dropdown-item" href="#">Xem chi tiết</a>
+                                        <a class="dropdown-item" href="#">Xuất dữ liệu</a>
                                     </div>
                                 </div>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
                                 <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
+                                    <canvas id="myBarChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Pie Chart -->
+                    <!-- Pie Chart (Chưa thực hiện) -->
                     <div class="col-xl-4 col-lg-5">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
-                            <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Nguồn doanh thu</h6>
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Học viên theo môn học</h6>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -374,11 +346,9 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                          aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Tiêu đề thả xuống:</div>
-                                        <a class="dropdown-item" href="#">Hành động</a>
-                                        <a class="dropdown-item" href="#">Hành động khác</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Một thứ khác ở đây</a>
+                                        <div class="dropdown-header">Hành động:</div>
+                                        <a class="dropdown-item" href="#">Xem chi tiết</a>
+                                        <a class="dropdown-item" href="#">Xuất dữ liệu</a>
                                     </div>
                                 </div>
                             </div>
@@ -387,16 +357,8 @@
                                 <div class="chart-pie pt-4 pb-2">
                                     <canvas id="myPieChart"></canvas>
                                 </div>
-                                <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Trực tiếp
-                                        </span>
-                                    <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Mạng xã hội
-                                        </span>
-                                    <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Giới thiệu
-                                        </span>
+                                <div class="mt-4 text-center small" id="pieChartLegend">
+                                    <!-- Legend sẽ được tạo động sau -->
                                 </div>
                             </div>
                         </div>
@@ -440,7 +402,7 @@
             <div class="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn sẵn sàng kết thúc phiên hiện tại.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                <a class="btn btn-primary" href="login.jsp">Đăng xuất</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a>
             </div>
         </div>
     </div>
@@ -459,9 +421,105 @@
 <!-- Page level plugins -->
 <script src="vendor/chart.js/Chart.min.js"></script>
 
-<!-- Page level custom scripts -->
-<script src="js/demo/chart-area-demo.js"></script>
-<script src="js/demo/chart-pie-demo.js"></script>
-</body>
+<!-- Custom script for bar chart -->
+<script>
+    // Gọi AJAX để lấy dữ liệu doanh thu
+    $(document).ready(function() {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/revenue-data',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Chuẩn bị dữ liệu cho biểu đồ
+                var labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+                var revenueData = Array(12).fill(0);
 
+                for (var month in data) {
+                    var monthIndex = parseInt(month) - 1; // Điều chỉnh từ 1-12 về 0-11
+                    revenueData[monthIndex] = data[month] || 0;
+                }
+
+                // Vẽ biểu đồ cột
+                var ctx = document.getElementById("myBarChart").getContext("2d");
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Doanh thu (VNĐ)',
+                            data: revenueData,
+                            backgroundColor: 'rgba(78, 115, 223, 0.8)',
+                            borderColor: 'rgba(78, 115, 223, 1)',
+                            borderWidth: 1,
+                            hoverBackgroundColor: 'rgba(78, 115, 223, 1)'
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    callback: function(value) {
+                                        return number_format(value, 0, '.', ',') + ' VNĐ';
+                                    }
+                                },
+                                gridLines: {
+                                    color: 'rgb(234, 236, 244)',
+                                    zeroLineColor: 'rgb(234, 236, 244)',
+                                    drawBorder: false,
+                                    borderDash: [2]
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    display: false
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                                    return label + ': ' + number_format(tooltipItem.yLabel, 0, '.', ',') + ' VNĐ';
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Hàm định dạng số
+                function number_format(number, decimals, dec_point, thousands_sep) {
+                    number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+                    var n = !isFinite(+number) ? 0 : +number,
+                        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+                        dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                        s = '',
+                        toFixedFix = function(n, prec) {
+                            var k = Math.pow(10, prec);
+                            return '' + Math.round(n * k) / k;
+                        };
+                    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+                    if (s[0].length > 3) {
+                        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+                    }
+                    if ((s[1] || '').length < prec) {
+                        s[1] = s[1] || '';
+                        s[1] += new Array(prec - s[1].length + 1).join('0');
+                    }
+                    return s.join(dec);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Lỗi khi lấy dữ liệu doanh thu:', error);
+            }
+        });
+    });
+</script>
+</body>
 </html>
