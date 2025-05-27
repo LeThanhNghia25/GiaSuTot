@@ -3,10 +3,25 @@
 <html>
 <head>
   <title>Header</title>
-  <!-- Đảm bảo Bootstrap CSS được bao gồm -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome CSS cho biểu tượng -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Template Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/login-signup.css" rel="stylesheet">
+  <link href="css/modal.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
 <!-- Spinner Start -->
@@ -63,7 +78,17 @@
             <span>Xin chào, <c:out value="${sessionScope.userName}"/></span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân</a></li>
+            <c:choose>
+              <c:when test="${sessionScope.role == 'student'}">
+                <!-- Link tới student profile -->
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/student">Thông tin cá nhân (Student)</a></li>
+              </c:when>
+              <c:when test="${sessionScope.role == 'tutor'}">
+                <!-- Link tới tutor profile -->
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân (Tutor)</a></li>
+              </c:when>
+            </c:choose>
+
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
           </ul>

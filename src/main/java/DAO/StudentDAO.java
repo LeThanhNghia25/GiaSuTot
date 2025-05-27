@@ -1,6 +1,7 @@
 package DAO;
 
 import Utils.DBConnection;
+import model.Account;
 import model.Student;
 import java.sql.*;
 import java.time.LocalDate;
@@ -31,7 +32,7 @@ public class StudentDAO {
             ps.setString(2, student.getName());
             ps.setDate(3, java.sql.Date.valueOf(student.getBirth()));
             ps.setString(4, student.getDescribe());
-            ps.setString(5, student.getAccountId());
+            ps.setString(5, student.getAccountId().getId());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         }
@@ -50,12 +51,40 @@ public class StudentDAO {
                 String id_st = rs.getString("id_st");
                 String name = rs.getString("name");
                 LocalDate birth = rs.getDate("birth").toLocalDate();
-                String describe = rs.getString("describeSt");
-
-                return new Student(id_st, name, birth, describe, id_acc);
+                String describe = rs.getString("describe_st");
+                Account acc = new Account(); // Tạo đối tượng Account đơn giản
+                acc.setId(id_acc);
+                return new Student(id_st, name, birth, describe, acc);
             }
         }
 
         return null; // không tìm thấy
     }
+
+    public boolean updateStudent(Student student) throws SQLException {
+        String sql = "UPDATE student SET name = ?, birth = ?, describe_st = ? WHERE id_st = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, student.getName());
+            ps.setDate(2, Date.valueOf(student.getBirth()));
+            ps.setString(3, student.getDescribe());
+            ps.setString(4, student.getId());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public Account getAccountByEmail(String email) throws SQLException {
+        String sql = "SELECT id_acc FROM account WHERE email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Account acc = new Account();
+                acc.setId(rs.getString("id_acc"));
+                acc.setEmail(email);
+                return acc;
+            }
+        }
+        return null;
+    }
+
 }
