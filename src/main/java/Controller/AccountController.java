@@ -46,8 +46,8 @@ public class AccountController extends HttpServlet {
                 request.getSession().invalidate();
                 response.sendRedirect(request.getContextPath() + "/account?action=login");
             } else {
-                // Mặc định chuyển về trang login
-                response.sendRedirect(request.getContextPath() + "/account?action=login");
+                // Chuyển hướng về index.jsp thay vì login
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();

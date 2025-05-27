@@ -70,17 +70,7 @@
                         </div>
                     </div>
                 </div>
-<%--                <div class="card mb-4 mb-lg-0">--%>
-<%--                    <div class="card-body p-0">--%>
-<%--                        <ul class="list-group list-group-flush rounded-3">--%>
-<%--                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">--%>
-<%--                                <i class="fas fa-star text-warning"></i>--%>
-<%--                                <p class="mb-0">Đánh giá:<%= tutor.getEvaluate() %> </p>--%>
-<%--                            </li>--%>
-<%--                        </ul>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
+            </div>
 
             <div class="col-lg-8">
                 <!-- Thông tin cá nhân -->
@@ -138,11 +128,11 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" value="<%= student.getAccountId().getEmail()%>readonly">
+                    <input type="email" class="form-control" name="email" value="<%= student.getAccountId().getEmail()%> readonly">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mô tả</label>
-                    <textarea class="form-control" name="describe_tutor" rows="3"><%= student.getDescribe() %></textarea>
+                    <textarea class="form-control" name="describe" rows="3"><%= student.getDescribe() %></textarea>
                 </div>
                 <div class="d-flex justify-content-center">
                     <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>

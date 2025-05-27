@@ -81,11 +81,11 @@
             <c:choose>
               <c:when test="${sessionScope.role == 'student'}">
                 <!-- Link tới student profile -->
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/student">Thông tin cá nhân (Student)</a></li>
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/student">Thông tin cá nhân</a></li>
               </c:when>
               <c:when test="${sessionScope.role == 'tutor'}">
                 <!-- Link tới tutor profile -->
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân (Tutor)</a></li>
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân</a></li>
               </c:when>
             </c:choose>
 
