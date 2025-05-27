@@ -63,7 +63,17 @@
             <span>Xin chào, <c:out value="${sessionScope.userName}"/></span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân</a></li>
+            <c:choose>
+              <c:when test="${sessionScope.role == 'student'}">
+                <!-- Link tới student profile -->
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/student">Thông tin cá nhân (Student)</a></li>
+              </c:when>
+              <c:when test="${sessionScope.role == 'tutor'}">
+                <!-- Link tới tutor profile -->
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân (Tutor)</a></li>
+              </c:when>
+            </c:choose>
+
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
           </ul>

@@ -70,35 +70,47 @@ public class AccountController extends HttpServlet {
 
                 if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatus())) {
                     HttpSession session = request.getSession();
-                    request.getSession().setAttribute("account", acc);
+                    session.setAttribute("account", acc);
+
                     System.out.println("Login successful. Account ID: " + acc.getId());
+
                     if (acc.getRole() == 1) { // Student
                         Student student = studentDAO.getStudentByAccountId(acc.getId());
                         if (student != null) {
                             session.setAttribute("userName", student.getName());
+                            session.setAttribute("role", "student"); // <-- THÊM DÒNG NÀY
+                            session.setAttribute("student", student); // Nếu bạn cần dùng thông tin student sau
                         }
                     } else if (acc.getRole() == 2) { // Tutor
                         Tutor tutor = tutorDAO.getTutorByAccountId(acc.getId());
                         if (tutor != null) {
                             session.setAttribute("userName", tutor.getName());
+                            session.setAttribute("role", "tutor"); // <-- THÊM DÒNG NÀY
+                            session.setAttribute("tutor", tutor);   // Nếu bạn cần dùng thông tin tutor sau
                         }
                     }
-                    // Login thành công, chuyển hướng tới trang chính (ví dụ)
+
+                    // Login thành công, chuyển hướng tới trang chính
                     response.sendRedirect(request.getContextPath() + "/index.jsp");
                 } else {
                     request.setAttribute("error", "Email hoặc mật khẩu không đúng, hoặc tài khoản chưa kích hoạt.");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 }
+
             } else if ("register".equals(action)) {
+                // Xử lý đăng ký
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
                 String name = request.getParameter("name");
-                String birthStr = request.getParameter("birth"); // Chuỗi từ input date
+                String birthStr = request.getParameter("birth");
                 LocalDate birth = LocalDate.parse(birthStr);
                 String describe = request.getParameter("describe");
 
-                if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()
-                        || name == null || name.trim().isEmpty() || birth == null || birthStr.trim().isEmpty()) {
+                if (email == null || email.trim().isEmpty() ||
+                        password == null || password.trim().isEmpty() ||
+                        name == null || name.trim().isEmpty() ||
+                        birthStr == null || birthStr.trim().isEmpty()) {
+
                     request.setAttribute("error_register", "Vui lòng điền đầy đủ thông tin.");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                     return;
@@ -114,16 +126,16 @@ public class AccountController extends HttpServlet {
                 try {
                     // Tạo account mới
                     String idAcc = accountDAO.generateaccount_id();
-                    Account acc = new Account(idAcc, email, password, 1, "inactive"); // role = 1, status = inactive
+                    Account acc = new Account(idAcc, email, password, 1, "inactive"); // Mặc định là student
                     accountDAO.insertAccount(acc);
 
-                    // Gửi các thông tin còn lại sang StudentController
+                    // Gửi thông tin student sang StudentController
                     request.setAttribute("name", name);
                     request.setAttribute("birth", birth);
                     request.setAttribute("describe", describe);
                     request.setAttribute("id_acc", idAcc);
 
-                    // Forward đến StudentController để lưu student
+                    // Forward để lưu student
                     request.getRequestDispatcher("/student").forward(request, response);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -137,4 +149,5 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
+
 }

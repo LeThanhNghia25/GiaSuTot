@@ -3,16 +3,16 @@ package model;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class Student {
+public class Student extends Account{
     private String id_st;            // id_st
     private String name;          // name
     private LocalDate birth;      // birth
     private String describe;      // describeSt
-    private String id_acc;     // id_acc (liên kết với account)
+    private Account id_acc;     // id_acc (liên kết với account)
 
     public Student() {}
 
-    public Student(String id_st, String name, LocalDate birth, String describe, String id_acc) {
+    public Student(String id_st, String name, LocalDate birth, String describe, Account id_acc) {
         this.id_st = id_st;
         this.name = name;
         this.birth = birth;
@@ -53,11 +53,11 @@ public class Student {
         this.describe = describe;
     }
 
-    public String getAccountId() {
+    public Account getAccountId() {
         return id_acc;
     }
 
-    public void setAccountId(String id_acc) {
+    public void setAccountId(Account id_acc) {
         this.id_acc = id_acc;
     }
 }
