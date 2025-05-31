@@ -19,7 +19,12 @@ public class AdminRevenueController extends HttpServlet {
 
     @Override
     public void init() {
-        revenueDAO = new AdminRevenueDAO();
+        try {
+            revenueDAO = new AdminRevenueDAO();
+        } catch (Exception e) {
+            System.err.println("Failed to initialize AdminRevenueDAO: " + e.getMessage());
+            throw new RuntimeException("Database connection error during initialization", e);
+        }
     }
 
     @Override
@@ -31,7 +36,7 @@ public class AdminRevenueController extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
 
             if ("subject".equals(type)) {
-                Map<String, Double> revenueBySubject = revenueDAO.getRevenueBySubject(year); // Truyền year vào
+                Map<String, Double> revenueBySubject = revenueDAO.getRevenueBySubject(year);
                 String json = new Gson().toJson(revenueBySubject);
                 response.getWriter().write(json);
             } else {

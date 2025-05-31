@@ -1,16 +1,16 @@
 package model;
 
 public class Account {
-    private String id_acc;
+    private String id; // Đổi từ id_acc thành id
     private String email;
     private String password;
     private int role;
-    private String status;
+    private String status; // Đổi từ status_acc thành status
 
     public Account() {}
 
     public Account(String id, String email, String password, int role, String status) {
-        this.id_acc = id_acc;
+        this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -19,11 +19,11 @@ public class Account {
 
     // Getter & Setter cho id
     public String getId() {
-        return id_acc;
+        return id;
     }
 
-    public void setId(String id_acc) {
-        this.id_acc =id_acc;
+    public void setId(String id) {
+        this.id = id;
     }
 
     // Getter & Setter cho email
@@ -54,11 +54,11 @@ public class Account {
     }
 
     // Getter & Setter cho status
-    public String getStatus() {
+    public String getStatus() { // Đổi từ getStatusAcc thành getStatus
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status) { // Đổi từ setStatusAcc thành setStatus
         this.status = status;
     }
 }

@@ -17,6 +17,7 @@ import java.util.HashMap;
 @WebServlet("/searchServlet")
 public class CourseController extends HttpServlet {
     private CourseDAO courseDAO = new CourseDAO();
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String subName = request.getParameter("subName");
@@ -24,8 +25,7 @@ public class CourseController extends HttpServlet {
             subName = ""; // Giá trị mặc định
         }
         try {
-            HashMap<Course, Subject> resultMap = courseDAO.FindByName(subName);
-
+            HashMap<Course, Subject> resultMap = courseDAO.findByName(subName); // Đổi FindByName thành findByName
             request.setAttribute("resultMap", resultMap);
             request.setAttribute("subName", subName);
             request.getRequestDispatcher("/FindCourse.jsp").forward(request, response);
@@ -40,6 +40,4 @@ public class CourseController extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response); // Xử lý POST giống GET
     }
-
 }
-

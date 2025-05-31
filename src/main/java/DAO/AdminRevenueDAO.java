@@ -14,9 +14,9 @@ public class AdminRevenueDAO {
         Map<String, Double> monthlyRevenue = new HashMap<>();
         String sql = "SELECT MONTH(rs.registration_date) AS month, SUM(s.fee) AS revenue " +
                 "FROM registered_subjects rs " +
-                "JOIN course c ON rs.id_course = c.id_course " +
-                "JOIN subject s ON c.id_sub = s.id_sub " +
-                "WHERE rs.status_rsub = 'completed' AND YEAR(rs.registration_date) = ? " +
+                "JOIN course c ON rs.course_id = c.id " +
+                "JOIN subject s ON c.subject_id = s.id " +
+                "WHERE rs.status = 'completed' AND YEAR(rs.registration_date) = ? " +
                 "GROUP BY MONTH(rs.registration_date)";
 
         try (Connection conn = DBConnection.getConnection();
@@ -33,14 +33,13 @@ public class AdminRevenueDAO {
         return monthlyRevenue;
     }
 
-    // Cập nhật phương thức getRevenueBySubject để hỗ trợ lọc theo năm
     public Map<String, Double> getRevenueBySubject(int year) throws SQLException {
         Map<String, Double> revenueBySubject = new HashMap<>();
         String sql = "SELECT s.name AS subject, SUM(s.fee) AS revenue " +
                 "FROM registered_subjects rs " +
-                "JOIN course c ON rs.id_course = c.id_course " +
-                "JOIN subject s ON c.id_sub = s.id_sub " +
-                "WHERE rs.status_rsub = 'completed' AND YEAR(rs.registration_date) = ? " +
+                "JOIN course c ON rs.course_id = c.id " +
+                "JOIN subject s ON c.subject_id = s.id " +
+                "WHERE rs.status = 'completed' AND YEAR(rs.registration_date) = ? " +
                 "GROUP BY s.name";
 
         try (Connection conn = DBConnection.getConnection();
