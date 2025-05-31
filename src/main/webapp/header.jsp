@@ -38,7 +38,7 @@
           <a href="404.jsp" class="dropdown-item">404 Page</a>
         </div>
       </div>
-      <a href="" class="nav-item nav-link">Profile</a>
+      <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a> <!-- Đảm bảo đường dẫn -->
     </div>
 
     <!-- Thanh tìm kiếm -->
@@ -68,7 +68,6 @@
             <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
           </ul>
         </div>
-
       </c:when>
       <c:otherwise>
         <!-- Nếu chưa đăng nhập, hiển thị nút Đăng nhập -->

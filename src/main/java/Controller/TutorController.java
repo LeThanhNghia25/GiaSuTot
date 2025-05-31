@@ -7,7 +7,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Account;
 import model.Tutor;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +22,12 @@ public class TutorController extends HttpServlet {
     @Override
     public void init() {
         System.out.println("Initializing TutorController");
-        tutorDAO = new TutorDAO();
+        try {
+            tutorDAO = new TutorDAO();
+        } catch (Exception e) {
+            System.err.println("Failed to initialize TutorDAO: " + e.getMessage());
+            throw new RuntimeException("Database connection error during initialization", e);
+        }
     }
 
     @Override
@@ -28,22 +35,19 @@ public class TutorController extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("Handling GET request for /profile");
 
-        // Lấy đối tượng Account từ session
-        model.Account account = (model.Account) request.getSession().getAttribute("account");
-
+        Account account = (Account) request.getSession().getAttribute("account");
         if (account == null) {
             System.out.println("No account found in session, redirecting to login.");
-            response.sendRedirect("login.jsp"); // Chuyển hướng nếu chưa đăng nhập
+            response.sendRedirect("login.jsp");
             return;
         }
 
-        String id_acc = account.getId(); // Lấy id_acc từ Account
-        System.out.println("Fetching tutor with account id: " + id_acc);
+        String accountId = account.getId();
+        System.out.println("Fetching tutor with account id: " + accountId);
 
-        Tutor tutor = tutorDAO.getTutorByAccountId(id_acc); // Truy vấn thông tin Tutor theo id_acc
-
+        Tutor tutor = tutorDAO.getTutorByAccountId(accountId);
         if (tutor == null) {
-            System.out.println("No tutor found with account id: " + id_acc);
+            System.out.println("No tutor found with account id: " + accountId);
             request.setAttribute("error", "Không tìm thấy thông tin gia sư.");
         } else {
             System.out.println("Tutor found: " + tutor.getName());
@@ -54,40 +58,45 @@ public class TutorController extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Lấy dữ liệu từ form
-            String id_tutor = request.getParameter("id_tutor");
+            Account account = (Account) request.getSession().getAttribute("account");
+            if (account == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+
+            String accountId = account.getId();
+            Tutor existingTutor = tutorDAO.getTutorByAccountId(accountId);
+            if (existingTutor == null) {
+                response.sendRedirect("error.jsp");
+                return;
+            }
+
             String name = request.getParameter("name");
             String email = request.getParameter("email");
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             String specialization = request.getParameter("specialization");
-            String describe_tutor = request.getParameter("describe_tutor");
-            int cccd = Integer.parseInt(request.getParameter("cccd"));
-            int bank_code = Integer.parseInt(request.getParameter("bank_code"));
-            String bank_name = request.getParameter("bank_name");
+            String description = request.getParameter("description"); // Đổi từ describe_tutor
+            int idCardNumber = Integer.parseInt(request.getParameter("id_card_number")); // Đổi từ cccd
+            int bankAccountNumber = Integer.parseInt(request.getParameter("bank_account_number")); // Đổi từ bank_code
+            String bankName = request.getParameter("bank_name");
             String birthStr = request.getParameter("birth");
             Date birth = null;
             if (birthStr != null && !birthStr.trim().isEmpty()) {
-                try {
-                    birth = new SimpleDateFormat("yyyy-MM-dd").parse(birthStr);
-                } catch (ParseException e) {
-                    e.printStackTrace();  // hoặc log lỗi rõ hơn
-                }
-            } else {
-                System.err.println("Birth date is null or empty.");
+                birth = new SimpleDateFormat("yyyy-MM-dd").parse(birthStr);
             }
 
-
-            Tutor updatedTutor = new Tutor(id_tutor, name, email, birth, phone, address, specialization, describe_tutor, cccd, bank_code, bank_name, 0);
+            Tutor updatedTutor = new Tutor(
+                    existingTutor.getId(), name, email, birth, phone, address, specialization,
+                    description, idCardNumber, bankAccountNumber, bankName, accountId, existingTutor.getEvaluate()
+            );
             tutorDAO.updateTutor(updatedTutor);
 
-            // Load lại thông tin từ DB sau khi cập nhật
-            Tutor refreshedTutor = tutorDAO.getTutorById(id_tutor);
+            Tutor refreshedTutor = tutorDAO.getTutorById(existingTutor.getId());
             request.setAttribute("tutor", refreshedTutor);
             request.getRequestDispatcher("profile.jsp").forward(request, response);
         } catch (Exception e) {
@@ -95,5 +104,4 @@ public class TutorController extends HttpServlet {
             response.sendRedirect("error.jsp");
         }
     }
-
 }

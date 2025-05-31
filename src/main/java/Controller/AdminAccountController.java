@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet(name = "AdminController", urlPatterns = {"/admin/account"})
+@WebServlet(name = "AdminAccountController", urlPatterns = {"/admin/account"})
 public class AdminAccountController extends HttpServlet {
     private AdminAccountDAO adminAccountDAO;
 
@@ -82,7 +82,7 @@ public class AdminAccountController extends HttpServlet {
         String action = request.getParameter("action");
         try {
             if ("edit".equals(action)) {
-                String id = request.getParameter("id_acc");
+                String id = request.getParameter("id"); // Đổi từ id_acc
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
                 String roleStr = request.getParameter("role");
@@ -96,6 +96,12 @@ public class AdminAccountController extends HttpServlet {
                 }
                 if (email == null || email.trim().isEmpty()) {
                     request.setAttribute("error", "Email không được để trống.");
+                    request.setAttribute("account", new Account(id, email, password, 0, status));
+                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    return;
+                }
+                if (password == null || password.trim().isEmpty()) {
+                    request.setAttribute("error", "Mật khẩu không được để trống.");
                     request.setAttribute("account", new Account(id, email, password, 0, status));
                     request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
                     return;
@@ -126,7 +132,7 @@ public class AdminAccountController extends HttpServlet {
         } catch (SQLException e) {
             log("SQL Error: " + e.getMessage(), e);
             request.setAttribute("error", "Có lỗi xảy ra khi cập nhật tài khoản. Vui lòng thử lại sau.");
-            request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
         }
     }
 }

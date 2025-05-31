@@ -19,19 +19,14 @@ public class StudentController extends HttpServlet {
 
     @Override
     public void init() {
-        try {
-            studentDAO = new StudentDAO();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        studentDAO = new StudentDAO();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy dữ liệu được set attribute từ AccountController
         String name = (String) request.getAttribute("name");
         LocalDate birth = (LocalDate) request.getAttribute("birth");
-        String describe = (String) request.getAttribute("describe");
+        String description = (String) request.getAttribute("description"); // Đổi từ describe
         String id_acc = (String) request.getAttribute("id_acc");
 
         try {
@@ -39,15 +34,13 @@ public class StudentController extends HttpServlet {
             student.setId(studentDAO.generateStudentId());
             student.setName(name);
             student.setBirth(birth);
-            student.setDescribe(describe);
+            student.setDescription(description); // Đổi từ setDescribe
             student.setAccountId(id_acc);
 
             studentDAO.insertStudent(student);
 
-            // Sau khi lưu thành công, chuyển về trang login với thông báo thành công
             request.getSession().setAttribute("success", "Đăng ký thành công, vui lòng đăng nhập.");
             response.sendRedirect(request.getContextPath() + "/account?action=login");
-
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error_register", "Lỗi lưu thông tin sinh viên: " + e.getMessage());

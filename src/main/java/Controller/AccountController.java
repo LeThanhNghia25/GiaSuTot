@@ -3,14 +3,13 @@ package Controller;
 import DAO.AccountDAO;
 import DAO.StudentDAO;
 import DAO.TutorDAO;
-import jakarta.servlet.http.HttpSession;
-import model.Account;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Account;
 import model.Student;
 import model.Tutor;
 
@@ -23,19 +22,15 @@ public class AccountController extends HttpServlet {
     private AccountDAO accountDAO;
     private TutorDAO tutorDAO;
     private StudentDAO studentDAO;
+
     @Override
     public void init() {
-        try {
-            accountDAO = new AccountDAO();
-            tutorDAO = new TutorDAO();
-            studentDAO = new StudentDAO();
-            System.out.println("AccountDAO initialized successfully at " + new java.util.Date());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        accountDAO = new AccountDAO();
+        tutorDAO = new TutorDAO();
+        studentDAO = new StudentDAO();
+        System.out.println("AccountDAO initialized successfully at " + new java.util.Date());
     }
 
-    // Hiển thị trang login/register hoặc các trang quản lý tài khoản
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -46,7 +41,6 @@ public class AccountController extends HttpServlet {
                 request.getSession().invalidate();
                 response.sendRedirect(request.getContextPath() + "/account?action=login");
             } else {
-                // Mặc định chuyển về trang login
                 response.sendRedirect(request.getContextPath() + "/account?action=login");
             }
         } catch (Exception e) {
@@ -56,7 +50,6 @@ public class AccountController extends HttpServlet {
         }
     }
 
-    // Xử lý đăng nhập và đăng ký
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -68,9 +61,9 @@ public class AccountController extends HttpServlet {
 
                 Account acc = accountDAO.getAccountByEmail(email);
 
-                if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatusAcc())) {
+                if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatus())) {
                     HttpSession session = request.getSession();
-                    request.getSession().setAttribute("account", acc);
+                    session.setAttribute("account", acc);
                     System.out.println("Login successful. Account ID: " + acc.getId());
                     if (acc.getRole() == 1) { // Student
                         Student student = studentDAO.getStudentByAccountId(acc.getId());
@@ -83,7 +76,6 @@ public class AccountController extends HttpServlet {
                             session.setAttribute("userName", tutor.getName());
                         }
                     }
-                    // Login thành công, chuyển hướng tới trang chính (ví dụ)
                     response.sendRedirect(request.getContextPath() + "/index.jsp");
                 } else {
                     request.setAttribute("error", "Email hoặc mật khẩu không đúng, hoặc tài khoản chưa kích hoạt.");
@@ -93,7 +85,7 @@ public class AccountController extends HttpServlet {
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
                 String name = request.getParameter("name");
-                String birthStr = request.getParameter("birth"); // Chuỗi từ input date
+                String birthStr = request.getParameter("birth");
                 LocalDate birth = LocalDate.parse(birthStr);
                 String describe = request.getParameter("describe");
 
@@ -111,29 +103,24 @@ public class AccountController extends HttpServlet {
                     return;
                 }
 
-                try {
-                    // Tạo account mới
-                    String idAcc = accountDAO.generateaccount_id();
-                    Account acc = new Account(idAcc, email, password, 1, "inactive"); // role = 1, status = inactive
-                    accountDAO.insertAccount(acc);
+                String idAcc = accountDAO.generateAccountId(); // Đổi từ generateaccount_id()
+                Account acc = new Account(idAcc, email, password, 1, "inactive");
+                accountDAO.insertAccount(acc);
 
-                    // Gửi các thông tin còn lại sang StudentController
-                    request.setAttribute("name", name);
-                    request.setAttribute("birth", birth);
-                    request.setAttribute("describe", describe);
-                    request.setAttribute("id_acc", idAcc);
+                request.setAttribute("name", name);
+                request.setAttribute("birth", birth);
+                request.setAttribute("description", describe); // Đổi từ describe
+                request.setAttribute("id_acc", idAcc);
 
-                    // Forward đến StudentController để lưu student
-                    request.getRequestDispatcher("/student").forward(request, response);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    request.setAttribute("error_register", "Lỗi đăng ký: " + e.getMessage());
-                    request.getRequestDispatcher("/login.jsp").forward(request, response);
-                }
+                request.getRequestDispatcher("/student").forward(request, response);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi không xác định: " + e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
