@@ -68,7 +68,7 @@ public class AccountController extends HttpServlet {
 
                 Account acc = accountDAO.getAccountByEmail(email);
 
-                if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatus())) {
+                if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatusAcc())) {
                     HttpSession session = request.getSession();
                     request.getSession().setAttribute("account", acc);
                     System.out.println("Login successful. Account ID: " + acc.getId());

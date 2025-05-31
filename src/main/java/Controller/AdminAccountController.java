@@ -19,15 +19,10 @@ public class AdminAccountController extends HttpServlet {
 
     @Override
     public void init() {
-        try {
-            adminAccountDAO = new AdminAccountDAO();
-            System.out.println("AdminAccountDAO initialized successfully in AdminController at " + new java.util.Date());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        adminAccountDAO = new AdminAccountDAO();
+        System.out.println("AdminAccountDAO initialized successfully in AdminController at " + new java.util.Date());
     }
 
-    // Xử lý GET request cho admin (hiển thị danh sách, chỉnh sửa, xóa, khôi phục tài khoản)
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -36,10 +31,18 @@ public class AdminAccountController extends HttpServlet {
                 System.out.println("Fetching accounts at " + new java.util.Date());
                 List<Account> accounts = adminAccountDAO.getAllAccounts();
                 System.out.println("Accounts size: " + (accounts != null ? accounts.size() : "null"));
+                if (accounts == null || accounts.isEmpty()) {
+                    request.setAttribute("message", "Không có tài khoản nào để hiển thị.");
+                }
                 request.setAttribute("accounts", accounts);
                 request.getRequestDispatcher("/admin/account-management.jsp").forward(request, response);
             } else if (action.equals("edit")) {
                 String id = request.getParameter("id");
+                if (id == null || id.trim().isEmpty()) {
+                    request.setAttribute("error", "ID tài khoản không hợp lệ.");
+                    request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
+                    return;
+                }
                 Account account = adminAccountDAO.getAccountById(id);
                 if (account != null) {
                     request.setAttribute("account", account);
@@ -50,21 +53,30 @@ public class AdminAccountController extends HttpServlet {
                 }
             } else if (action.equals("delete")) {
                 String id = request.getParameter("id");
+                if (id == null || id.trim().isEmpty()) {
+                    request.setAttribute("error", "ID tài khoản không hợp lệ.");
+                    request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
+                    return;
+                }
                 adminAccountDAO.hideAccount(id);
                 response.sendRedirect(request.getContextPath() + "/admin/account");
             } else if (action.equals("restore")) {
                 String id = request.getParameter("id");
+                if (id == null || id.trim().isEmpty()) {
+                    request.setAttribute("error", "ID tài khoản không hợp lệ.");
+                    request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
+                    return;
+                }
                 adminAccountDAO.restoreAccount(id);
                 response.sendRedirect(request.getContextPath() + "/admin/account");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Lỗi SQL: " + e.getMessage());
+            log("SQL Error: " + e.getMessage(), e);
+            request.setAttribute("error", "Có lỗi xảy ra khi xử lý dữ liệu. Vui lòng thử lại sau.");
             request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
         }
     }
 
-    // Xử lý POST request cho admin (chỉnh sửa tài khoản)
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -73,11 +85,35 @@ public class AdminAccountController extends HttpServlet {
                 String id = request.getParameter("id_acc");
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
-                int role = Integer.parseInt(request.getParameter("role"));
+                String roleStr = request.getParameter("role");
                 String status = request.getParameter("status");
 
+                // Kiểm tra dữ liệu đầu vào
+                if (id == null || id.trim().isEmpty()) {
+                    request.setAttribute("error", "ID tài khoản không hợp lệ.");
+                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    return;
+                }
                 if (email == null || email.trim().isEmpty()) {
                     request.setAttribute("error", "Email không được để trống.");
+                    request.setAttribute("account", new Account(id, email, password, 0, status));
+                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    return;
+                }
+                int role;
+                try {
+                    role = Integer.parseInt(roleStr);
+                    if (role < 1 || role > 3) {
+                        throw new NumberFormatException("Role phải nằm trong khoảng 1-3.");
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("error", "Role không hợp lệ. Vui lòng chọn giá trị từ 1 đến 3.");
+                    request.setAttribute("account", new Account(id, email, password, 0, status));
+                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    return;
+                }
+                if (status == null || (!status.equals("active") && !status.equals("inactive"))) {
+                    request.setAttribute("error", "Trạng thái không hợp lệ. Vui lòng chọn 'active' hoặc 'inactive'.");
                     request.setAttribute("account", new Account(id, email, password, role, status));
                     request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
                     return;
@@ -87,9 +123,9 @@ public class AdminAccountController extends HttpServlet {
                 adminAccountDAO.updateAccount(account);
                 response.sendRedirect(request.getContextPath() + "/admin/account");
             }
-        } catch (SQLException | NumberFormatException e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Lỗi: " + e.getMessage());
+        } catch (SQLException e) {
+            log("SQL Error: " + e.getMessage(), e);
+            request.setAttribute("error", "Có lỗi xảy ra khi cập nhật tài khoản. Vui lòng thử lại sau.");
             request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
         }
     }

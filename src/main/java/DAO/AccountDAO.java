@@ -3,7 +3,6 @@ package DAO;
 import model.Account;
 import Utils.DBConnection;
 import java.sql.*;
-import java.util.*;
 
 public class AccountDAO {
     private Connection conn;
@@ -30,7 +29,7 @@ public class AccountDAO {
             ps.setString(2, acc.getEmail());
             ps.setString(3, acc.getPassword());
             ps.setInt(4, acc.getRole());
-            ps.setString(5, acc.getStatus());
+            ps.setString(5, acc.getStatusAcc());
             ps.executeUpdate();
         }
     }
@@ -46,7 +45,7 @@ public class AccountDAO {
                 acc.setEmail(rs.getString("email"));
                 acc.setPassword(rs.getString("pass"));
                 acc.setRole(rs.getInt("role"));
-                acc.setStatus(rs.getString("status_acc"));
+                acc.setStatusAcc(rs.getString("status_acc"));
                 return acc;
             }
         }

@@ -5,16 +5,16 @@ public class Account {
     private String email;
     private String password;
     private int role;
-    private String status;
+    private String status_acc;
 
     public Account() {}
 
-    public Account(String id, String email, String password, int role, String status) {
+    public Account(String id_acc, String email, String password, int role, String status_acc) {
         this.id_acc = id_acc;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.status = status;
+        this.status_acc = status_acc;
     }
 
     // Getter & Setter cho id
@@ -54,11 +54,11 @@ public class Account {
     }
 
     // Getter & Setter cho status
-    public String getStatus() {
-        return status;
+    public String getStatusAcc() {
+        return status_acc;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatusAcc(String status_acc) {
+        this.status_acc = status_acc;
     }
 }
