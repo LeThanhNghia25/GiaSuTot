@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 @WebServlet("/searchServlet")
 public class CourseController extends HttpServlet {
     private CourseDAO courseDAO = new CourseDAO();
