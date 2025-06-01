@@ -35,8 +35,8 @@
                 <input type="date" name="birth" id="register-birth" required>
                 <div id="birth-error" style="color: red; font-size: 10px;"></div>
 
-                <input type="text" name="describe" id="register-describe" placeholder="Mô tả">
-                <div id="describeSt-error" style="color: red; font-size: 10px;"></div>
+                <input type="text" name="description" id="register-description" placeholder="Mô tả"> <!-- Đổi từ describe -->
+                <div id="description-error" style="color: red; font-size: 10px;"></div> <!-- Đổi từ describeSt-error -->
 
                 <input type="password" name="password" id="register-password" placeholder="Mật khẩu" required>
                 <div id="password-error" style="color: red; font-size: 10px;"></div>

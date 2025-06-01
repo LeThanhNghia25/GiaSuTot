@@ -41,8 +41,8 @@
                                 <input type="email" class="form-control" id="email" name="email" value="${account.email}" required>
                             </div>
                             <div class="form-group">
-                                <label for="password">Mật khẩu</label>
-                                <input type="password" class="form-control" id="password" name="password" value="${account.password}" required>
+                                <label for="password">Mật khẩu (để trống nếu không muốn thay đổi)</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu mới nếu muốn thay đổi">
                             </div>
                             <div class="form-group">
                                 <label for="role">Vai trò</label>
@@ -55,8 +55,8 @@
                             <div class="form-group">
                                 <label for="status">Trạng thái</label>
                                 <select class="form-control" id="status" name="status">
-                                    <option value="active" <c:if test="${account.status == 'active'}">selected</c:if>>Đang hoạt động</option>
-                                    <option value="inactive" <c:if test="${account.status == 'inactive'}">selected</c:if>>Khóa</option>
+                                    <option value="active" <c:if test="${account.statusAcc == 'active'}">selected</c:if>>Đang hoạt động</option>
+                                    <option value="inactive" <c:if test="${account.statusAcc == 'inactive'}">selected</c:if>>Khóa</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>

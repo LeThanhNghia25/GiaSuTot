@@ -64,7 +64,7 @@
                     </td>
                     <td>
                       <c:choose>
-                        <c:when test="${account.status == 'active'}">
+                        <c:when test="${account.statusAcc == 'active'}">
                           <span class="badge badge-success">Đang hoạt động</span>
                         </c:when>
                         <c:otherwise>
@@ -75,7 +75,7 @@
                     <td>
                       <a href="${pageContext.request.contextPath}/admin/account?action=edit&id=${account.id}" class="btn btn-sm btn-primary">Sửa</a>
                       <c:choose>
-                        <c:when test="${account.status == 'active'}">
+                        <c:when test="${account.statusAcc == 'active'}">
                           <a href="${pageContext.request.contextPath}/admin/account?action=delete&id=${account.id}" class="btn btn-sm btn-danger"
                              onclick="return confirm('Bạn có chắc muốn khóa tài khoản này không?')">Khóa</a>
                         </c:when>

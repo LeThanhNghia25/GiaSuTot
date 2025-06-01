@@ -18,43 +18,18 @@ public class AdminSubjectController extends HttpServlet {
     private AdminSubjectDAO adminSubjectDAO;
 
     public void init() {
-        try {
-            adminSubjectDAO = new AdminSubjectDAO();
-            System.out.println("SubjectDAO initialized successfully at " + new java.util.Date());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        adminSubjectDAO = new AdminSubjectDAO();
+        System.out.println("SubjectDAO initialized successfully at " + new java.util.Date());
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         try {
             if (action == null || action.isEmpty()) {
-                // Lấy tham số tìm kiếm từ form
-                String tenMonHoc = request.getParameter("tenMonHoc");
-                String lop = request.getParameter("lop");
-                String tinh = request.getParameter("tinh");  // nếu là trạng thái
-                String tenGiaoVien = request.getParameter("tenGiaoVien");  // nếu có, không thì bỏ
-
-                List<Subject> subjects;
-
-                // Kiểm tra có tham số tìm kiếm hay không
-                boolean isSearch = (tenMonHoc != null && !tenMonHoc.trim().isEmpty()) ||
-                        (lop != null && !lop.trim().isEmpty()) ||
-                        (tinh != null && !tinh.trim().isEmpty()) ||
-                        (tenGiaoVien != null && !tenGiaoVien.trim().isEmpty());
-
-                if (isSearch) {
-                    // Gọi hàm tìm kiếm trong DAO
-                    subjects = adminSubjectDAO.searchSubjects(tenMonHoc, lop, tinh, tenGiaoVien);
-                    request.setAttribute("searchMessage", "Kết quả tìm kiếm");
-                } else {
-                    subjects = adminSubjectDAO.getAllSubjects();
-                }
-
+                // BỎ CHỨC NĂNG TÌM KIẾM -> luôn lấy tất cả môn học
+                List<Subject> subjects = adminSubjectDAO.getAllSubjects();
                 request.setAttribute("subjects", subjects);
                 request.getRequestDispatcher("/admin/subject-management.jsp").forward(request, response);
-
             } else if (action.equals("add")) {
                 request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
             } else if (action.equals("edit")) {
@@ -87,7 +62,7 @@ public class AdminSubjectController extends HttpServlet {
         String action = request.getParameter("action");
         try {
             if (action.equals("add")) {
-                String id = request.getParameter("id_sub");
+                String id = request.getParameter("id"); // Đổi từ id_sub
                 String name = request.getParameter("name");
                 String level = request.getParameter("level");
                 String description = request.getParameter("description");
@@ -132,9 +107,8 @@ public class AdminSubjectController extends HttpServlet {
                 Subject subject = new Subject(id, name, level, description, fee, status);
                 adminSubjectDAO.addSubject(subject);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
-
             } else if (action.equals("edit")) {
-                String id = request.getParameter("id_sub");
+                String id = request.getParameter("id"); // Đổi từ id_sub
                 String name = request.getParameter("name");
                 String level = request.getParameter("level");
                 String description = request.getParameter("description");
