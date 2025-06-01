@@ -2,7 +2,7 @@ package model;
 
 import java.util.Date;
 
-public class Tutor {
+public class Tutor extends Account{
     private String id; // Đổi từ id_tutor thành id
     private String name;
     private String email;
