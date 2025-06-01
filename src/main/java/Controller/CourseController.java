@@ -14,20 +14,23 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 @WebServlet("/searchServlet")
 public class CourseController extends HttpServlet {
     private CourseDAO courseDAO = new CourseDAO();
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String subName = request.getParameter("subName");
-        if (subName == null || subName.trim().isEmpty()) {
-            subName = ""; // Giá trị mặc định
+        String search = request.getParameter("search");
+        if (search == null || search.trim().isEmpty()) {
+            search = ""; // Giá trị mặc định
         }
         try {
-            HashMap<Course, Subject> resultMap = courseDAO.findByName(subName); // Đổi FindByName thành findByName
+            HashMap<Course, Subject> resultMap = courseDAO.FindByName(search);
+
             request.setAttribute("resultMap", resultMap);
-            request.setAttribute("subName", subName);
+            request.setAttribute("search", search);
             request.getRequestDispatcher("/FindCourse.jsp").forward(request, response);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,4 +43,6 @@ public class CourseController extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response); // Xử lý POST giống GET
     }
+
 }
+

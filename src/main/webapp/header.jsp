@@ -57,7 +57,7 @@
     </div>
 
     <!-- Thanh tìm kiếm -->
-    <form class="d-flex ms-3 me-2" role="search" method="GET" action="courses.jsp">
+    <form class="d-flex ms-3 me-2" role="search" method="GET" action="searchServlet">
       <input class="form-control me-2" type="search" name="search" placeholder="Tìm kiếm khóa học..." aria-label="Search"
              value="${param.search != null ? param.search : ''}">
       <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
