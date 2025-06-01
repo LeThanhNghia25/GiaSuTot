@@ -31,10 +31,10 @@ public class CourseDAO {
 
                 while (resultSet.next()) {
                     Course course = new Course();
-                    course.setId(resultSet.getString("id_course"));
-                    course.setId_subject(resultSet.getString("id_sub"));
-                    course.setId_tutor(resultSet.getString("id_tutor"));
-                    course.setDateTime(resultSet.getTimestamp("timeCourse")); // Lấy timestamp và chuyển sang Date
+                    course.setId(resultSet.getString("id"));
+                    course.setId_subject(resultSet.getString("subject_id"));
+                    course.setId_tutor(resultSet.getString("tutor_id"));
+                    course.setDateTime(resultSet.getTimestamp("time")); // Lấy timestamp và chuyển sang Date
                     courseList.add(course);
                 }
 
@@ -60,7 +60,9 @@ public class CourseDAO {
         HashMap<Course, Subject> subjectMap = new CourseDAO().getAllSubjects();
         HashMap<Course, Subject> result = new HashMap<>();
         for (Course key : subjectMap.keySet()) {
-          if(subName.equals(subjectMap.get(key).getName())){
+            String findname = subName.toLowerCase();
+            String sName = subjectMap.get(key).getName().toLowerCase();
+            if(sName.contains(findname)){
               result.put(key, subjectMap.get(key));
           }
         }
