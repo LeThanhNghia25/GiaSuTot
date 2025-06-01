@@ -1,12 +1,12 @@
 package model;
 
 public class Subject {
-    private String id;            // id_sub
+    private String id;
     private String name;
     private String level;
-    private String description;   // describeSb
+    private String description;
     private double fee;
-    private String status;        // statusSub (active/inactive)
+    private String status;
 
     public Subject() {}
 
@@ -69,6 +69,10 @@ public class Subject {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Subject{" +
@@ -79,9 +83,5 @@ public class Subject {
                 ", fee=" + fee +
                 ", status='" + status + '\'' +
                 '}';
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

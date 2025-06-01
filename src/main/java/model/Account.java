@@ -1,11 +1,11 @@
 package model;
 
 public class Account {
-    private String id;
+    private String id; // Đổi từ id_acc thành id
     private String email;
     private String password;
     private int role;
-    private String status;
+    private String status; // Đổi từ status_acc thành status
 
     public Account() {}
 
@@ -54,11 +54,11 @@ public class Account {
     }
 
     // Getter & Setter cho status
-    public String getStatus() {
+    public String getStatus() { // Đổi từ getStatusAcc thành getStatus
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status) { // Đổi từ setStatusAcc thành setStatus
         this.status = status;
     }
 }
