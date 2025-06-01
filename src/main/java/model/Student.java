@@ -1,8 +1,9 @@
 package model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
-public class Student {
+public class Student extends Account{
     private String id; // Đổi từ id_st thành id
     private String name;
     private LocalDate birth;

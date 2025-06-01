@@ -61,7 +61,7 @@ CREATE TABLE registered_subjects (
                                      student_id CHAR(20), -- Đổi từ id_st thành student_id
                                      registration_date DATE NOT NULL,
                                      number_of_lessons INT NOT NULL,
-                                     status VARCHAR(50) NOT NULL CHECK (status IN ('registered', 'completed', 'cancelled', 'pending_payment')), -- Đổi từ status_rsub thành status
+                                     status VARCHAR(50) NOT NULL CHECK (status IN ('pending_payment', 'registered', 'completed', 'cancelled')), -- Đổi từ status_rsub thành status
                                      PRIMARY KEY (course_id, student_id),
                                      FOREIGN KEY (course_id) REFERENCES course(id),
                                      FOREIGN KEY (student_id) REFERENCES student(id)
@@ -76,6 +76,15 @@ CREATE TABLE lesson (
                         PRIMARY KEY (course_id, student_id, time),
                         FOREIGN KEY (course_id) REFERENCES course(id),
                         FOREIGN KEY (student_id) REFERENCES student(id)
+);
+
+CREATE TABLE notifications (
+                               id CHAR(36) PRIMARY KEY,
+                               account_id CHAR(20) NOT NULL,
+                               message TEXT NOT NULL,
+                               created_at DATETIME NOT NULL,
+                               status VARCHAR(50) NOT NULL CHECK (status IN ('sent', 'pending', 'failed')),
+                               FOREIGN KEY (account_id) REFERENCES account(id)
 );
 
 -- Chèn dữ liệu vào bảng account
@@ -161,10 +170,10 @@ INSERT INTO registered_subjects (course_id, student_id, registration_date, numbe
                                                                                                           ('course002', 'st002', '2025-04-26', 8, 'completed'),
                                                                                                           ('course003', 'st003', '2025-04-27', 5, 'cancelled'),
                                                                                                           ('course001', 'st004', '2025-01-15', 12, 'completed'),
-                                                                                                          ('course004', 'st005', '2025-01-20', 10, 'pending_payment'),
+                                                                                                          ('course004', 'st005', '2025-01-20', 10, 'registered'),
                                                                                                           ('course005', 'st006', '2025-02-10', 8, 'completed'),
                                                                                                           ('course006', 'st007', '2025-03-05', 15, 'completed'),
-                                                                                                          ('course007', 'st008', '2025-04-01', 10, 'pending_payment'),
+                                                                                                          ('course007', 'st008', '2025-04-01', 10, 'registered'),
                                                                                                           ('course008', 'st001', '2025-04-15', 6, 'completed'),
                                                                                                           ('course009', 'st002', '2025-05-01', 8, 'completed'),
                                                                                                           ('course004', 'st003', '2025-01-25', 10, 'completed'),
