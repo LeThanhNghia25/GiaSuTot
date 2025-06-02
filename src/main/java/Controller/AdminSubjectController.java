@@ -175,7 +175,7 @@ public class AdminSubjectController extends HttpServlet {
                 List<Student> enrolledStudents = adminSubjectDAO.getEnrolledStudents(id);
                 for (Student student : enrolledStudents) {
                     String message = "Môn học " + subject.getName() + " (" + subject.getLevel() + ") đã bị ẩn. Bạn đã được hoàn tiền đầy đủ.";
-                    adminSubjectDAO.sendNotification(student.getAccountId(), message);
+                    adminSubjectDAO.sendNotification(student.getaccount_id(), message);
                 }
 
                 adminSubjectDAO.cancelRegistrations(id);

@@ -21,8 +21,6 @@ public class CourseDAO {
 
     }
 
-
-
         // Phương thức để lấy tất cả dữ liệu từ bảng Course
         public List<Course> getAllCourses() throws SQLException {
             List<Course> courseList = new ArrayList<>();

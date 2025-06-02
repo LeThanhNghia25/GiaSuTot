@@ -3,30 +3,31 @@ package model;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class Student extends Account{
-    private String id; // Đổi từ id_st thành id
-    private String name;
-    private LocalDate birth;
-    private String description; // Đổi từ describe thành description
-    private String accountId; // Đổi từ id_acc thành accountId
-
+public class Student {
+    private String id_st;            // id_st
+    private String name;          // name
+    private LocalDate birth;      // birth
+    private String describe_st;      // describeSt
+    private String id_acc;     // id_acc (liên kết với account)
+// id_st, name, birth, describe_st, id_acc
     public Student() {}
 
-    public Student(String id, String name, LocalDate birth, String description, String accountId) {
-        this.id = id;
+    public Student(String id_st, String name, LocalDate birth, String describe_st, String id_acc) {
+        this.id_st = id_st;
         this.name = name;
         this.birth = birth;
-        this.description = description;
-        this.accountId = accountId;
+        this.describe_st = describe_st;
+        this.id_acc = id_acc;
+
     }
 
     // Getters and Setters
     public String getId() {
-        return id;
+        return id_st;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id_st = id_st;
     }
 
     public String getName() {
@@ -45,19 +46,20 @@ public class Student extends Account{
         this.birth = birth;
     }
 
-    public String getDescription() { // Đổi từ getDescribe thành getDescription
-        return description;
+    public String getDescribe() {
+        return describe_st;
     }
 
-    public void setDescription(String description) { // Đổi từ setDescribe thành setDescription
-        this.description = description;
+    public void setDescribe(String describe) {
+        this.describe_st = describe;
     }
 
-    public String getAccountId() { // Đổi từ getAccountId thành getAccountId (đã đúng, chỉ cần đồng bộ tên biến)
-        return accountId;
+    public String getaccount_id() {
+        return id_acc;
     }
 
-    public void setAccountId(String accountId) { // Đổi từ setAccountId thành setAccountId (đã đúng, chỉ cần đồng bộ tên biến)
-        this.accountId = accountId;
+    public void setaccount_id(String account_id) {
+        this.id_acc = account_id;
+
     }
 }

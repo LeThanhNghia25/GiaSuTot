@@ -55,6 +55,7 @@ public class StudentController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String action = request.getParameter("action");
 
         if ("update".equals(action)) {
@@ -98,8 +99,8 @@ public class StudentController extends HttpServlet {
             student.setId(id);
             student.setName(name);
             student.setBirth(birth);
-            student.setDescription(description); // Đổi setDescribe thành setDescription
-            student.setAccountId(accountId); // Đổi setAccountId(account) thành setAccountId(accountId)
+            student.setaccount_id(description); // Đổi setDescribe thành setDescription
+            student.setaccount_id(accountId); // Đổi setAccountId(account) thành setAccountId(accountId)
 
             // Cập nhật thông tin trong cơ sở dữ liệu
             studentDAO.updateStudent(student);
@@ -123,11 +124,10 @@ public class StudentController extends HttpServlet {
 
         try {
             Student student = new Student();
-            student.setId(studentDAO.generateStudentId());
             student.setName(name);
             student.setBirth(birth);
-            student.setDescription(description); // Đổi setDescribe thành setDescription
-            student.setAccountId(accountId); // Đổi setAccountId(acc) thành setAccountId(accountId)
+            student.setDescribe(description); // Đổi setDescribe thành setDescription
+            student.setaccount_id(accountId); // Đổi setAccountId(acc) thành setAccountId(accountId)
 
             studentDAO.insertStudent(student);
             request.getSession().setAttribute("success", "Đăng ký thành công, vui lòng đăng nhập.");
