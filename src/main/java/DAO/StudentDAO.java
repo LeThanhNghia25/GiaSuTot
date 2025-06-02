@@ -75,20 +75,4 @@ public class StudentDAO {
             return ps.executeUpdate() > 0;
         }
     }
-
-    public Account getAccountByEmail(String email) throws SQLException {
-        String sql = "SELECT id_acc FROM account WHERE email = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Account acc = new Account();
-                acc.setId(rs.getString("id_acc"));
-                acc.setEmail(email);
-                return acc;
-            }
-        }
-        return null;
-    }
-
 }
