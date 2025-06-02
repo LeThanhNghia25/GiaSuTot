@@ -50,7 +50,6 @@
       </div>
     </div>
 
-
     <% if (tutor == null) { %>
     <div class="alert alert-danger" role="alert">
       Không tìm thấy thông tin gia sư.
@@ -76,7 +75,7 @@
             <ul class="list-group list-group-flush rounded-3">
               <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                 <i class="fas fa-star text-warning"></i>
-                <p class="mb-0">Đánh giá:<%= tutor.getEvaluate() %> </p>
+                <p class="mb-0">Đánh giá: <%= tutor.getEvaluate() %> </p>
               </li>
             </ul>
           </div>
@@ -99,7 +98,7 @@
             <hr>
             <div class="row">
               <div class="col-sm-3"><p class="mb-0">Ngày sinh</p></div>
-              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getBirth() %></p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getBirth() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(tutor.getBirth()) : "" %></p></div>
             </div>
             <hr>
             <div class="row">
@@ -114,12 +113,12 @@
             <hr>
             <div class="row">
               <div class="col-sm-3"><p class="mb-0">CCCD</p></div>
-              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getCccd() %></p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getIdCardNumber() %></p></div> <!-- Đổi từ getCccd() -->
             </div>
             <hr>
             <div class="row">
               <div class="col-sm-3"><p class="mb-0">Số tài khoản</p></div>
-              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getBankCode() %></p></div>
+              <div class="col-sm-9"><p class="text-muted mb-0"><%= tutor.getBankAccountNumber() %></p></div> <!-- Đổi từ getBankCode() -->
             </div>
             <hr>
             <div class="row">
@@ -143,7 +142,7 @@
         <div class="card mb-4" id="profileInfo">
           <div class="card-body">
             <h5 class="mb-3">Mô tả thêm</h5>
-            <p class="text-muted"><%= tutor.getDescribeTutor() %></p>
+            <p class="text-muted"><%= tutor.getDescription() %></p> <!-- Đổi từ getDescribeTutor() -->
           </div>
         </div>
       </div>
@@ -164,11 +163,11 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Ngày sinh</label>
-          <input type="date" class="form-control" name="birth" value="<%= tutor.getBirth() %>">
+          <input type="date" class="form-control" name="birth" value="<%= tutor.getBirth() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(tutor.getBirth()) : "" %>">
         </div>
         <div class="mb-3">
           <label class="form-label">Email</label>
-          <input type="email" class="form-control" name="email" value="<%= tutor.getEmail()%>">
+          <input type="email" class="form-control" name="email" value="<%= tutor.getEmail() %>">
         </div>
         <div class="mb-3">
           <label class="form-label">Số điện thoại</label>
@@ -176,11 +175,11 @@
         </div>
         <div class="mb-3">
           <label class="form-label">CCCD</label>
-          <input type="text" class="form-control" name="cccd" value="<%= tutor.getCccd() %>"readonly>
+          <input type="text" class="form-control" name="id_card_number" value="<%= tutor.getIdCardNumber() %>" readonly> <!-- Đổi từ cccd -->
         </div>
         <div class="mb-3">
           <label class="form-label">Số tài khoản</label>
-          <input type="text" class="form-control" name="bank_code" value="<%= tutor.getBankCode() %>">
+          <input type="text" class="form-control" name="bank_account_number" value="<%= tutor.getBankAccountNumber() %>" readonly> <!-- Đổi từ bank_code -->
         </div>
         <div class="mb-3">
           <label class="form-label">Tên ngân hàng</label>
@@ -192,7 +191,6 @@
             <option value="Sacombank" <%= "Sacombank".equals(tutor.getBankName()) ? "selected" : "" %>>Sacombank</option>
           </select>
         </div>
-
         <div class="mb-3">
           <label class="form-label">Địa chỉ</label>
           <input type="text" class="form-control" name="address" value="<%= tutor.getAddress() %>">
@@ -203,16 +201,14 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Mô tả</label>
-          <textarea class="form-control" name="describe_tutor" rows="3"><%= tutor.getDescribeTutor() %></textarea>
+          <textarea class="form-control" name="description" rows="3"><%= tutor.getDescription() %></textarea> <!-- Đổi từ describe_tutor -->
         </div>
         <div class="d-flex justify-content-center">
           <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>
           <button type="button" class="btn btn-secondary" onclick="toggleEditForm()">Hủy</button>
         </div>
-
       </form>
     </div>
-
     <% } %>
   </div>
 </section>
@@ -233,6 +229,5 @@
     });
   }
 </script>
-
 </body>
 </html>

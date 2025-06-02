@@ -53,11 +53,11 @@
           <a href="404.jsp" class="dropdown-item">404 Page</a>
         </div>
       </div>
-      <a href="" class="nav-item nav-link">Profile</a>
+      <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a> <!-- Đảm bảo đường dẫn -->
     </div>
 
     <!-- Thanh tìm kiếm -->
-    <form class="d-flex ms-3 me-2" role="search" method="GET" action="courses.jsp">
+    <form class="d-flex ms-3 me-2" role="search" method="GET" action="searchServlet">
       <input class="form-control me-2" type="search" name="search" placeholder="Tìm kiếm khóa học..." aria-label="Search"
              value="${param.search != null ? param.search : ''}">
       <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
@@ -94,7 +94,6 @@
             <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
           </ul>
         </div>
-
       </c:when>
       <c:otherwise>
         <!-- Nếu chưa đăng nhập, hiển thị nút Đăng nhập -->

@@ -98,7 +98,7 @@
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6 class="section-title bg-white text-center text-primary px-3">Khóa học </h6>
-            <h2>Kết quả tìm kiếm cho: <%= request.getAttribute("subName") %></h2>
+            <h2>Kết quả tìm kiếm cho: <%= request.getAttribute("search") %></h2>
         </div>
 
         <c:forEach var="course" items="${resultMap}">

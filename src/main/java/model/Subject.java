@@ -1,31 +1,31 @@
 package model;
 
 public class Subject {
-    private String id_sub;            // id_sub
+    private String id;
     private String name;
     private String level;
-    private String describe_sb;   // describeSb
+    private String description;
     private double fee;
-    private String status_sub;        // statusSub (active/inactive)
+    private String status;
 
     public Subject() {}
 
-    public Subject(String id_sub, String name, String level, String describe_sb, double fee, String status_sub) {
-        this.id_sub = id_sub;
+    public Subject(String id, String name, String level, String description, double fee, String status) {
+        this.id = id;
         this.name = name;
         this.level = level;
-        this.describe_sb = describe_sb;
+        this.description = description;
         this.fee = fee;
-        this.status_sub =status_sub;
+        this.status = status;
     }
 
     // Getter & Setter cho id
     public String getId() {
-        return id_sub;
+        return id;
     }
 
     public void setId(String id) {
-        this.id_sub =id_sub;
+        this.id = id;
     }
 
     // Getter & Setter cho name
@@ -48,11 +48,11 @@ public class Subject {
 
     // Getter & Setter cho description
     public String getDescription() {
-        return describe_sb;
+        return description;
     }
 
     public void setDescription(String description) {
-        this.describe_sb = describe_sb;
+        this.description = description;
     }
 
     // Getter & Setter cho fee
@@ -66,22 +66,22 @@ public class Subject {
 
     // Getter & Setter cho status
     public String getStatus() {
-        return status_sub;
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
         return "Subject{" +
-                "id_sub='" + id_sub + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", level='" + level + '\'' +
-                ", description='" + describe_sb + '\'' +
+                ", description='" + description + '\'' +
                 ", fee=" + fee +
-                ", status='" + status_sub + '\'' +
+                ", status='" + status + '\'' +
                 '}';
-    }
-
-    public void setStatus(String status) {
-        this.status_sub = status_sub;
     }
 }
