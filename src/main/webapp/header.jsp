@@ -53,7 +53,7 @@
           <a href="404.jsp" class="dropdown-item">404 Page</a>
         </div>
       </div>
-      <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a> <!-- Đảm bảo đường dẫn -->
+      <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a>
     </div>
 
     <!-- Thanh tìm kiếm -->
@@ -87,8 +87,11 @@
                 <!-- Link tới tutor profile -->
                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân</a></li>
               </c:when>
+              <c:otherwise>
+                <!-- Trường hợp role không phải student hoặc tutor (ví dụ: admin hoặc role không được thiết lập) -->
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Thông tin cá nhân</a></li>
+              </c:otherwise>
             </c:choose>
-
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
           </ul>
