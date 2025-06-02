@@ -21,7 +21,7 @@
   <div id="content-wrapper" class="d-flex flex-column">
     <div id="content">
       <!-- Topbar -->
-      <%@ include file="topbar.jsp" %>
+      <%@ include file="header.jsp" %>
       <!-- Main Content -->
       <div class="container-fluid">
         <h1 class="h3 mb-4 text-gray-800">Lỗi</h1>
