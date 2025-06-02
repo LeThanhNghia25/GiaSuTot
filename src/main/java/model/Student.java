@@ -18,6 +18,7 @@ public class Student {
         this.birth = birth;
         this.describe_st = describe_st;
         this.id_acc = id_acc;
+
     }
 
     // Getters and Setters
@@ -59,5 +60,6 @@ public class Student {
 
     public void setaccount_id(String account_id) {
         this.id_acc = account_id;
+
     }
 }

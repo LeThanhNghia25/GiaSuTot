@@ -1,13 +1,18 @@
 package Controller;
 
 import DAO.AccountDAO;
-import model.Account;
-
+import DAO.StudentDAO;
+import DAO.TutorDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import jakarta.servlet.http.HttpSession;
+import model.Account;
+import model.Student;
+import model.Tutor;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,18 +21,21 @@ import java.time.LocalDate;
 @WebServlet(name = "AccountController", urlPatterns = {"/account", "/signup-user"})
 public class AccountController extends HttpServlet {
     private AccountDAO accountDAO;
+    private TutorDAO tutorDAO;
+    private StudentDAO studentDAO;
 
     @Override
     public void init() {
+        accountDAO = new AccountDAO();
+        tutorDAO = new TutorDAO();
         try {
-            accountDAO = new AccountDAO();
-            System.out.println("AccountDAO initialized successfully at " + new java.util.Date());
+            studentDAO = new StudentDAO();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+        System.out.println("AccountDAO initialized successfully at " + new java.util.Date());
     }
 
-    // Hiển thị trang login/register hoặc các trang quản lý tài khoản
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -38,7 +46,6 @@ public class AccountController extends HttpServlet {
                 request.getSession().invalidate();
                 response.sendRedirect(request.getContextPath() + "/account?action=login");
             } else {
-                // Mặc định chuyển về trang login
                 response.sendRedirect(request.getContextPath() + "/account?action=login");
             }
         } catch (Exception e) {
@@ -48,7 +55,6 @@ public class AccountController extends HttpServlet {
         }
     }
 
-    // Xử lý đăng nhập và đăng ký
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("AccountController: doPost được gọi");
@@ -63,12 +69,28 @@ public class AccountController extends HttpServlet {
 
                 Account acc = accountDAO.getAccountByEmail(email);
 
+
                 if (acc != null && acc.getPassword().equals(pass) && "active".equalsIgnoreCase(acc.getStatus())) {
-                    request.getSession().setAttribute("account", acc);
-                    // Login thành công, chuyển hướng tới trang chính (ví dụ)
-                    response.sendRedirect(request.getContextPath() + "/about.jsp");
+                    HttpSession session = request.getSession();
+                    session.setAttribute("account", acc);
 
+                    // Thiết lập userName và role dựa trên vai trò
+                    if (acc.getRole() == 1) { // Student
+                        Student student = studentDAO.getStudentByAccountId(acc.getId());
+                        if (student != null) {
+                            session.setAttribute("userName", student.getName());
+                            session.setAttribute("role", "student"); // Thiết lập role dạng chuỗi
+                        }
+                    } else if (acc.getRole() == 2) { // Tutor
+                        Tutor tutor = tutorDAO.getTutorByAccountId(acc.getId());
+                        if (tutor != null) {
+                            session.setAttribute("userName", tutor.getName());
+                            session.setAttribute("role", "tutor"); // Thiết lập role dạng chuỗi
+                        }
+                    }
 
+                    System.out.println("Login successful. Account ID: " + acc.getId());
+                    response.sendRedirect(request.getContextPath() + "/index.jsp");
                 } else {
                     request.setAttribute("error_login", "Email hoặc mật khẩu không đúng, hoặc tài khoản chưa kích hoạt.");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
@@ -77,9 +99,9 @@ public class AccountController extends HttpServlet {
                 String email = request.getParameter("email");
                 String pass = request.getParameter("pass");
                 String name = request.getParameter("name");
-                String birthStr = request.getParameter("birth"); // Chuỗi từ input date
+                String birthStr = request.getParameter("birth");
                 LocalDate birth = LocalDate.parse(birthStr);
-                String describe = request.getParameter("describe");
+                String description = request.getParameter("description"); // Đổi từ describe thành description
 
                 if (email == null || email.trim().isEmpty() || pass == null || pass.trim().isEmpty()
                         || name == null || name.trim().isEmpty() || birth == null || birthStr.trim().isEmpty()) {
@@ -97,15 +119,9 @@ public class AccountController extends HttpServlet {
 
                 try {
                     // Tạo account mới
-                    String idAcc = accountDAO.generateaccount_id();
+                    String idAcc = accountDAO.generateAccountId();
                     Account acc = new Account(idAcc, email, pass, 1, "inactive", null); // role = 1, status = inactive
                     accountDAO.insertAccount(acc);
-
-                    // Gửi các thông tin còn lại sang StudentController
-                    request.setAttribute("name", name);
-                    request.setAttribute("birth", birth);
-                    request.setAttribute("describe", describe);
-                    request.setAttribute("id_acc", idAcc);
 
                     // Forward đến StudentController để lưu student
 
@@ -119,6 +135,10 @@ public class AccountController extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi không xác định: " + e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }

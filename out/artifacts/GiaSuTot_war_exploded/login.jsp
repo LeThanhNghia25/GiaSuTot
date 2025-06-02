@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<<<<<<< HEAD
 <head>
     <meta charset="utf-8">
     <title>eLEARNING - eLearning HTML Template</title>
@@ -42,8 +43,14 @@
 
 </head>
 <body>
+=======
+<!-- Header -->
+>>>>>>> 39e768531abb96e6e103c58032b55c374d4495bb
 <%@ include file="header.jsp" %>
 <!-- Header End -->
+
+<body>
+
 
 <!-- Content-->
 <div class="content">
@@ -68,8 +75,13 @@
                 <input type="date" name="birth" id="register-birth" >
                 <div id="birth-error" style="color: red; font-size: 10px;"></div>
 
+<<<<<<< HEAD
                 <input type="text" name="describe" id="register-describe" placeholder="Mô tả" >
                 <div id="describeSt-error" style="color: red; font-size: 10px;"></div>
+=======
+                <input type="text" name="description" id="register-description" placeholder="Mô tả"> <!-- Đổi từ describe -->
+                <div id="description-error" style="color: red; font-size: 10px;"></div> <!-- Đổi từ describeSt-error -->
+>>>>>>> 39e768531abb96e6e103c58032b55c374d4495bb
 
                 <input type="password" name="password" id="register-password" placeholder="Mật khẩu" >
                 <div id="password-error" style="color: red; font-size: 10px;"></div>
@@ -117,13 +129,13 @@
                     <h1>Chào mừng, trở lại!</h1>
                     <p>Nhập thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web</p>
                     <button id="login">Đăng nhập</button>
-                    <button id="homes"><a href="about.jsp" style="text-decoration: none ;color: #FFFFFF">Trang chủ</a></button>
+                    <button id="homes"><a href="index.jsp" style="text-decoration: none ;color: #FFFFFF">Trang chủ</a></button>
                 </div>
                 <div class="toggle-panel toggle-right">
                     <h1>Chào bạn!</h1>
                     <p>Đăng ký với thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web</p>
                     <button id="register">Đăng kí</button>
-                    <button id="HOME"><a href="about.jsp" style="text-decoration: none ;color: #FFFFFF" >Trang chủ</a></button>
+                    <button id="HOME"><a href="index.jsp" style="text-decoration: none ;color: #FFFFFF" >Trang chủ</a></button>
                 </div>
             </div>
         </div>

@@ -2,11 +2,14 @@ package model;
 
 public class Account {
     private String id_acc;
+
     private String email;
     private String pass;
     private int role;
+
     private String status_acc; // id_acc, email, pass, role, status_acc
     private String google_id;
+
     public Account() {}
 
     public Account(String id_acc, String email, String pass, int role, String status_acc, String google_id) {
@@ -62,6 +65,7 @@ public class Account {
     }
 
     // Getter & Setter cho status
+
     public String getStatus() {
         return status_acc;
     }
@@ -75,5 +79,6 @@ public class Account {
 
     public void setGoogle_id(String status) {
         this.status_acc = status_acc;
+
     }
 }

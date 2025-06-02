@@ -3,10 +3,25 @@
 <html>
 <head>
   <title>Header</title>
-  <!-- Đảm bảo Bootstrap CSS được bao gồm -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome CSS cho biểu tượng -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Template Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/login-signup.css" rel="stylesheet">
+  <link href="css/modal.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
 <!-- Spinner Start -->
@@ -38,11 +53,11 @@
           <a href="404.jsp" class="dropdown-item">404 Page</a>
         </div>
       </div>
-      <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
+      <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a>
     </div>
 
     <!-- Thanh tìm kiếm -->
-    <form class="d-flex ms-3 me-2" role="search" method="GET" action="courses.jsp">
+    <form class="d-flex ms-3 me-2" role="search" method="GET" action="searchServlet">
       <input class="form-control me-2" type="search" name="search" placeholder="Tìm kiếm khóa học..." aria-label="Search"
              value="${param.search != null ? param.search : ''}">
       <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
@@ -57,9 +72,29 @@
     <c:choose>
       <c:when test="${not empty sessionScope.account}">
         <!-- Nếu đã đăng nhập, hiển thị tên người dùng và nút Đăng xuất -->
-        <div class="d-flex align-items-center py-4 px-lg-5 d-none d-lg-block">
-          <span class="text-primary me-3">Xin chào, <c:out value="${sessionScope.userName}"/></span>
-          <a href="${pageContext.request.contextPath}/account?action=logout" class="btn btn-danger btn-short">Đăng xuất<i class="fa fa-sign-out-alt ms-2"></i></a>
+        <div class="dropdown py-4 px-lg-5 d-none d-lg-block">
+          <a class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-user me-2"></i>
+            <span>Xin chào, <c:out value="${sessionScope.userName}"/></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <c:choose>
+              <c:when test="${sessionScope.role == 'student'}">
+                <!-- Link tới student profile -->
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/student">Thông tin cá nhân</a></li>
+              </c:when>
+              <c:when test="${sessionScope.role == 'tutor'}">
+                <!-- Link tới tutor profile -->
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân</a></li>
+              </c:when>
+              <c:otherwise>
+                <!-- Trường hợp role không phải student hoặc tutor (ví dụ: admin hoặc role không được thiết lập) -->
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Thông tin cá nhân</a></li>
+              </c:otherwise>
+            </c:choose>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
+          </ul>
         </div>
       </c:when>
       <c:otherwise>

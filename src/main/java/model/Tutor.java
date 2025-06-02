@@ -1,23 +1,27 @@
 package model;
 
-import java.sql.Date;
+import java.util.Date;
 
-public class Tutor {
-    private String id;
+public class Tutor extends Account{
+    private String id; // Đổi từ id_tutor thành id
     private String name;
     private String email;
-    private Date birth;
+    private Date birth; // DATE trong SQL ánh xạ thành java.util.Date
     private String phone;
     private String address;
     private String specialization;
-    private String describe_tutor;
+    private String description; // Đổi từ describe_tutor thành description
+    private int idCardNumber; // Đổi từ cccd thành idCardNumber
+    private int bankAccountNumber; // Đổi từ bank_code thành bankAccountNumber
+    private String bankName;
+    private String accountId; // Đổi từ id_acc thành accountId
     private int evaluate;
-    private String account_id;
 
-    // Constructor
     public Tutor() {}
 
-    public Tutor(String id, String name, String email, Date birth, String phone, String address, String specialization, String describe_tutor, int evaluate) {
+    public Tutor(String id, String name, String email, Date birth, String phone, String address,
+                 String specialization, String description, int idCardNumber, int bankAccountNumber,
+                 String bankName, String accountId, int evaluate) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -25,11 +29,15 @@ public class Tutor {
         this.phone = phone;
         this.address = address;
         this.specialization = specialization;
-        this.describe_tutor = describe_tutor;
+        this.description = description;
+        this.idCardNumber = idCardNumber;
+        this.bankAccountNumber = bankAccountNumber;
+        this.bankName = bankName;
+        this.accountId = accountId;
         this.evaluate = evaluate;
     }
 
-    // Getters and Setters
+    // Getter & Setter cho id
     public String getId() {
         return id;
     }
@@ -38,6 +46,7 @@ public class Tutor {
         this.id = id;
     }
 
+    // Getter & Setter cho name
     public String getName() {
         return name;
     }
@@ -46,6 +55,7 @@ public class Tutor {
         this.name = name;
     }
 
+    // Getter & Setter cho email
     public String getEmail() {
         return email;
     }
@@ -54,6 +64,7 @@ public class Tutor {
         this.email = email;
     }
 
+    // Getter & Setter cho birth
     public Date getBirth() {
         return birth;
     }
@@ -62,6 +73,7 @@ public class Tutor {
         this.birth = birth;
     }
 
+    // Getter & Setter cho phone
     public String getPhone() {
         return phone;
     }
@@ -70,6 +82,7 @@ public class Tutor {
         this.phone = phone;
     }
 
+    // Getter & Setter cho address
     public String getAddress() {
         return address;
     }
@@ -78,6 +91,7 @@ public class Tutor {
         this.address = address;
     }
 
+    // Getter & Setter cho specialization
     public String getSpecialization() {
         return specialization;
     }
@@ -86,27 +100,57 @@ public class Tutor {
         this.specialization = specialization;
     }
 
-    public String getDescribeTutor() {
-        return describe_tutor;
+    // Getter & Setter cho description
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescribeTutor(String describe_tutor) {
-        this.describe_tutor = describe_tutor;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
+    // Getter & Setter cho idCardNumber
+    public int getIdCardNumber() {
+        return idCardNumber;
+    }
+
+    public void setIdCardNumber(int idCardNumber) {
+        this.idCardNumber = idCardNumber;
+    }
+
+    // Getter & Setter cho bankAccountNumber
+    public int getBankAccountNumber() {
+        return bankAccountNumber;
+    }
+
+    public void setBankAccountNumber(int bankAccountNumber) {
+        this.bankAccountNumber = bankAccountNumber;
+    }
+
+    // Getter & Setter cho bankName
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    // Getter & Setter cho accountId
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    // Getter & Setter cho evaluate
     public int getEvaluate() {
         return evaluate;
     }
 
     public void setEvaluate(int evaluate) {
         this.evaluate = evaluate;
-    }
-
-    public String getAccountId() {
-        return account_id;
-    }
-
-    public void setAccountId(String account_id) {
-        this.account_id = account_id;
     }
 }
