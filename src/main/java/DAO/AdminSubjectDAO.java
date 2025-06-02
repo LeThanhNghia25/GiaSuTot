@@ -71,6 +71,19 @@ public class AdminSubjectDAO {
         return list;
     }
 
+    public String generateSubjectId() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM subject";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                int count = rs.getInt(1) + 1;
+                return String.format("sb%03d", count);
+            }
+        }
+        return "sb001"; // Nếu không có môn học nào, bắt đầu từ sb001
+    }
+
     public void addSubject(Subject subject) throws SQLException {
         String sql = "INSERT INTO subject (id, name, level, description, fee, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();

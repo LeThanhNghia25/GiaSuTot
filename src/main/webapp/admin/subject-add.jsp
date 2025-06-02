@@ -21,7 +21,7 @@
   <div id="content-wrapper" class="d-flex flex-column">
     <div id="content">
       <!-- Topbar -->
-      <%@ include file="topbar.jsp" %>
+      <%@ include file="header.jsp" %>
       <!-- Main Content -->
       <div class="container-fluid">
         <h1 class="h3 mb-4 text-gray-800">Thêm môn học</h1>
@@ -35,10 +35,6 @@
           <div class="card-body">
             <form method="post" action="${pageContext.request.contextPath}/admin/subject">
               <input type="hidden" name="action" value="add">
-              <div class="form-group">
-                <label for="id">ID môn học</label>
-                <input type="text" class="form-control" id="id" name="id" value="${param.id}" required> <!-- Đổi từ id_sub -->
-              </div>
               <div class="form-group">
                 <label for="name">Tên môn học</label>
                 <input type="text" class="form-control" id="name" name="name" value="${param.name}" required>
