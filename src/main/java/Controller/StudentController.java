@@ -29,14 +29,20 @@ public class StudentController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Lấy dữ liệu được set attribute từ AccountController
+        String id = null;
+        try {
+            id = (String) studentDAO.generateStudentId();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         String name = (String) request.getAttribute("name");
         LocalDate birth = (LocalDate) request.getAttribute("birth");
         String describe = (String) request.getAttribute("describe");
         String idAcc = (String) request.getAttribute("id_acc");
 
         try {
-            Student student = new Student();
-            student.setId(studentDAO.generateStudentId());
+            Student student = new Student(id, name, birth, describe, idAcc);
+            student.setId(id);
             student.setName(name);
             student.setBirth(birth);
             student.setDescribe(describe);

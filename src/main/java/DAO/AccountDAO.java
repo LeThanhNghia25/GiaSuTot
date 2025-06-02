@@ -3,7 +3,6 @@ package DAO;
 import model.Account;
 import Utils.DBConnection;
 import java.sql.*;
-import java.util.*;
 
 public class AccountDAO {
     private Connection conn;
@@ -24,7 +23,7 @@ public class AccountDAO {
         return null;
     }
     public void insertAccount(Account acc) throws SQLException {
-        String sql = "INSERT INTO account (id_acc, email, pass, role, status_acc) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO account (id_acc, email, pass, role, statusAcc) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, acc.getId());
             ps.setString(2, acc.getEmail());
@@ -46,11 +45,50 @@ public class AccountDAO {
                 acc.setEmail(rs.getString("email"));
                 acc.setPassword(rs.getString("pass"));
                 acc.setRole(rs.getInt("role"));
-                acc.setStatus(rs.getString("status_acc"));
+                acc.setStatus(rs.getString("statusAcc"));
                 return acc;
             }
         }
         return null;
     }
+    public Account findByGoogleId(String googleId) throws SQLException {
+        String sql = "SELECT * FROM account WHERE google_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, googleId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Account account = new Account();
+                    account.setId(generateaccount_id());        // id_acc thay cho userId
+                    account.setEmail(rs.getString("email"));
+                    account.setPassword(rs.getString("pass"));         // nếu cần mật khẩu
+                    account.setRole(rs.getInt("role"));
+                    account.setStatus("inactive"); // thêm trường status_acc
+                    account.setGoogle_id(rs.getString("google_id")); // google_id phải có trong bảng
+                    return account;
+                }
+            }
+        }
+        return null;
+    }
+    public boolean insertgg(Account account) {
+        String sql = "INSERT INTO account (id_acc, email, role, statusAcc, google_id) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, generateaccount_id());
+            stmt.setString(2, account.getEmail());
+            stmt.setInt(3, 1);
+            stmt.setString(4, "inactive");
+            stmt.setString(5, account.getGoogle_id());
+
+            int rowsInserted = stmt.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 }
