@@ -37,8 +37,8 @@ CREATE TABLE tutor (
                        address VARCHAR(255) NOT NULL,
                        specialization VARCHAR(255) NOT NULL,
                        description TEXT, -- Đổi từ describe_tutor thành description
-                       id_card_number INT(12) NOT NULL, -- Đổi từ cccd thành id_card_number
-                       bank_account_number INT(15) NOT NULL, -- Đổi từ bank_code thành bank_account_number
+                       id_card_number BIGINT(12) NOT NULL, -- Đổi từ cccd thành id_card_number
+                       bank_account_number BIGINT(15) NOT NULL, -- Đổi từ bank_code thành bank_account_number
                        bank_name VARCHAR(255) NOT NULL,
                        account_id CHAR(20), -- Đổi từ id_acc thành account_id
                        evaluate INT CHECK (evaluate BETWEEN 1 AND 5),

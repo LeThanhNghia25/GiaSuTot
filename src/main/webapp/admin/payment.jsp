@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Quản lý môn học</title>
+  <title>Thanh toán cho gia sư</title>
   <link href="${pageContext.request.contextPath}/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700,900" rel="stylesheet">
   <link href="${pageContext.request.contextPath}/admin/css/sb-admin-2.min.css" rel="stylesheet">
@@ -17,6 +18,7 @@
   <div id="sidebar">
     <%@ include file="slibar.jsp" %>
   </div>
+
   <!-- Content Wrapper -->
   <div id="content-wrapper" class="d-flex flex-column">
     <div id="content">
@@ -24,58 +26,60 @@
       <%@ include file="header.jsp" %>
       <!-- Main Content -->
       <div class="container-fluid">
-        <h1 class="h3 mb-4 text-gray-800">Quản lý môn học</h1>
-        <a href="${pageContext.request.contextPath}/admin/subject?action=add" class="btn btn-success mb-3">+ Thêm môn học</a>
+        <h1 class="h3 mb-4 text-gray-800">Thanh toán cho gia sư</h1>
+        <c:if test="${not empty error}">
+          <div class="alert alert-danger">${error}</div>
+        </c:if>
+        <c:if test="${not empty success}">
+          <div class="alert alert-success">${success}</div>
+        </c:if>
         <div class="card shadow mb-4">
           <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Danh sách môn học</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách khóa học đã hoàn thành</h6>
           </div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Tên môn</th>
-                  <th>Mô tả</th>
-                  <th>Trạng thái</th>
-                  <th>Hành động</th>
+                  <th>Mã khóa học</th>
+                  <th>Tên môn học</th>
+                  <th>Cấp độ</th>
+                  <th>Tên gia sư</th>
+                  <th>Giá tiền (VND)</th>
+                  <th>Mức lương (70%)</th>
+                  <th>Thanh toán</th>
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="subject" items="${subjects}">
+                <c:forEach var="course" items="${completedCourses}">
                   <tr>
-                    <td>${subject.id}</td>
-                    <td>${subject.name}</td>
-                    <td>${subject.description}</td>
+                    <td>${course.id}</td>
+                    <td>${course.subject.name}</td>
+                    <td>${course.subject.level}</td>
+                    <td>${course.tutor.name}</td>
                     <td>
-                      <c:choose>
-                        <c:when test="${subject.status == 'active'}">
-                          <span class="badge badge-success">Đang hoạt động</span>
-                        </c:when>
-                        <c:otherwise>
-                          <span class="badge badge-secondary">Đã ẩn</span>
-                        </c:otherwise>
-                      </c:choose>
+                      <fmt:setLocale value="vi_VN"/>
+                      <fmt:formatNumber value="${course.subject.fee}" type="currency" currencySymbol="₫" groupingUsed="true"/>
                     </td>
                     <td>
-                      <a href="${pageContext.request.contextPath}/admin/subject?action=edit&id=${subject.id}" class="btn btn-sm btn-primary">Sửa</a>
-                      <c:choose>
-                        <c:when test="${subject.status == 'active'}">
-                          <a href="${pageContext.request.contextPath}/admin/subject?action=hide&id=${subject.id}" class="btn btn-sm btn-danger">Ẩn</a>
-                        </c:when>
-                        <c:otherwise>
-                          <a href="${pageContext.request.contextPath}/admin/subject?action=restore&id=${subject.id}" class="btn btn-sm btn-success"
-                             onclick="return confirm('Bạn có chắc muốn hiện lại môn học này không?')">Hiện</a>
-                        </c:otherwise>
-                      </c:choose>
+                      <fmt:setLocale value="vi_VN"/>
+                      <fmt:formatNumber value="${course.subject.fee * 0.7}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                    </td>
+                    <td>
+                      <form action="${pageContext.request.contextPath}/admin/payment" method="post">
+                        <input type="hidden" name="courseId" value="${course.id}">
+                        <input type="hidden" name="tutorId" value="${course.tutor.id}">
+                        <input type="hidden" name="amount" value="${course.subject.fee * 0.7}">
+                        <button type="submit" class="btn btn-primary btn-sm">Thanh toán</button>
+                      </form>
                     </td>
                   </tr>
                 </c:forEach>
                 </tbody>
               </table>
-              <c:if test="${empty subjects}">
-                <div class="text-center text-muted">Không có môn học nào hoặc lỗi: ${subjects}</div>
+              <c:if test="${empty completedCourses}">
+                <div class="text-center text-muted">Không có khóa học nào đã hoàn thành hoặc lỗi: ${completedCourses}</div>
               </c:if>
             </div>
           </div>

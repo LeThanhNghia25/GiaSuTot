@@ -24,13 +24,13 @@ public class TutorDAO {
                                 rs.getString("id"),
                                 rs.getString("name"),
                                 rs.getString("email"),
-                                rs.getDate("birth"),
+                                rs.getDate("birth").toLocalDate(), // Sử dụng toLocalDate()
                                 rs.getString("phone"),
                                 rs.getString("address"),
                                 rs.getString("specialization"),
                                 rs.getString("description"),
-                                rs.getInt("id_card_number"),
-                                rs.getInt("bank_account_number"),
+                                rs.getLong("id_card_number"),      // Sử dụng getLong()
+                                rs.getLong("bank_account_number"), // Sử dụng getLong()
                                 rs.getString("bank_name"),
                                 rs.getString("account_id"),
                                 rs.getInt("evaluate")
@@ -67,13 +67,13 @@ public class TutorDAO {
                                 rs.getString("id"),
                                 rs.getString("name"),
                                 rs.getString("email"),
-                                rs.getDate("birth"),
+                                rs.getDate("birth").toLocalDate(), // Sử dụng toLocalDate()
                                 rs.getString("phone"),
                                 rs.getString("address"),
                                 rs.getString("specialization"),
                                 rs.getString("description"),
-                                rs.getInt("id_card_number"),
-                                rs.getInt("bank_account_number"),
+                                rs.getLong("id_card_number"),      // Sử dụng getLong()
+                                rs.getLong("bank_account_number"), // Sử dụng getLong()
                                 rs.getString("bank_name"),
                                 rs.getString("account_id"),
                                 rs.getInt("evaluate")
@@ -94,13 +94,13 @@ public class TutorDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tutor.getName());
             stmt.setString(2, tutor.getEmail());
-            stmt.setDate(3, new java.sql.Date(tutor.getBirth().getTime()));
+            stmt.setDate(3, tutor.getBirth() != null ? java.sql.Date.valueOf(tutor.getBirth()) : null);
             stmt.setString(4, tutor.getPhone());
             stmt.setString(5, tutor.getAddress());
             stmt.setString(6, tutor.getSpecialization());
             stmt.setString(7, tutor.getDescription());
-            stmt.setInt(8, tutor.getIdCardNumber());
-            stmt.setInt(9, tutor.getBankAccountNumber());
+            stmt.setLong(8, tutor.getIdCardNumber());     // Sử dụng setLong()
+            stmt.setLong(9, tutor.getBankAccountNumber()); // Sử dụng setLong()
             stmt.setString(10, tutor.getBankName());
             stmt.setInt(11, tutor.getEvaluate());
             stmt.setString(12, tutor.getId());
