@@ -31,7 +31,7 @@ public class CourseDAO {
             course.setSubjectId(resultSet.getString("subject_id"));
             course.setTutorId(resultSet.getString("tutor_id"));
             course.setTotal_lesson(resultSet.getInt("total_lesson")); // <-- thêm dòng này
-            course.setTime(resultSet.getTimestamp("time")); // Timestamp sang Date
+            course.setTime(resultSet.getTimestamp("time").toLocalDateTime()); // Timestamp sang Date
             courseList.add(course);
         }
 

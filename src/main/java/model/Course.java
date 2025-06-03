@@ -10,6 +10,7 @@ public class Course {
     private LocalDateTime time;
     private Subject subject;
     private Tutor tutor;
+    private int total_lesson;
     private String studentId; // ID học viên
     private String studentName; // Tên học viên
     private LocalDate startDate; // Ngày bắt đầu học
@@ -24,6 +25,13 @@ public class Course {
         this.time = time;
     }
 
+    public Course(String id, String subjectId, String tutorId, int total_lesson, LocalDateTime time) {
+        this.id = id;
+        this.subjectId = subjectId;
+        this.tutorId = tutorId;
+        this.total_lesson = total_lesson;
+        this.time = time;
+    }
     public String getId() {
         return id;
     }
@@ -71,6 +79,13 @@ public class Course {
     public void setTutor(Tutor tutor) {
         this.tutor = tutor;
     }
+    public int getTotal_lesson() {
+        return total_lesson;
+    }
+
+    public void setTotal_lesson(int total_lesson) {
+        this.total_lesson = total_lesson;
+    }
 
     public String getStudentId() {
         return studentId;
@@ -110,9 +125,8 @@ public class Course {
                 "id='" + id + '\'' +
                 ", subjectId='" + subjectId + '\'' +
                 ", tutorId='" + tutorId + '\'' +
+                ", total_lesson=" + total_lesson +
                 ", time=" + time +
-                ", subject=" + (subject != null ? subject.getName() : "null") +
-                ", tutor=" + (tutor != null ? tutor.getName() : "null") +
                 '}';
     }
 }
