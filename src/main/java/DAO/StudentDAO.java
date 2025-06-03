@@ -33,7 +33,7 @@ public class StudentDAO {
             ps.setString(2, student.getName());
             ps.setDate(3, java.sql.Date.valueOf(student.getBirth()));
             ps.setString(4, student.getDescription());
-            ps.setString(5, student.getAccountId()); // Đổi từ student.getAccountId().getId() thành student.getAccountId()
+            ps.setString(5, student.getAccount().getId()); // Đổi từ student.getAccountId().getId() thành student.getAccountId()
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         }
@@ -60,7 +60,7 @@ public class StudentDAO {
                 acc.setId(accountId);
                 acc.setEmail(email);
 
-                return new Student(id, name, birth, description, accountId); // Đổi tham số cuối thành accountId (String)
+                return new Student(id, name, birth, description, acc); // Đổi tham số cuối thành accountId (String)
             }
         }
         return null;

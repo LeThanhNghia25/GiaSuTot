@@ -128,7 +128,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" value="<%= student.getAccount().getEmail() %> readonly">
+                    <input type="email" class="form-control" name="email" value="<%= student.getAccount().getEmail() %>"  readonly>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mô tả</label>
