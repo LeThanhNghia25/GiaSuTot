@@ -8,16 +8,16 @@ public class Student extends Account{
     private String name;
     private LocalDate birth;
     private String description; // Đổi từ describe thành description
-    private String accountId; // Đổi từ id_acc thành accountId
+    private Account account; // Thay vì String accountId
 
     public Student() {}
 
-    public Student(String id, String name, LocalDate birth, String description, String accountId) {
+    public Student(String id, String name, LocalDate birth, String description,  Account account) {
         this.id = id;
         this.name = name;
         this.birth = birth;
         this.description = description;
-        this.accountId = accountId;
+        this.account = account;
     }
 
     // Getters and Setters
@@ -53,11 +53,11 @@ public class Student extends Account{
         this.description = description;
     }
 
-    public String getAccountId() { // Đổi từ getAccountId thành getAccountId (đã đúng, chỉ cần đồng bộ tên biến)
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(String accountId) { // Đổi từ setAccountId thành setAccountId (đã đúng, chỉ cần đồng bộ tên biến)
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

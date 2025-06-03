@@ -99,7 +99,7 @@ public class StudentController extends HttpServlet {
             student.setName(name);
             student.setBirth(birth);
             student.setDescription(description); // Đổi setDescribe thành setDescription
-            student.setAccountId(accountId); // Đổi setAccountId(account) thành setAccountId(accountId)
+            student.setAccount(account); // Đổi setAccountId(account) thành setAccountId(accountId)
 
             // Cập nhật thông tin trong cơ sở dữ liệu
             studentDAO.updateStudent(student);
@@ -119,7 +119,7 @@ public class StudentController extends HttpServlet {
         String name = (String) request.getAttribute("name");
         LocalDate birth = (LocalDate) request.getAttribute("birth");
         String description = (String) request.getAttribute("description"); // Đổi describe thành description
-        String accountId = (String) request.getAttribute("account_id"); // Đổi id_acc thành account_id
+        Account account = (Account) request.getAttribute("account"); // Đổi id_acc thành account_id
 
         try {
             Student student = new Student();
@@ -127,7 +127,7 @@ public class StudentController extends HttpServlet {
             student.setName(name);
             student.setBirth(birth);
             student.setDescription(description); // Đổi setDescribe thành setDescription
-            student.setAccountId(accountId); // Đổi setAccountId(acc) thành setAccountId(accountId)
+            student.setAccount(account); // Đổi setAccountId(acc) thành setAccountId(accountId)
 
             studentDAO.insertStudent(student);
             request.getSession().setAttribute("success", "Đăng ký thành công, vui lòng đăng nhập.");

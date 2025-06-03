@@ -1,5 +1,6 @@
 package DAO;
 
+import model.Account;
 import model.Student;
 import model.Subject;
 import Utils.DBConnection;
@@ -163,12 +164,14 @@ public class AdminSubjectDAO {
             stmt.setString(1, subjectId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    Account acc = new Account();
+                    acc.setId(rs.getString("id"));
                     students.add(new Student(
                             rs.getString("id"),
                             rs.getString("name"),
                             rs.getDate("birth").toLocalDate(),
                             rs.getString("description"),
-                            rs.getString("account_id")
+                            acc
                     ));
                 }
             }
