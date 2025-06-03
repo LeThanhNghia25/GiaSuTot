@@ -11,9 +11,8 @@ import model.Account;
 import model.Tutor;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet("/tutor")
 public class TutorController extends HttpServlet {
@@ -80,14 +79,14 @@ public class TutorController extends HttpServlet {
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             String specialization = request.getParameter("specialization");
-            String description = request.getParameter("description"); // Đổi từ describe_tutor
-            int idCardNumber = Integer.parseInt(request.getParameter("id_card_number")); // Đổi từ cccd
-            int bankAccountNumber = Integer.parseInt(request.getParameter("bank_account_number")); // Đổi từ bank_code
+            String description = request.getParameter("description");
+            long idCardNumber = Long.parseLong(request.getParameter("id_card_number"));
+            long bankAccountNumber = Long.parseLong(request.getParameter("bank_account_number"));
             String bankName = request.getParameter("bank_name");
             String birthStr = request.getParameter("birth");
-            Date birth = null;
+            LocalDate birth = null;
             if (birthStr != null && !birthStr.trim().isEmpty()) {
-                birth = new SimpleDateFormat("yyyy-MM-dd").parse(birthStr);
+                birth = LocalDate.parse(birthStr, DateTimeFormatter.ISO_LOCAL_DATE);
             }
 
             Tutor updatedTutor = new Tutor(
