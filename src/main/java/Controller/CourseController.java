@@ -14,35 +14,37 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import java.text.Normalizer;
-import java.util.regex.Pattern;
-
 @WebServlet("/searchServlet")
 public class CourseController extends HttpServlet {
-    private CourseDAO courseDAO = new CourseDAO();
+    private final CourseDAO courseDAO = new CourseDAO();
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String search = request.getParameter("search");
         if (search == null || search.trim().isEmpty()) {
-            search = ""; // Giá trị mặc định
+            search = ""; // Mặc định nếu không nhập gì
         }
+
         try {
+            // Gọi DAO để tìm kiếm khóa học theo tên môn học
             HashMap<Course, Subject> resultMap = courseDAO.FindByName(search);
 
+            // Gửi dữ liệu sang JSP để hiển thị
             request.setAttribute("resultMap", resultMap);
             request.setAttribute("search", search);
+
             request.getRequestDispatcher("/FindCourse.jsp").forward(request, response);
         } catch (SQLException e) {
             e.printStackTrace();
-            request.setAttribute("error", "Lỗi khi truy vấn cơ sở dữ liệu: " + e.getMessage());
+            request.setAttribute("error", "Lỗi truy vấn cơ sở dữ liệu: " + e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response); // Xử lý POST giống GET
+        doGet(request, response); // Gửi POST -> xử lý như GET
     }
-
 }
-

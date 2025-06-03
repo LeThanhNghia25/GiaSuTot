@@ -37,6 +37,9 @@
 <body>
 <%
     Student student = (Student) request.getAttribute("student");
+    Account acc = (Account) session.getAttribute("account");
+    int role = (acc != null) ? acc.getRole() : -1;
+    boolean isStudent = (role == 1);
 %>
 <section style="background-color: #eee;">
     <div class="container py-5">
@@ -78,7 +81,10 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h5>Thông tin cá nhân</h5>
+                            <% if (isStudent) { %>
                             <button type="button" class="btn btn-warning btn-sm" onclick="toggleEditForm()">Chỉnh sửa</button>
+                            <% } %>
+
                         </div>
                         <hr>
                         <div class="row">
@@ -110,7 +116,7 @@
 
         <!-- Backdrop -->
         <div id="backdrop" class="overlay-backdrop" style="display: none;"></div>
-
+        <% if (isStudent) { %>
         <!-- Form chỉnh sửa dạng overlay -->
         <div id="editForm" class="overlay-form" style="display: none;">
             <h5 class="mb-3">Chỉnh sửa thông tin cá nhân</h5>
@@ -141,7 +147,7 @@
 
             </form>
         </div>
-
+        <% } %>
         <% } %>
     </div>
 </section>

@@ -48,8 +48,9 @@
                         <th>Cấp độ</th>
                         <th>Mô tả</th>
                         <th>Học phí</th>
-                        <th>Trạng thái</th>
-                        <th>Trạng thái đăng ký</th>
+                        <th>Buổi học</th>
+                        <th>Danh sách học viên</th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -62,8 +63,19 @@
                             <td>${subject.fee}</td>
                             <td>
                                 <c:forEach var="rs" items="${registeredSubjectsMap[subject.id]}">
+                                    <c:if test="${rs.status == 'completed'}">
+                                        <c:set var="mapKey" value="${rs.courseId}_${rs.studentId}" />
+                                        <c:set var="lessonCount" value="${lessonCountsMap[mapKey]}" />
+                                        <c:set var="totalLesson" value="${totalLessonMap[rs.courseId]}" />
+                                        Hoàn thành: ${lessonCount}/${totalLesson}<br>
+                                    </c:if>
+                                </c:forEach>
+                            </td>
+
+                            <td>
+                                <c:forEach var="rs" items="${registeredSubjectsMap[subject.id]}">
                                     • ${rs.student.name}
-                                    <a href="s${pageContext.request.contextPath}/student?id=${rs.student.id}">Xem chi tiết</a><br>
+                                    <a href="${pageContext.request.contextPath}/student?id=${rs.student.id}">Xem thông tin</a><br>
                                 </c:forEach>
                             </td>
                         </tr>

@@ -56,15 +56,28 @@ public class TutorSubjectController extends HttpServlet {
             List<Subject> subjects = subjectDAO.getActiveSubjectsByTutor(tutorId);
             // Tạo map lưu danh sách registeredSubjects cho từng subject
             Map<String, List<RegisteredSubjects>> registeredSubjectsMap = new HashMap<>();
-
+            Map<String, Integer> lessonCountsMap = new HashMap<>();
+            Map<String, Integer> totalLessonMap = new HashMap<>();
             for (Subject subject : subjects) {
                 List<RegisteredSubjects> registeredSubjects = subjectDAO.getRegisteredSubjectsByCourse(subject.getId());
                 registeredSubjectsMap.put(subject.getId(), registeredSubjects);
+
+                // Lấy số buổi đã học cho mỗi học viên
+                for (RegisteredSubjects rs : registeredSubjects) {
+                    if ("completed".equals(rs.getStatus())) {
+                        int lessonCount = subjectDAO.getLessonCount(rs.getCourseId(), rs.getStudentId());
+                        lessonCountsMap.put(rs.getCourseId() + "_" + rs.getStudentId(), lessonCount);
+                    }
+                    int totalLesson = subjectDAO.getTotalLessonByCourseId(rs.getCourseId());
+                    totalLessonMap.put(rs.getCourseId(), totalLesson);
+                }
             }
 
             // Truyền dữ liệu về JSP
             request.setAttribute("subjects", subjects);
             request.setAttribute("registeredSubjectsMap", registeredSubjectsMap);
+            request.setAttribute("lessonCountsMap", lessonCountsMap);
+            request.setAttribute("totalLessonMap", totalLessonMap);
             request.getRequestDispatcher("/manager_subject.jsp").forward(request, response);
         } catch (SQLException e) {
             e.printStackTrace();

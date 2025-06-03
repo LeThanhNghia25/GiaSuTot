@@ -50,6 +50,7 @@ CREATE TABLE course (
                         id CHAR(20) PRIMARY KEY, -- Đổi từ id_course thành id
                         subject_id CHAR(20), -- Đổi từ id_sub thành subject_id
                         tutor_id CHAR(20), -- Đổi từ id_tutor thành tutor_id
+                        total_lesson INT NOT NULL,
                         time DATETIME NOT NULL, -- Đổi từ time_course thành time
                         FOREIGN KEY (subject_id) REFERENCES subject(id),
                         FOREIGN KEY (tutor_id) REFERENCES tutor(id)
@@ -153,16 +154,16 @@ INSERT INTO subject (id, name, level, description, fee, status) VALUES
                                                                     ('sub015', 'Hoa hoc', 'Lop 7', 'Hoc Hoa hoc co ban lop 7', 190000.00, 'inactive');
 
 -- Chèn dữ liệu vào bảng course
-INSERT INTO course (id, subject_id, tutor_id, time) VALUES
-                                                        ('course001', 'sub001', 'tut001', '2025-05-01 08:00:00'),
-                                                        ('course002', 'sub002', 'tut002', '2025-05-02 09:00:00'),
-                                                        ('course003', 'sub003', 'tut003', '2025-05-03 10:00:00'),
-                                                        ('course004', 'sub004', 'tut004', '2025-01-10 08:00:00'),
-                                                        ('course005', 'sub005', 'tut005', '2025-02-15 09:00:00'),
-                                                        ('course006', 'sub001', 'tut001', '2025-03-01 08:00:00'),
-                                                        ('course007', 'sub002', 'tut006', '2025-04-05 09:00:00'),
-                                                        ('course008', 'sub011', 'tut007', '2025-04-10 10:00:00'),
-                                                        ('course009', 'sub014', 'tut009', '2025-05-12 09:00:00');
+INSERT INTO course (id, subject_id, tutor_id, total_lesson,time) VALUES
+                                                        ('course001', 'sub001', 'tut001', 15,'2025-05-01 08:00:00'),
+                                                        ('course002', 'sub002', 'tut002', 12,'2025-05-02 09:00:00'),
+                                                        ('course003', 'sub003', 'tut003', 15,'2025-05-03 10:00:00'),
+                                                        ('course004', 'sub004', 'tut004', 12, '2025-01-10 08:00:00'),
+                                                        ('course005', 'sub005', 'tut005', 15,'2025-02-15 09:00:00'),
+                                                        ('course006', 'sub001', 'tut001', 12,'2025-03-01 08:00:00'),
+                                                        ('course007', 'sub002', 'tut006', 15,'2025-04-05 09:00:00'),
+                                                        ('course008', 'sub011', 'tut007', 12,'2025-04-10 10:00:00'),
+                                                        ('course009', 'sub014', 'tut009', 15,'2025-05-12 09:00:00');
 
 -- Chèn dữ liệu vào bảng registered_subjects
 INSERT INTO registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) VALUES

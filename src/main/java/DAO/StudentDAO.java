@@ -91,4 +91,32 @@ public class StudentDAO {
         }
         return null;
     }
+
+    public Student getStudentById(String studentId) throws SQLException {
+        String sql = "SELECT s.id, s.name, s.birth, s.description, a.id as acc_id, a.email " +
+                "FROM student s JOIN account a ON s.account_id = a.id " +
+                "WHERE s.id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, studentId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                LocalDate birth = rs.getDate("birth").toLocalDate();
+                String description = rs.getString("description");
+                String email = rs.getString("email");
+                String accId = rs.getString("acc_id");
+
+                Account acc = new Account();
+                acc.setId(accId);
+                acc.setEmail(email);
+
+                return new Student(id, name, birth, description, acc);
+            }
+        }
+        return null;
+    }
+
 }

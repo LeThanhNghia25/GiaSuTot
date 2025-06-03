@@ -30,28 +30,41 @@ public class StudentController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("account");
-        if (account == null) {
-            request.setAttribute("error", "Vui lòng đăng nhập để xem thông tin cá nhân.");
-            request.getRequestDispatcher("/account?action=login").forward(request, response);
-            return;
-        }
+        String studentId = request.getParameter("id"); // lấy id từ URL nếu có
+        Student student = null;
 
         try {
-            Student student = studentDAO.getStudentByAccountId(account.getId());
+            if (studentId != null && !studentId.isEmpty()) {
+                // Nếu có id truyền trên URL, lấy thông tin theo id
+                student = studentDAO.getStudentById(studentId);
+            } else {
+                // Nếu không có id, lấy theo account trong session
+                HttpSession session = request.getSession();
+                Account account = (Account) session.getAttribute("account");
+                if (account == null) {
+                    request.setAttribute("error", "Vui lòng đăng nhập để xem thông tin cá nhân.");
+                    request.getRequestDispatcher("/account?action=login").forward(request, response);
+                    return;
+                }
+
+                student = studentDAO.getStudentByAccountId(account.getId());
+            }
+
             if (student == null) {
                 request.setAttribute("error", "Không tìm thấy thông tin học viên.");
             } else {
                 request.setAttribute("student", student);
             }
+
             request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
+
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi khi lấy thông tin học viên: " + e.getMessage());
             request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
         }
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

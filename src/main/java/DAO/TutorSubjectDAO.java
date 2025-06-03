@@ -77,4 +77,29 @@ public class TutorSubjectDAO {
         return registeredSubjects;
     }
 
+    public int getLessonCount(String courseId, String studentId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM lesson WHERE course_id = ? AND student_id = ? AND status = 'completed'";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, courseId);
+            ps.setString(2, studentId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public int getTotalLessonByCourseId(String courseId) throws SQLException {
+        String sql = "SELECT total_lesson FROM course WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, courseId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total_lesson");
+            }
+        }
+        return 0; // Trả về 0 nếu không tìm thấy
+    }
+
 }
