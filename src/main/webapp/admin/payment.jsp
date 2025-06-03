@@ -141,7 +141,7 @@
           <input type="hidden" name="action" value="confirmPayment">
           <button type="submit" class="btn btn-success">Đã thanh toán</button>
         </form>
-        <form id="deferPaymentForm" action="${pageContext.request.contextPath}/admin/payment" method="post">
+        <form id="deferPaymentForm" method="post">
           <input type="hidden" name="courseId" id="modalCourseIdDefer">
           <input type="hidden" name="tutorId" id="modalTutorIdDefer">
           <input type="hidden" name="studentId" id="modalStudentIdDefer">
@@ -164,6 +164,7 @@
 <script src="${pageContext.request.contextPath}/admin/js/sb-admin-2.min.js"></script>
 <script>
   $(document).ready(function() {
+    // Xử lý form để mở modal
     $('.payment-form').submit(function(e) {
       e.preventDefault();
       var form = $(this);
@@ -188,6 +189,26 @@
           console.log('AJAX Error - Status: ' + status + ', Error: ' + error);
           console.log('Response: ', xhr.responseText);
           alert('Lỗi khi tải thông tin thanh toán: ' + (xhr.responseText || error));
+        }
+      });
+    });
+
+    // Xử lý form "Tạm hoãn" để không load lại trang
+    $('#deferPaymentForm').submit(function(e) {
+      e.preventDefault();
+      var form = $(this);
+      $.ajax({
+        url: '${pageContext.request.contextPath}/admin/payment',
+        type: 'POST',
+        data: form.serialize(),
+        dataType: 'json',
+        success: function(data) {
+          $('#paymentModal').modal('hide'); // Đóng modal sau khi tạm hoãn
+        },
+        error: function(xhr, status, error) {
+          console.log('AJAX Error - Status: ' + status + ', Error: ' + error);
+          console.log('Response: ', xhr.responseText);
+          alert('Lỗi khi tạm hoãn thanh toán: ' + (xhr.responseText || error));
         }
       });
     });

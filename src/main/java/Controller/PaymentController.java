@@ -47,7 +47,7 @@ public class PaymentController extends HttpServlet {
         String action = request.getParameter("action");
         String courseId = request.getParameter("courseId");
         String tutorId = request.getParameter("tutorId");
-        String studentId = request.getParameter("studentId"); // Thêm studentId
+        String studentId = request.getParameter("studentId");
         double amount = 0;
 
         System.out.println("Received action: " + action);
@@ -80,7 +80,7 @@ public class PaymentController extends HttpServlet {
                 Map<String, Object> responseData = new HashMap<>();
                 responseData.put("tutor", tutorData);
                 responseData.put("courseId", courseId);
-                responseData.put("studentId", studentId); // Trả về studentId để sử dụng trong modal
+                responseData.put("studentId", studentId);
                 responseData.put("amount", amount);
 
                 // Trả về JSON
@@ -126,7 +126,16 @@ public class PaymentController extends HttpServlet {
                 request.setAttribute("error", "Lỗi khi thực hiện thanh toán: " + e.getMessage());
             }
         } else if ("deferPayment".equals(action)) {
-            // Không hiển thị thông báo và không làm mới trang
+            // Trả về phản hồi JSON để xác nhận tạm hoãn thành công
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("status", "success");
+            responseData.put("message", "Thanh toán đã được tạm hoãn");
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out = response.getWriter();
+            out.print(new Gson().toJson(responseData));
+            out.flush();
             return;
         }
 
