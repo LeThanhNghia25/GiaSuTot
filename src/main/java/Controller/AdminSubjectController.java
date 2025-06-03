@@ -74,15 +74,14 @@ public class AdminSubjectController extends HttpServlet {
         String action = request.getParameter("action");
         try {
             if (action.equals("add")) {
-                String id = request.getParameter("id");
                 String name = request.getParameter("name");
                 String level = request.getParameter("level");
                 String description = request.getParameter("description");
                 String feeStr = request.getParameter("fee");
                 String status = request.getParameter("status");
 
-                if (id == null || id.trim().isEmpty() || name == null || name.trim().isEmpty()) {
-                    request.setAttribute("error", "ID và tên môn học không được để trống.");
+                if (name == null || name.trim().isEmpty()) {
+                    request.setAttribute("error", "Tên môn học không được để trống.");
                     request.getRequestDispatcher("/admin/subject-add.jsp").forward(request, response);
                     return;
                 }
@@ -110,12 +109,7 @@ public class AdminSubjectController extends HttpServlet {
                     return;
                 }
 
-                if (adminSubjectDAO.getSubjectById(id) != null) {
-                    request.setAttribute("error", "ID môn học đã tồn tại.");
-                    request.getRequestDispatcher("/admin/subject-add.jsp").forward(request, response);
-                    return;
-                }
-
+                String id = adminSubjectDAO.generateSubjectId();
                 Subject subject = new Subject(id, name, level, description, fee, status);
                 adminSubjectDAO.addSubject(subject);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
