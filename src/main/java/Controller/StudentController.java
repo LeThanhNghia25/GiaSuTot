@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.StudentDAO;
+import model.Account;
 import model.Student;
 
 import jakarta.servlet.ServletException;
@@ -27,7 +28,7 @@ public class StudentController extends HttpServlet {
         String name = (String) request.getAttribute("name");
         LocalDate birth = (LocalDate) request.getAttribute("birth");
         String description = (String) request.getAttribute("description"); // Đổi từ describe
-        String id_acc = (String) request.getAttribute("id_acc");
+        Account account = (Account) request.getAttribute("id_acc");
 
         try {
             Student student = new Student();
@@ -35,7 +36,7 @@ public class StudentController extends HttpServlet {
             student.setName(name);
             student.setBirth(birth);
             student.setDescription(description); // Đổi từ setDescribe
-            student.setAccountId(id_acc);
+            student.setAccount(account);
 
             studentDAO.insertStudent(student);
 

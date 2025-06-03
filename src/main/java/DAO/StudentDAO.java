@@ -1,6 +1,7 @@
 package DAO;
 
 import Utils.DBConnection;
+import model.Account;
 import model.Student;
 
 import java.sql.*;
@@ -29,7 +30,7 @@ public class StudentDAO {
             ps.setString(2, student.getName());
             ps.setDate(3, java.sql.Date.valueOf(student.getBirth()));
             ps.setString(4, student.getDescription());
-            ps.setString(5, student.getAccountId());
+            ps.setString(5, student.getAccount().getId());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         }
@@ -46,7 +47,10 @@ public class StudentDAO {
                     String name = rs.getString("name");
                     LocalDate birth = rs.getDate("birth").toLocalDate();
                     String description = rs.getString("description");
-                    return new Student(id, name, birth, description, accountId);
+
+                    Account acc = new Account();
+                    acc.setId(id);
+                    return new Student(id, name, birth, description, acc);
                 }
             }
         }

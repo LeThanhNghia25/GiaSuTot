@@ -89,7 +89,7 @@
               </c:when>
             </c:choose>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/subjects"> Quản lý môn học</a></li>
+            <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/tutor-subjects"> Quản lý môn học</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
           </ul>

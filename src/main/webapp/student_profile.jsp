@@ -93,7 +93,7 @@
                         <hr>
                         <div class="row">
                             <div class="col-sm-3"><p class="mb-0">Email</p></div>
-                            <div class="col-sm-9"><p class="text-muted mb-0"><%= student.getAccountId().getEmail() %></p></div>
+                            <div class="col-sm-9"><p class="text-muted mb-0"><%= student.getAccount().getEmail() %></p></div>
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                 <div class="card mb-4" id="profileInfo">
                     <div class="card-body">
                         <h5 class="mb-3">Mô tả thêm</h5>
-                        <p class="text-muted"><%= student.getDescribe() %></p>
+                        <p class="text-muted"><%= student.getDescription() %></p>
                     </div>
                 </div>
             </div>
@@ -128,11 +128,11 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" value="<%= student.getAccountId().getEmail()%> readonly">
+                    <input type="email" class="form-control" name="email" value="<%= student.getAccount().getEmail() %> readonly">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mô tả</label>
-                    <textarea class="form-control" name="describe" rows="3"><%= student.getDescribe() %></textarea>
+                    <textarea class="form-control" name="describe" rows="3"><%= student.getDescription() %></textarea>
                 </div>
                 <div class="d-flex justify-content-center">
                     <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>
