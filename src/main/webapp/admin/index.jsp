@@ -28,7 +28,7 @@
 <div id="wrapper">
     <!-- Sidebar -->
     <div id="sidebar">
-        <%@ include file="slidebar.jsp" %>
+        <%@ include file="slibar.jsp" %>
     </div>
     <!-- End of Sidebar -->
 

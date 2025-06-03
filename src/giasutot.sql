@@ -37,8 +37,8 @@ CREATE TABLE tutor (
                        address VARCHAR(255) NOT NULL,
                        specialization VARCHAR(255) NOT NULL,
                        description TEXT, -- Đổi từ describe_tutor thành description
-                       id_card_number INT(12) NOT NULL, -- Đổi từ cccd thành id_card_number
-                       bank_account_number INT(15) NOT NULL, -- Đổi từ bank_code thành bank_account_number
+                       id_card_number BIGINT(12) NOT NULL, -- Đổi từ cccd thành id_card_number
+                       bank_account_number BIGINT(15) NOT NULL, -- Đổi từ bank_code thành bank_account_number
                        bank_name VARCHAR(255) NOT NULL,
                        account_id CHAR(20), -- Đổi từ id_acc thành account_id
                        evaluate INT CHECK (evaluate BETWEEN 1 AND 5),
@@ -85,6 +85,19 @@ CREATE TABLE notifications (
                                created_at DATETIME NOT NULL,
                                status VARCHAR(50) NOT NULL CHECK (status IN ('sent', 'pending', 'failed')),
                                FOREIGN KEY (account_id) REFERENCES account(id)
+);
+
+CREATE TABLE payment (
+                         id CHAR(20) PRIMARY KEY,
+                         course_id CHAR(20) NOT NULL,
+                         tutor_id CHAR(20) NOT NULL,
+                         student_id CHAR(20) NOT NULL, -- Thêm cột student_id
+                         amount DECIMAL(10, 2) NOT NULL,
+                         payment_date DATETIME NOT NULL,
+                         status VARCHAR(50) NOT NULL CHECK (status IN ('completed', 'pending', 'failed')),
+                         FOREIGN KEY (course_id) REFERENCES course(id),
+                         FOREIGN KEY (tutor_id) REFERENCES tutor(id),
+                         FOREIGN KEY (student_id) REFERENCES student(id) -- Thêm khóa ngoại cho student_id
 );
 
 -- Chèn dữ liệu vào bảng account

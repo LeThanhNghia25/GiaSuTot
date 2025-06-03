@@ -1,18 +1,23 @@
 package model;
 
-import DAO.TutorDAO;
-
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Course {
     private String id;
-    private String subjectId; // Đổi từ id_subject thành subjectId
-    private String tutorId; // Đổi từ id_tutor thành tutorId
-    private Date time; // Đổi từ dateTime thành time
+    private String subjectId;
+    private String tutorId;
+    private LocalDateTime time;
+    private Subject subject;
+    private Tutor tutor;
+    private String studentId; // ID học viên
+    private String studentName; // Tên học viên
+    private LocalDate startDate; // Ngày bắt đầu học
+    private LocalDate endDate; // Ngày hoàn thành khóa học
 
     public Course() {}
 
-    public Course(String id, String subjectId, String tutorId, Date time) {
+    public Course(String id, String subjectId, String tutorId, LocalDateTime time) {
         this.id = id;
         this.subjectId = subjectId;
         this.tutorId = tutorId;
@@ -27,33 +32,76 @@ public class Course {
         this.id = id;
     }
 
-    public String getSubjectId() { // Đổi từ getId_subject thành getSubjectId
+    public String getSubjectId() {
         return subjectId;
     }
 
-    public void setSubjectId(String subjectId) { // Đổi từ setId_subject thành setSubjectId
+    public void setSubjectId(String subjectId) {
         this.subjectId = subjectId;
     }
 
-    public String getTutorId() { // Đổi từ getId_tutor thành getTutorId
+    public String getTutorId() {
         return tutorId;
     }
 
-    public void setTutorId(String tutorId) { // Đổi từ setId_tutor thành setTutorId
+    public void setTutorId(String tutorId) {
         this.tutorId = tutorId;
     }
 
-    public Date getTime() { // Đổi từ getDateTime thành getTime
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(Date time) { // Đổi từ setDateTime thành setTime
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
     public Tutor getTutor() {
-        TutorDAO dao = new TutorDAO();
-        return dao.getTutorById(this.tutorId);
+        return tutor;
+    }
+
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     @Override
@@ -63,12 +111,8 @@ public class Course {
                 ", subjectId='" + subjectId + '\'' +
                 ", tutorId='" + tutorId + '\'' +
                 ", time=" + time +
+                ", subject=" + (subject != null ? subject.getName() : "null") +
+                ", tutor=" + (tutor != null ? tutor.getName() : "null") +
                 '}';
-    }
-
-    public static void main(String[] args) {
-        // Sửa lại cách tạo Date (năm - 1900, tháng từ 0-11)
-        Course course = new Course("course001", "sub001", "tut001", new Date(2025 - 1900, 5 - 1, 12, 8, 20, 0));
-        System.out.println(course);
     }
 }

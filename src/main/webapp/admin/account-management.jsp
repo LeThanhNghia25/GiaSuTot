@@ -15,7 +15,7 @@
 <div id="wrapper">
   <!-- Sidebar -->
   <div id="sidebar">
-    <%@ include file="slidebar.jsp" %>
+    <%@ include file="slibar.jsp" %>
   </div>
   <!-- Content Wrapper -->
   <div id="content-wrapper" class="d-flex flex-column">

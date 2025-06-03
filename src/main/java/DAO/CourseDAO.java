@@ -36,7 +36,7 @@ public class CourseDAO {
                     course.setId(resultSet.getString("id"));
                     course.setSubjectId(resultSet.getString("subject_id"));
                     course.setTutorId(resultSet.getString("tutor_id"));
-                    course.setTime(resultSet.getTimestamp("time")); // Lấy timestamp và chuyển sang Date
+                    course.setTime(resultSet.getTimestamp("time").toLocalDateTime()); // Lấy timestamp và chuyển sang Date
                     courseList.add(course);
                 }
 
