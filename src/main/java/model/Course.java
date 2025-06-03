@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Course {
@@ -9,6 +10,10 @@ public class Course {
     private LocalDateTime time;
     private Subject subject;
     private Tutor tutor;
+    private String studentId; // ID học viên
+    private String studentName; // Tên học viên
+    private LocalDate startDate; // Ngày bắt đầu học
+    private LocalDate endDate; // Ngày hoàn thành khóa học
 
     public Course() {}
 
@@ -67,6 +72,38 @@ public class Course {
         this.tutor = tutor;
     }
 
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
@@ -77,10 +114,5 @@ public class Course {
                 ", subject=" + (subject != null ? subject.getName() : "null") +
                 ", tutor=" + (tutor != null ? tutor.getName() : "null") +
                 '}';
-    }
-
-    public static void main(String[] args) {
-        Course course = new Course("course001", "sub001", "tut001", LocalDateTime.of(2025, 5, 12, 8, 20));
-        System.out.println(course);
     }
 }

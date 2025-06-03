@@ -87,6 +87,19 @@ CREATE TABLE notifications (
                                FOREIGN KEY (account_id) REFERENCES account(id)
 );
 
+CREATE TABLE payment (
+                         id CHAR(20) PRIMARY KEY,
+                         course_id CHAR(20) NOT NULL,
+                         tutor_id CHAR(20) NOT NULL,
+                         student_id CHAR(20) NOT NULL, -- Thêm cột student_id
+                         amount DECIMAL(10, 2) NOT NULL,
+                         payment_date DATETIME NOT NULL,
+                         status VARCHAR(50) NOT NULL CHECK (status IN ('completed', 'pending', 'failed')),
+                         FOREIGN KEY (course_id) REFERENCES course(id),
+                         FOREIGN KEY (tutor_id) REFERENCES tutor(id),
+                         FOREIGN KEY (student_id) REFERENCES student(id) -- Thêm khóa ngoại cho student_id
+);
+
 -- Chèn dữ liệu vào bảng account
 INSERT INTO account (id, email, password, role, status) VALUES
                                                             ('acc001', 'student1@example.com', 'pass1', 1, 'active'),
