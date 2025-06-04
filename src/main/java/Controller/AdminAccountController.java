@@ -46,7 +46,7 @@ public class AdminAccountController extends HttpServlet {
                 Account account = adminAccountDAO.getAccountById(id);
                 if (account != null) {
                     request.setAttribute("account", account);
-                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/account-edit.jsp").forward(request, response);
                 } else {
                     request.setAttribute("error", "Tài khoản không tồn tại.");
                     request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
@@ -82,7 +82,7 @@ public class AdminAccountController extends HttpServlet {
         String action = request.getParameter("action");
         try {
             if ("edit".equals(action)) {
-                String id = request.getParameter("id"); // Đổi từ id_acc
+                String id = request.getParameter("id");
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
                 String roleStr = request.getParameter("role");
@@ -91,19 +91,13 @@ public class AdminAccountController extends HttpServlet {
                 // Kiểm tra dữ liệu đầu vào
                 if (id == null || id.trim().isEmpty()) {
                     request.setAttribute("error", "ID tài khoản không hợp lệ.");
-                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/account-edit.jsp").forward(request, response);
                     return;
                 }
                 if (email == null || email.trim().isEmpty()) {
                     request.setAttribute("error", "Email không được để trống.");
                     request.setAttribute("account", new Account(id, email, password, 0, status));
-                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
-                    return;
-                }
-                if (password == null || password.trim().isEmpty()) {
-                    request.setAttribute("error", "Mật khẩu không được để trống.");
-                    request.setAttribute("account", new Account(id, email, password, 0, status));
-                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/account-edit.jsp").forward(request, response);
                     return;
                 }
                 int role;
@@ -115,14 +109,27 @@ public class AdminAccountController extends HttpServlet {
                 } catch (NumberFormatException e) {
                     request.setAttribute("error", "Role không hợp lệ. Vui lòng chọn giá trị từ 1 đến 3.");
                     request.setAttribute("account", new Account(id, email, password, 0, status));
-                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/account-edit.jsp").forward(request, response);
                     return;
                 }
                 if (status == null || (!status.equals("active") && !status.equals("inactive"))) {
                     request.setAttribute("error", "Trạng thái không hợp lệ. Vui lòng chọn 'active' hoặc 'inactive'.");
                     request.setAttribute("account", new Account(id, email, password, role, status));
-                    request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/account-edit.jsp").forward(request, response);
                     return;
+                }
+
+                // Lấy thông tin tài khoản hiện tại từ DB
+                Account currentAccount = adminAccountDAO.getAccountById(id);
+                if (currentAccount == null) {
+                    request.setAttribute("error", "Tài khoản không tồn tại.");
+                    request.getRequestDispatcher("/admin/account-edit.jsp").forward(request, response);
+                    return;
+                }
+
+                // Nếu password để trống, giữ nguyên mật khẩu cũ
+                if (password == null || password.trim().isEmpty()) {
+                    password = currentAccount.getPassword(); // Giữ mật khẩu hiện tại
                 }
 
                 Account account = new Account(id, email, password, role, status);
@@ -132,7 +139,7 @@ public class AdminAccountController extends HttpServlet {
         } catch (SQLException e) {
             log("SQL Error: " + e.getMessage(), e);
             request.setAttribute("error", "Có lỗi xảy ra khi cập nhật tài khoản. Vui lòng thử lại sau.");
-            request.getRequestDispatcher("/admin/edit-account.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/account-edit.jsp").forward(request, response);
         }
     }
 }

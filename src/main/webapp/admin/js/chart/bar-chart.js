@@ -38,7 +38,7 @@ $(document).ready(function() {
         $.ajax({
             url: contextPath + '/revenue-data',
             type: 'GET',
-            data: { year: year },
+            data: { type: 'monthly', year: year }, // Thêm tham số type: 'monthly'
             dataType: 'json',
             success: function(data) {
                 console.log('Dữ liệu nhận được:', data);

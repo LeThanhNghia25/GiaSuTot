@@ -15,13 +15,13 @@
 <div id="wrapper">
   <!-- Sidebar -->
   <div id="sidebar">
-    <%@ include file="slidebar.jsp" %>
+    <%@ include file="slibar.jsp" %>
   </div>
   <!-- Content Wrapper -->
   <div id="content-wrapper" class="d-flex flex-column">
     <div id="content">
       <!-- Topbar -->
-      <%@ include file="topbar.jsp" %>
+      <%@ include file="header.jsp" %>
       <!-- Main Content -->
       <div class="container-fluid">
         <h1 class="h3 mb-4 text-gray-800">Quản lý người dùng</h1>
@@ -64,7 +64,7 @@
                     </td>
                     <td>
                       <c:choose>
-                        <c:when test="${account.statusAcc == 'active'}">
+                        <c:when test="${account.status == 'active'}"> <!-- Đổi từ statusAcc -->
                           <span class="badge badge-success">Đang hoạt động</span>
                         </c:when>
                         <c:otherwise>
@@ -75,7 +75,7 @@
                     <td>
                       <a href="${pageContext.request.contextPath}/admin/account?action=edit&id=${account.id}" class="btn btn-sm btn-primary">Sửa</a>
                       <c:choose>
-                        <c:when test="${account.statusAcc == 'active'}">
+                        <c:when test="${account.status == 'active'}"> <!-- Đổi từ statusAcc -->
                           <a href="${pageContext.request.contextPath}/admin/account?action=delete&id=${account.id}" class="btn btn-sm btn-danger"
                              onclick="return confirm('Bạn có chắc muốn khóa tài khoản này không?')">Khóa</a>
                         </c:when>

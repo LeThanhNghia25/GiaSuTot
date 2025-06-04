@@ -28,7 +28,7 @@
 <div id="wrapper">
     <!-- Sidebar -->
     <div id="sidebar">
-        <%@ include file="slidebar.jsp" %>
+        <%@ include file="slibar.jsp" %>
     </div>
     <!-- End of Sidebar -->
 
@@ -324,7 +324,7 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo tháng</h6>
                                 <div class="d-flex align-items-center">
-                                    <select id="yearFilter" class="form-control mr-2" style="width: auto;">
+                                    <select id="barChartYearFilter" class="form-control mr-2" style="width: auto;">
                                         <option value="2023">2023</option>
                                         <option value="2024">2024</option>
                                         <option value="2025" selected>2025</option>
@@ -358,7 +358,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo môn học (<span id="pieChartYear">2025</span>)</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo môn học</h6>
                                 <div class="d-flex align-items-center">
                                     <select id="pieChartYearFilter" class="form-control mr-2" style="width: auto;">
                                         <option value="2023">2023</option>

@@ -1,26 +1,26 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public class Tutor {
-    private String id; // Đổi từ id_tutor thành id
+public class Tutor extends Account {
+    private String id;
     private String name;
     private String email;
-    private Date birth; // DATE trong SQL ánh xạ thành java.util.Date
+    private LocalDate birth; // Thay Date thành LocalDate
     private String phone;
     private String address;
     private String specialization;
-    private String description; // Đổi từ describe_tutor thành description
-    private int idCardNumber; // Đổi từ cccd thành idCardNumber
-    private int bankAccountNumber; // Đổi từ bank_code thành bankAccountNumber
+    private String description;
+    private long idCardNumber; // Thay int thành long
+    private long bankAccountNumber; // Thay int thành long
     private String bankName;
-    private String accountId; // Đổi từ id_acc thành accountId
+    private String accountId;
     private int evaluate;
 
     public Tutor() {}
 
-    public Tutor(String id, String name, String email, Date birth, String phone, String address,
-                 String specialization, String description, int idCardNumber, int bankAccountNumber,
+    public Tutor(String id, String name, String email, LocalDate birth, String phone, String address,
+                 String specialization, String description, long idCardNumber, long bankAccountNumber,
                  String bankName, String accountId, int evaluate) {
         this.id = id;
         this.name = name;
@@ -65,11 +65,11 @@ public class Tutor {
     }
 
     // Getter & Setter cho birth
-    public Date getBirth() {
+    public LocalDate getBirth() {
         return birth;
     }
 
-    public void setBirth(Date birth) {
+    public void setBirth(LocalDate birth) {
         this.birth = birth;
     }
 
@@ -110,20 +110,20 @@ public class Tutor {
     }
 
     // Getter & Setter cho idCardNumber
-    public int getIdCardNumber() {
+    public long getIdCardNumber() {
         return idCardNumber;
     }
 
-    public void setIdCardNumber(int idCardNumber) {
+    public void setIdCardNumber(long idCardNumber) {
         this.idCardNumber = idCardNumber;
     }
 
     // Getter & Setter cho bankAccountNumber
-    public int getBankAccountNumber() {
+    public long getBankAccountNumber() {
         return bankAccountNumber;
     }
 
-    public void setBankAccountNumber(int bankAccountNumber) {
+    public void setBankAccountNumber(long bankAccountNumber) {
         this.bankAccountNumber = bankAccountNumber;
     }
 

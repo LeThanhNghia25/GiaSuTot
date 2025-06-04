@@ -1,107 +1,118 @@
 package DAO;
 
-import Utils.DBConnection;
 import model.Course;
+import model.Tutor;
 import model.Subject;
+import Utils.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.text.Normalizer;
-import java.util.regex.Pattern;
 
 public class CourseDAO {
-    private Connection conn = DBConnection.getConnection();
+    public List<Course> getAllAvailableCourses() {
+        System.out.println("Fetching all available courses...");
+        List<Course> courses = new ArrayList<>();
+        String sql = "SELECT c.*, s.name AS subject_name, s.level, s.fee, t.name AS tutor_name, t.specialization, t.address " +
+                "FROM course c JOIN subject s ON c.subject_id = s.id " +
+                "JOIN tutor t ON c.tutor_id = t.id " +
+                "WHERE s.status = 'active'";
 
-    public CourseDAO() {
-
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Course course = new Course();
+                course.setId(rs.getString("id"));
+                course.setSubjectId(rs.getString("subject_id"));
+                course.setTutorId(rs.getString("tutor_id"));
+                course.setTime(rs.getTimestamp("time").toLocalDateTime());
+                Subject subject = new Subject();
+                subject.setId(rs.getString("subject_id"));
+                subject.setName(rs.getString("subject_name"));
+                subject.setLevel(rs.getString("level"));
+                subject.setFee(rs.getDouble("fee"));
+                subject.setStatus("active");
+                course.setSubject(subject);
+                Tutor tutor = new Tutor();
+                tutor.setId(rs.getString("tutor_id"));
+                tutor.setName(rs.getString("tutor_name"));
+                tutor.setAddress(rs.getString("address"));
+                tutor.setSpecialization(rs.getString("specialization"));
+                course.setTutor(tutor);
+                courses.add(course);
+            }
+            System.out.println("Fetched " + courses.size() + " courses from database.");
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return courses;
     }
 
-
-
-        // Phương thức để lấy tất cả dữ liệu từ bảng Course
-        public List<Course> getAllCourses() throws SQLException {
-            List<Course> courseList = new ArrayList<>();
-            String sql = "SELECT * FROM course";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet resultSet = stmt.executeQuery();
-            System.out.println("Fetching subjects...");
-
-                while (resultSet.next()) {
-                    Course course = new Course();
-                    course.setId(resultSet.getString("id"));
-                    course.setSubjectId(resultSet.getString("subject_id"));
-                    course.setTutorId(resultSet.getString("tutor_id"));
-                    course.setTime(resultSet.getTimestamp("time")); // Lấy timestamp và chuyển sang Date
-                    courseList.add(course);
-                }
-
-            return courseList;
+    public void registerCourse(String courseId, String studentId) {
+        System.out.println("Registering course " + courseId + " for student " + studentId);
+        String sql = "INSERT INTO registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) " +
+                "VALUES (?, ?, CURDATE(), 10, 'pending_approval')";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, courseId);
+            stmt.setString(2, studentId);
+            stmt.executeUpdate();
+            System.out.println("Course registered.");
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
         }
-        public HashMap<Course, Subject> getAllSubjects() throws SQLException {
-        HashMap<Course, Subject> subjectMap = new HashMap<>();
-        List<Course> courseList = getAllCourses();
-        AdminSubjectDAO adminSubjectDAO = new AdminSubjectDAO();
-        List<Subject> subjectList = adminSubjectDAO.getAllSubjects();
-        for (Course course : courseList) {
-            for (Subject subject : subjectList) {
-                if(course.getSubjectId().equals(subject.getId())){
-                    subjectMap.put(course, subject);
+    }
+
+    public void registerTrial(String courseId, String studentId) {
+        System.out.println("Registering trial lesson for course " + courseId + " for student " + studentId);
+
+        String sqlRegister = "INSERT INTO registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) " +
+                "VALUES (?, ?, CURDATE(), 1, 'trial')";
+        String sqlLesson = "INSERT INTO lesson (course_id, student_id, status, time) " +
+                "SELECT ?, ?, 'scheduled', DATE_ADD(time, INTERVAL 1 DAY) FROM course WHERE id = ?";
+
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement pstmtRegister = conn.prepareStatement(sqlRegister)) {
+                pstmtRegister.setString(1, courseId);
+                pstmtRegister.setString(2, studentId);
+                pstmtRegister.executeUpdate();
+            }
+
+            try (PreparedStatement pstmtLesson = conn.prepareStatement(sqlLesson)) {
+                pstmtLesson.setString(1, courseId);
+                pstmtLesson.setString(2, studentId);
+                pstmtLesson.setString(3, courseId);
+                pstmtLesson.executeUpdate();
+            }
+
+            conn.commit();
+            System.out.println("Trial lesson scheduled successfully.");
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
         }
-
-        return subjectMap;
-
-        }
-    public HashMap<Course, Subject> FindByName(String subName) throws SQLException {
-        HashMap<Course, Subject> subjectMap = new CourseDAO().getAllSubjects();
-        HashMap<Course, Subject> result = new HashMap<>();
-        for (Course key : subjectMap.keySet()) {
-            String findname = subName.toLowerCase();
-                findname = removeDiacritics(findname);
-            String sName = subjectMap.get(key).getName().toLowerCase();
-            if(sName.contains(findname)){
-              result.put(key, subjectMap.get(key));
-          }
-        }
-
-        return result;
     }
-//chuyen thanh chuoi khong dau
-    public static String removeDiacritics(String input) {
-        if (input == null) return null;
-        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        String result = pattern.matcher(normalized).replaceAll("");
-        return result.replaceAll("Đ", "D").replaceAll("đ", "d");
-    }
-
-    public static void main(String[] args) throws SQLException {
-
-        CourseDAO courseDAO = new CourseDAO();
-
-        List<Course> courses = courseDAO.getAllCourses();
-
-        for (Course course : courses) {
-            System.out.println(course);
-        }
-        HashMap<Course, Subject> subjectMap = courseDAO.getAllSubjects();
-        for (Course key : subjectMap.keySet()) {
-            System.out.println("Key: " + key + ", Value: " + subjectMap.get(key));
-        }
-        HashMap<Course, Subject> findSub = courseDAO.FindByName("Hóa học");
-        for (Course key : findSub.keySet()) {
-            System.out.println("Key: " + key + ", Value: " + findSub.get(key));
-
-        }
-    }
-
-    }
-
-
-
+}

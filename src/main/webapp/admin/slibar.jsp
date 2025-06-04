@@ -81,18 +81,11 @@
       <span>Quản lý người dùng</span>
     </a>
   </li>
-  <!-- Biểu đồ -->
+  <!-- Thanh toán -->
   <li class="nav-item">
-    <a class="nav-link" href="${pageContext.request.contextPath}/charts.jsp">
+    <a class="nav-link" href="${pageContext.request.contextPath}/admin/payment">
       <i class="fas fa-fw fa-chart-area"></i>
-      <span>Biểu đồ</span>
-    </a>
-  </li>
-  <!-- Bảng -->
-  <li class="nav-item">
-    <a class="nav-link" href="${pageContext.request.contextPath}/tables.jsp">
-      <i class="fas fa-fw fa-table"></i>
-      <span>Bảng</span>
+      <span>Thanh toán</span>
     </a>
   </li>
   <hr class="sidebar-divider d-none d-md-block">
