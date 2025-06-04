@@ -42,9 +42,9 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <div class="navbar-nav ms-auto p-4 p-lg-0">
-      <a href="index.jsp" class="nav-item nav-link active">Trang chủ</a>
+      <a href="index.jsp" class="nav-item nav-link">Trang chủ</a>
       <a href="about.jsp" class="nav-item nav-link">Về chúng tôi</a>
-      <a href="courses.jsp" class="nav-item nav-link">Khóa học</a>
+      <a href="${pageContext.request.contextPath}/courses" class="nav-item nav-link">Khóa học</a>
       <div class="nav-item dropdown">
         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
         <div class="dropdown-menu fade-down m-0">
@@ -53,7 +53,7 @@
           <a href="404.jsp" class="dropdown-item">404 Page</a>
         </div>
       </div>
-      <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a> <!-- Đảm bảo đường dẫn -->
+      <a href="${pageContext.request.contextPath}/tutor" class="nav-item nav-link">Profile</a>
     </div>
 
     <!-- Thanh tìm kiếm -->
@@ -108,7 +108,7 @@
 <div class="modal fade" id="modalBoLoc" tabindex="-1" aria-labelledby="modalBoLocLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="formBoLoc" method="GET" action="courses.jsp">
+      <form id="formBoLoc" method="GET" action="${pageContext.request.contextPath}/courses">
         <div class="modal-header">
           <h5 class="modal-title" id="modalBoLocLabel">Bộ lọc khóa học</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
