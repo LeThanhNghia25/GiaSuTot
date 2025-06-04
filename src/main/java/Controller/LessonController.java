@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.CourseDAO;
 import DAO.LessonDAO;
 import DAO.StudentDAO;
 import DAO.TutorDAO;
@@ -53,19 +54,28 @@ public class LessonController extends HttpServlet {
         Tutor tutor = tutorDAO.getTutorByAccountId(accountId);
         LessonDAO lessonDAO = new LessonDAO();
         List<String> IdStudenList = null;
-        List<Student> studentList = null;
+        List<Course> courseList = null;
         try {
             IdStudenList = lessonDAO.getListStudentIdByTutor(tutor);
             StudentDAO studentDAO = new StudentDAO();
-            for (String id : IdStudenList) {
-                Student student = studentDAO.getStudentById(id);
-                studentList.add(student);
-            }
+            CourseDAO courseDAO = new CourseDAO();
+            courseList= courseDAO.FindByIdTutor(tutor.getId());
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
+        List<Student> studentList = new ArrayList<>();
+        for (String id : IdStudenList) {
+            StudentDAO studentDAO2 = new StudentDAO();
+            Student student = null;
+            try {
+                student = studentDAO2.getStudentById(id);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            studentList.add(student);
+        }
+        request.setAttribute("listcourse", courseList);
         request.setAttribute("studentList", studentList);
         request.setAttribute("StIDList", IdStudenList);
         request.setAttribute("tutor", tutor);

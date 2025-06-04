@@ -80,6 +80,16 @@ public class CourseDAO {
         String result = pattern.matcher(normalized).replaceAll("");
         return result.replaceAll("Đ", "D").replaceAll("đ", "d");
     }
+    public List<Course> FindByIdTutor(String id) throws SQLException {
+        List<Course> courseList = new CourseDAO().getAllCourses();
+        List<Course> result = new ArrayList<>();
+        for (Course course : courseList) {
+            if(id.equals(course.getTutorId())){
+                result.add(course);
+            }
+        }
+        return result;
+    }
 
     public static void main(String[] args) throws SQLException {
 

@@ -155,7 +155,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label for="studentId" class="block text-sm font-medium text-gray-700 mb-1">Mã học viên</label>
-                  <form action="lessontController" method="post">
+
                     <select id="idStudent" name="idStudent"
                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition" required>
                     <c:forEach var="idst" items="${StIDList}" >
@@ -163,17 +163,18 @@
                     </c:forEach>
 
                    </select>
-                  </form>
+
                   </div>
                 </div>
                 <div>
                   <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">Tên học viên</label>
-                  <input type="text" id="studentName" name="studentName"
+                  <select id="n_Student" name="n_Student"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition" required>
+                    <c:forEach var="n_st" items="${studentList}" >
+                      <option value="" >${n_st.getName()}</option>
+                    </c:forEach>
 
-                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
-                         placeholder="Tên học viên" readonly
-                         value=<%= request.getAttribute("student") %>
-                  >
+                  </select>
                 </div>
               </div>
 
@@ -190,12 +191,9 @@
                   <select id="subject" name="subject"
                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition" required>
                     <option value="" disabled selected>Chọn môn học</option>
-                    <option value="math">Toán học</option>
-                    <option value="physics">Vật lý</option>
-                    <option value="chemistry">Hóa học</option>
-                    <option value="literature">Ngữ văn</option>
-                    <option value="english">Tiếng Anh</option>
-                    <option value="other">Khác</option>
+                    <c:forEach var="course" items="${listcourse}" >
+                      <option value="" >${course.getId()}</option>
+                    </c:forEach>
                   </select>
                 </div>
                 <div>
