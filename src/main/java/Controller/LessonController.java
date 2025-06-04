@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.LessonDAO;
+import DAO.StudentDAO;
 import DAO.TutorDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -10,33 +11,35 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Account;
 import model.Course;
+import model.Student;
 import model.Tutor;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @WebServlet(name = "lessontController", urlPatterns = {"/lesson"})
 public class LessonController extends HttpServlet {
-    private TutorDAO tutorDAO;
 
-    @Override
-    public void init() {
-        System.out.println("Initializing TutorController");
-        try {
-            tutorDAO = new TutorDAO();
-        } catch (Exception e) {
-            System.err.println("Failed to initialize TutorDAO: " + e.getMessage());
-            throw new RuntimeException("Database connection error during initialization", e);
-        }
-    }
+
+//    @Override
+//    public void init() {
+//        System.out.println("Initializing TutorController");
+//        try {
+//            tutorDAO = new TutorDAO();
+//        } catch (Exception e) {
+//            System.err.println("Failed to initialize TutorDAO: " + e.getMessage());
+//            throw new RuntimeException("Database connection error during initialization", e);
+//        }
+//    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Handling GET request for /profile");
+
 
         Account account = (Account) request.getSession().getAttribute("account");
         if (account == null) {
@@ -46,16 +49,24 @@ public class LessonController extends HttpServlet {
         }
 
         String accountId = account.getId();
-        System.out.println("Fetching tutor with account id: " + accountId);
-
+        TutorDAO tutorDAO = new TutorDAO();
         Tutor tutor = tutorDAO.getTutorByAccountId(accountId);
         LessonDAO lessonDAO = new LessonDAO();
         List<String> IdStudenList = null;
+        List<Student> studentList = null;
         try {
             IdStudenList = lessonDAO.getListStudentIdByTutor(tutor);
+            StudentDAO studentDAO = new StudentDAO();
+            for (String id : IdStudenList) {
+                Student student = studentDAO.getStudentById(id);
+                studentList.add(student);
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        request.setAttribute("studentList", studentList);
         request.setAttribute("StIDList", IdStudenList);
         request.setAttribute("tutor", tutor);
 
@@ -67,6 +78,21 @@ public class LessonController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        }
+//            String studentId = request.getParameter("idStudent");
+//            StudentDAO studentDAO = new StudentDAO();
+//            Student student = null;
+//        try {
+//            student = studentDAO.getStudentById(studentId);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//            request.setAttribute("studentN", student.getName());
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("subjectManagement.jsp");
+//            dispatcher.forward(request, response);
+
+
+
+    }
 
 }

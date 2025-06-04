@@ -116,6 +116,7 @@ public class TutorDAO {
         String testId = "tut001";
         System.out.println("Testing getTutorById with id: " + testId);
         Tutor tutor = tutorDAO.getTutorById(testId);
+
         if (tutor != null) {
             System.out.println("Tutor Details:");
             System.out.println("ID: " + tutor.getId());

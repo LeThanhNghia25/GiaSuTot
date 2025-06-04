@@ -52,4 +52,28 @@ public class StudentDAO {
         }
         return null;
     }
+    public Student getStudentById(String id_st) throws SQLException {
+        String sql = "SELECT * FROM student WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id_st);
+            ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    String id = rs.getString("id");
+                    String name = rs.getString("name");
+                    LocalDate birth = rs.getDate("birth").toLocalDate();
+                    String description = rs.getString("description");
+                    String accountId = rs.getString("account_id");
+                    return new Student(id, name, birth, description, accountId);
+                }
+        return null;
+    }
+
+    }
+
+    public static void main(String[] args) throws SQLException {
+        StudentDAO dao = new StudentDAO();
+        Student student = dao.getStudentById("st001");
+        System.out.println(student);
+    }
 }

@@ -56,6 +56,17 @@ public class Student {
         return accountId;
     }
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", birth=" + birth +
+                ", description='" + description + '\'' +
+                ", accountId='" + accountId + '\'' +
+                '}';
+    }
+
     public void setAccountId(String accountId) { // Đổi từ setAccountId thành setAccountId (đã đúng, chỉ cần đồng bộ tên biến)
         this.accountId = accountId;
     }
