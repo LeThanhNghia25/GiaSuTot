@@ -21,58 +21,58 @@ public class SearchDAO {
 
     }
 
+    // Phương thức để lấy tất cả dữ liệu từ bảng Course
+    public List<Course> getAllCourses() throws SQLException {
+        List<Course> courseList = new ArrayList<>();
+        String sql = "SELECT * FROM course";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet resultSet = stmt.executeQuery();
+        System.out.println("Fetching subjects...");
 
-
-        // Phương thức để lấy tất cả dữ liệu từ bảng Course
-        public List<Course> getAllCourses() throws SQLException {
-            List<Course> courseList = new ArrayList<>();
-            String sql = "SELECT * FROM course";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet resultSet = stmt.executeQuery();
-            System.out.println("Fetching subjects...");
-
-                while (resultSet.next()) {
-                    Course course = new Course();
-                    course.setId(resultSet.getString("id"));
-                    course.setSubjectId(resultSet.getString("subject_id"));
-                    course.setTutorId(resultSet.getString("tutor_id"));
-                    course.setTime(resultSet.getTimestamp("time").toLocalDateTime()); // Lấy timestamp và chuyển sang Date
-                    courseList.add(course);
-                }
-
-            return courseList;
+        while (resultSet.next()) {
+            Course course = new Course();
+            course.setId(resultSet.getString("id"));
+            course.setSubjectId(resultSet.getString("subject_id"));
+            course.setTutorId(resultSet.getString("tutor_id"));
+            course.setTime(resultSet.getTimestamp("time").toLocalDateTime()); // Lấy timestamp và chuyển sang Date
+            courseList.add(course);
         }
-        public HashMap<Course, Subject> getAllSubjects() throws SQLException {
+
+        return courseList;
+    }
+
+    public HashMap<Course, Subject> getAllSubjects() throws SQLException {
         HashMap<Course, Subject> subjectMap = new HashMap<>();
         List<Course> courseList = getAllCourses();
         AdminSubjectDAO adminSubjectDAO = new AdminSubjectDAO();
         List<Subject> subjectList = adminSubjectDAO.getAllSubjects();
         for (Course course : courseList) {
             for (Subject subject : subjectList) {
-                if(course.getSubjectId().equals(subject.getId())){
+                if (course.getSubjectId().equals(subject.getId())) {
                     subjectMap.put(course, subject);
                 }
             }
         }
 
         return subjectMap;
+    }
 
-        }
     public HashMap<Course, Subject> FindByName(String subName) throws SQLException {
         HashMap<Course, Subject> subjectMap = new SearchDAO().getAllSubjects();
         HashMap<Course, Subject> result = new HashMap<>();
         for (Course key : subjectMap.keySet()) {
             String findname = subName.toLowerCase();
-                findname = removeDiacritics(findname);
+            findname = removeDiacritics(findname);
             String sName = subjectMap.get(key).getName().toLowerCase();
-            if(sName.contains(findname)){
-              result.put(key, subjectMap.get(key));
-          }
+            if (sName.contains(findname)) {
+                result.put(key, subjectMap.get(key));
+            }
         }
 
         return result;
     }
-//chuyen thanh chuoi khong dau
+
+    //chuyen thanh chuoi khong dau
     public static String removeDiacritics(String input) {
         if (input == null) return null;
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
@@ -101,7 +101,7 @@ public class SearchDAO {
         }
     }
 
-    }
+}
 
 
 

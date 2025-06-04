@@ -27,11 +27,7 @@ public class AccountController extends HttpServlet {
     public void init() {
         accountDAO = new AccountDAO();
         tutorDAO = new TutorDAO();
-        try {
-            studentDAO = new StudentDAO();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        studentDAO = new StudentDAO();
         System.out.println("AccountDAO initialized successfully at " + new java.util.Date());
     }
 

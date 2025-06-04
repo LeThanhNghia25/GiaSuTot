@@ -13,15 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TutorSubjectDAO {
-    private Connection conn;
-
-    public TutorSubjectDAO() throws SQLException {
-        conn = DBConnection.getConnection();
-    }
-
-    public Connection getConnection() {
-        return conn;
-    }
+    public TutorSubjectDAO() {}
 
     // Lấy danh sách môn học active mà tutor dạy
     public List<Subject> getActiveSubjectsByTutor(String tutorId) throws SQLException {
@@ -30,18 +22,20 @@ public class TutorSubjectDAO {
                 "FROM subject s " +
                 "JOIN course c ON s.id = c.subject_id " +
                 "WHERE s.status = 'active' AND c.tutor_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tutorId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Subject subject = new Subject();
-                subject.setId(rs.getString("id"));
-                subject.setName(rs.getString("name"));
-                subject.setLevel(rs.getString("level"));
-                subject.setDescription(rs.getString("description"));
-                subject.setFee(rs.getDouble("fee"));
-                subject.setStatus(rs.getString("status"));
-                subjects.add(subject);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Subject subject = new Subject();
+                    subject.setId(rs.getString("id"));
+                    subject.setName(rs.getString("name"));
+                    subject.setLevel(rs.getString("level"));
+                    subject.setDescription(rs.getString("description"));
+                    subject.setFee(rs.getDouble("fee"));
+                    subject.setStatus(rs.getString("status"));
+                    subjects.add(subject);
+                }
             }
         }
         return subjects;
@@ -52,29 +46,29 @@ public class TutorSubjectDAO {
         String sql = "SELECT rs.course_id, rs.student_id, rs.registration_date, rs.number_of_lessons, rs.status, s.name AS student_name " +
                 "FROM registered_subjects rs " +
                 "JOIN course c ON rs.course_id = c.id " +
-                "JOIN student s ON rs.student_id = s.id " +  // JOIN để lấy tên học viên
+                "JOIN student s ON rs.student_id = s.id " +
                 "WHERE c.subject_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, subjectId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                RegisteredSubjects rsSub = new RegisteredSubjects();
-                rsSub.setCourseId(rs.getString("course_id"));
-                rsSub.setStudentId(rs.getString("student_id"));
-                rsSub.setRegistrationDate(rs.getDate("registration_date"));
-                rsSub.setNumberOfLessons(rs.getInt("number_of_lessons"));
-                rsSub.setStatus(rs.getString("status"));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    RegisteredSubjects rsSub = new RegisteredSubjects();
+                    rsSub.setCourse_id(rs.getString("course_id"));
+                    rsSub.setStudent_id(rs.getString("student_id"));
+                    rsSub.setRegistration_date(rs.getDate("registration_date") != null ? rs.getDate("registration_date").toLocalDate() : null);
+                    rsSub.setNumber_of_lessons(rs.getInt("number_of_lessons"));
+                    rsSub.setStatus(rs.getString("status"));
 
-                // Tạo đối tượng Student và gán tên
-                Student student = new Student();
-                student.setId(rs.getString("student_id"));
-                student.setName(rs.getString("student_name"));
-                rsSub.setStudent(student);
+                    Student student = new Student();
+                    student.setId(rs.getString("student_id"));
+                    student.setName(rs.getString("student_name"));
+                    rsSub.setStudent(student);
 
-                registeredSubjects.add(rsSub);
+                    registeredSubjects.add(rsSub);
+                }
             }
         }
         return registeredSubjects;
     }
-
 }

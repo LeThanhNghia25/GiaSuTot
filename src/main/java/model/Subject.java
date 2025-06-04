@@ -19,7 +19,6 @@ public class Subject {
         this.status = status;
     }
 
-    // Getter & Setter cho id
     public String getId() {
         return id;
     }
@@ -28,7 +27,6 @@ public class Subject {
         this.id = id;
     }
 
-    // Getter & Setter cho name
     public String getName() {
         return name;
     }
@@ -37,7 +35,6 @@ public class Subject {
         this.name = name;
     }
 
-    // Getter & Setter cho level
     public String getLevel() {
         return level;
     }
@@ -46,7 +43,6 @@ public class Subject {
         this.level = level;
     }
 
-    // Getter & Setter cho description
     public String getDescription() {
         return description;
     }
@@ -55,7 +51,6 @@ public class Subject {
         this.description = description;
     }
 
-    // Getter & Setter cho fee
     public double getFee() {
         return fee;
     }
@@ -64,7 +59,6 @@ public class Subject {
         this.fee = fee;
     }
 
-    // Getter & Setter cho status
     public String getStatus() {
         return status;
     }

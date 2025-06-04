@@ -5,6 +5,7 @@ import model.Notification;
 import model.Payment;
 import model.Subject;
 import model.Tutor;
+import model.Account;
 import Utils.DBConnection;
 
 import java.sql.*;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentDAO {
-
     public List<Course> getCompletedCourses() throws SQLException {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT c.*, s.*, t.*, rs.student_id, rs.registration_date, st.name AS student_name, " +
@@ -31,42 +31,48 @@ public class PaymentDAO {
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                Course course = new Course(
-                        rs.getString("id"),
-                        rs.getString("subject_id"),
-                        rs.getString("tutor_id"),
-                        rs.getTimestamp("time").toLocalDateTime()
-                );
-                course.setSubject(new Subject(
-                        rs.getString("s.id"),
-                        rs.getString("s.name"),
-                        rs.getString("s.level"),
-                        rs.getString("s.description"),
-                        rs.getDouble("s.fee"),
-                        rs.getString("s.status")
-                ));
-                course.setTutor(new Tutor(
-                        rs.getString("t.id"),
-                        rs.getString("t.name"),
-                        rs.getString("t.email"),
-                        rs.getDate("t.birth").toLocalDate(),
-                        rs.getString("t.phone"),
-                        rs.getString("t.address"),
-                        rs.getString("t.specialization"),
-                        rs.getString("t.description"),
-                        rs.getLong("t.id_card_number"),
-                        rs.getLong("t.bank_account_number"),
-                        rs.getString("t.bank_name"),
-                        rs.getString("t.account_id"),
-                        rs.getInt("t.evaluate")
-                ));
-                // Thêm thông tin học viên và ngày
+                Course course = new Course();
+                course.setId(rs.getString("id"));
+                course.setSubjectId(rs.getString("subject_id"));
+                course.setTutorId(rs.getString("tutor_id"));
+                course.setTime(rs.getTimestamp("time") != null ? rs.getTimestamp("time").toLocalDateTime() : null);
+
+                Subject subject = new Subject();
+                subject.setId(rs.getString("s.id"));
+                subject.setName(rs.getString("s.name"));
+                subject.setLevel(rs.getString("s.level"));
+                subject.setDescription(rs.getString("s.description"));
+                subject.setFee(rs.getDouble("s.fee"));
+                subject.setStatus(rs.getString("s.status"));
+                course.setSubject(subject);
+
+                Account account = new Account();
+                account.setId(rs.getString("t.account_id"));
+                account.setEmail(rs.getString("t.email"));
+
+                Tutor tutor = new Tutor();
+                tutor.setId(rs.getString("t.id"));
+                tutor.setName(rs.getString("t.name"));
+                tutor.setEmail(rs.getString("t.email"));
+                tutor.setBirth(rs.getDate("t.birth") != null ? rs.getDate("t.birth").toLocalDate() : null);
+                tutor.setPhone(rs.getString("t.phone"));
+                tutor.setAddress(rs.getString("t.address"));
+                tutor.setSpecialization(rs.getString("t.specialization"));
+                tutor.setDescription(rs.getString("t.description"));
+                tutor.setIdCardNumber(rs.getLong("t.id_card_number"));
+                tutor.setBankAccountNumber(rs.getLong("t.bank_account_number"));
+                tutor.setBankName(rs.getString("t.bank_name"));
+                tutor.setAccount(account);
+                tutor.setEvaluate(rs.getInt("t.evaluate"));
+                course.setTutor(tutor);
+
                 course.setStudentId(rs.getString("student_id"));
                 course.setStudentName(rs.getString("student_name"));
                 Timestamp startDate = rs.getTimestamp("start_date");
                 Timestamp endDate = rs.getTimestamp("end_date");
                 course.setStartDate(startDate != null ? startDate.toLocalDateTime().toLocalDate() : null);
                 course.setEndDate(endDate != null ? endDate.toLocalDateTime().toLocalDate() : null);
+
                 courses.add(course);
             }
             System.out.println("Total completed courses retrieved: " + courses.size());
