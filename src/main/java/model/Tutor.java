@@ -1,43 +1,42 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Tutor {
-    private String id; // Đổi từ id_tutor thành id
+    private String id;
     private String name;
     private String email;
-    private Date birth; // DATE trong SQL ánh xạ thành java.util.Date
+    private LocalDate birth;
     private String phone;
     private String address;
     private String specialization;
-    private String description; // Đổi từ describe_tutor thành description
-    private int idCardNumber; // Đổi từ cccd thành idCardNumber
-    private int bankAccountNumber; // Đổi từ bank_code thành bankAccountNumber
+    private String description;
+    private long idCardNumber;
+    private long bankAccountNumber;
     private String bankName;
-    private String accountId; // Đổi từ id_acc thành accountId
+    private Account account;
     private int evaluate;
 
     public Tutor() {}
 
-    public Tutor(String id, String name, String email, Date birth, String phone, String address,
-                 String specialization, String description, int idCardNumber, int bankAccountNumber,
-                 String bankName, String accountId, int evaluate) {
+    public Tutor(String id, String name, String email, LocalDate birth, String phone, String address,
+                 String specialization, String description, long idCardNumber, long bankAccountNumber,
+                 String bankName, Account account, int evaluate) {
         this.id = id;
-        this.name = name;
-        this.email = email;
+        this.name = name != null ? name : "";
+        this.email = email != null ? email : "";
         this.birth = birth;
-        this.phone = phone;
-        this.address = address;
-        this.specialization = specialization;
-        this.description = description;
+        this.phone = phone != null ? phone : "";
+        this.address = address != null ? address : "";
+        this.specialization = specialization != null ? specialization : "";
+        this.description = description != null ? description : "";
         this.idCardNumber = idCardNumber;
         this.bankAccountNumber = bankAccountNumber;
-        this.bankName = bankName;
-        this.accountId = accountId;
+        this.bankName = bankName != null ? bankName : "";
+        this.account = account != null ? account : new Account();
         this.evaluate = evaluate;
     }
 
-    // Getter & Setter cho id
     public String getId() {
         return id;
     }
@@ -46,7 +45,6 @@ public class Tutor {
         this.id = id;
     }
 
-    // Getter & Setter cho name
     public String getName() {
         return name;
     }
@@ -55,7 +53,6 @@ public class Tutor {
         this.name = name;
     }
 
-    // Getter & Setter cho email
     public String getEmail() {
         return email;
     }
@@ -64,16 +61,14 @@ public class Tutor {
         this.email = email;
     }
 
-    // Getter & Setter cho birth
-    public Date getBirth() {
+    public LocalDate getBirth() {
         return birth;
     }
 
-    public void setBirth(Date birth) {
+    public void setBirth(LocalDate birth) {
         this.birth = birth;
     }
 
-    // Getter & Setter cho phone
     public String getPhone() {
         return phone;
     }
@@ -82,7 +77,6 @@ public class Tutor {
         this.phone = phone;
     }
 
-    // Getter & Setter cho address
     public String getAddress() {
         return address;
     }
@@ -91,7 +85,6 @@ public class Tutor {
         this.address = address;
     }
 
-    // Getter & Setter cho specialization
     public String getSpecialization() {
         return specialization;
     }
@@ -100,7 +93,6 @@ public class Tutor {
         this.specialization = specialization;
     }
 
-    // Getter & Setter cho description
     public String getDescription() {
         return description;
     }
@@ -109,25 +101,22 @@ public class Tutor {
         this.description = description;
     }
 
-    // Getter & Setter cho idCardNumber
-    public int getIdCardNumber() {
+    public long getIdCardNumber() {
         return idCardNumber;
     }
 
-    public void setIdCardNumber(int idCardNumber) {
+    public void setIdCardNumber(long idCardNumber) {
         this.idCardNumber = idCardNumber;
     }
 
-    // Getter & Setter cho bankAccountNumber
-    public int getBankAccountNumber() {
+    public long getBankAccountNumber() {
         return bankAccountNumber;
     }
 
-    public void setBankAccountNumber(int bankAccountNumber) {
+    public void setBankAccountNumber(long bankAccountNumber) {
         this.bankAccountNumber = bankAccountNumber;
     }
 
-    // Getter & Setter cho bankName
     public String getBankName() {
         return bankName;
     }
@@ -136,21 +125,38 @@ public class Tutor {
         this.bankName = bankName;
     }
 
-    // Getter & Setter cho accountId
-    public String getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
-    // Getter & Setter cho evaluate
     public int getEvaluate() {
         return evaluate;
     }
 
     public void setEvaluate(int evaluate) {
         this.evaluate = evaluate;
+    }
+
+    @Override
+    public String toString() {
+        return "Tutor{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", birth=" + birth +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", specialization='" + specialization + '\'' +
+                ", description='" + description + '\'' +
+                ", idCardNumber=" + idCardNumber +
+                ", bankAccountNumber=" + bankAccountNumber +
+                ", bankName='" + bankName + '\'' +
+                ", account=" + (account != null ? account.getId() : "null") +
+                ", evaluate=" + evaluate +
+                '}';
     }
 }

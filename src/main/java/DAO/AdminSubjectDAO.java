@@ -1,12 +1,15 @@
 package DAO;
 
+import model.Account;
 import model.Student;
 import model.Subject;
 import Utils.DBConnection;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class AdminSubjectDAO {
 
@@ -69,6 +72,19 @@ public class AdminSubjectDAO {
         return list;
     }
 
+    public String generateSubjectId() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM subject";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                int count = rs.getInt(1) + 1;
+                return String.format("sb%03d", count);
+            }
+        }
+        return "sb001"; // Nếu không có môn học nào, bắt đầu từ sb001
+    }
+
     public void addSubject(Subject subject) throws SQLException {
         String sql = "INSERT INTO subject (id, name, level, description, fee, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -107,7 +123,7 @@ public class AdminSubjectDAO {
     }
 
     public void restoreSubject(String id) throws SQLException {
-        String sql = "UPDATE subject SET status = 'active' WHERE id = ?"; // Sửa từ 'inactive' thành 'active'
+        String sql = "UPDATE subject SET status = 'active' WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, id);
@@ -134,5 +150,58 @@ public class AdminSubjectDAO {
             }
         }
         return null;
+    }
+
+    public List<Student> getEnrolledStudents(String subjectId) throws SQLException {
+        List<Student> students = new ArrayList<>();
+        String sql = "SELECT s.* FROM student s " +
+                "JOIN registered_subjects rs ON s.id = rs.student_id " +
+                "JOIN course c ON rs.course_id = c.id " +
+                "WHERE c.subject_id = ? " +
+                "AND rs.status = 'registered'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, subjectId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Account acc = new Account();
+                    acc.setId(rs.getString("id"));
+                    students.add(new Student(
+                            rs.getString("id"),
+                            rs.getString("name"),
+                            rs.getDate("birth").toLocalDate(),
+                            rs.getString("description"),
+                            acc
+                    ));
+                }
+            }
+        }
+        return students;
+    }
+
+    public void sendNotification(String accountId, String message) throws SQLException {
+        String notificationId = "notif" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 31);
+        String sql = "INSERT INTO notifications (id, account_id, message, created_at, status) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, notificationId);
+            stmt.setString(2, accountId);
+            stmt.setString(3, message);
+            stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+            stmt.setString(5, "sent");
+            stmt.executeUpdate();
+        }
+    }
+
+    public void cancelRegistrations(String subjectId) throws SQLException {
+        String sql = "UPDATE registered_subjects rs " +
+                "SET rs.status = 'cancelled' " +
+                "WHERE rs.course_id IN (SELECT c.id FROM course c WHERE c.subject_id = ?)" +
+                "AND rs.status = 'registered'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, subjectId);
+            stmt.executeUpdate();
+        }
     }
 }

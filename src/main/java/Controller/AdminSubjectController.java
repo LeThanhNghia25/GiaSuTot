@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.AdminSubjectDAO;
 import model.Subject;
+import model.Student;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,26 +27,37 @@ public class AdminSubjectController extends HttpServlet {
         String action = request.getParameter("action");
         try {
             if (action == null || action.isEmpty()) {
-                // BỎ CHỨC NĂNG TÌM KIẾM -> luôn lấy tất cả môn học
                 List<Subject> subjects = adminSubjectDAO.getAllSubjects();
                 request.setAttribute("subjects", subjects);
                 request.getRequestDispatcher("/admin/subject-management.jsp").forward(request, response);
             } else if (action.equals("add")) {
-                request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
+                request.getRequestDispatcher("/admin/subject-add.jsp").forward(request, response);
             } else if (action.equals("edit")) {
                 String id = request.getParameter("id");
                 Subject subject = adminSubjectDAO.getSubjectById(id);
                 if (subject != null) {
                     request.setAttribute("subject", subject);
-                    request.getRequestDispatcher("/admin/edit-subject.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/subject-edit.jsp").forward(request, response);
                 } else {
                     request.setAttribute("error", "Môn học không tồn tại.");
                     request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
                 }
-            } else if (action.equals("delete")) {
+            } else if (action.equals("hide")) {
                 String id = request.getParameter("id");
-                adminSubjectDAO.hideSubject(id);
-                response.sendRedirect(request.getContextPath() + "/admin/subject");
+                if (id == null || id.trim().isEmpty()) {
+                    request.setAttribute("error", "ID môn học không hợp lệ.");
+                    request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
+                    return;
+                }
+                List<Student> enrolledStudents = adminSubjectDAO.getEnrolledStudents(id);
+                if (!enrolledStudents.isEmpty()) {
+                    request.setAttribute("enrolledStudents", enrolledStudents);
+                    request.setAttribute("subjectId", id);
+                    request.getRequestDispatcher("/admin/subject-confirm-hide.jsp").forward(request, response);
+                } else {
+                    adminSubjectDAO.hideSubject(id);
+                    response.sendRedirect(request.getContextPath() + "/admin/subject");
+                }
             } else if (action.equals("restore")) {
                 String id = request.getParameter("id");
                 adminSubjectDAO.restoreSubject(id);
@@ -62,16 +74,15 @@ public class AdminSubjectController extends HttpServlet {
         String action = request.getParameter("action");
         try {
             if (action.equals("add")) {
-                String id = request.getParameter("id"); // Đổi từ id_sub
                 String name = request.getParameter("name");
                 String level = request.getParameter("level");
                 String description = request.getParameter("description");
                 String feeStr = request.getParameter("fee");
                 String status = request.getParameter("status");
 
-                if (id == null || id.trim().isEmpty() || name == null || name.trim().isEmpty()) {
-                    request.setAttribute("error", "ID và tên môn học không được để trống.");
-                    request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
+                if (name == null || name.trim().isEmpty()) {
+                    request.setAttribute("error", "Tên môn học không được để trống.");
+                    request.getRequestDispatcher("/admin/subject-add.jsp").forward(request, response);
                     return;
                 }
 
@@ -83,32 +94,27 @@ public class AdminSubjectController extends HttpServlet {
                     fee = Double.parseDouble(feeStr);
                     if (fee < 0) {
                         request.setAttribute("error", "Phí môn học không được âm.");
-                        request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
+                        request.getRequestDispatcher("/admin/subject-add.jsp").forward(request, response);
                         return;
                     }
                 } catch (NumberFormatException e) {
                     request.setAttribute("error", "Phí môn học phải là một số hợp lệ: " + e.getMessage());
-                    request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/subject-add.jsp").forward(request, response);
                     return;
                 }
 
                 if (status == null || (!status.equals("active") && !status.equals("inactive"))) {
                     request.setAttribute("error", "Trạng thái không hợp lệ.");
-                    request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/subject-add.jsp").forward(request, response);
                     return;
                 }
 
-                if (adminSubjectDAO.getSubjectById(id) != null) {
-                    request.setAttribute("error", "ID môn học đã tồn tại.");
-                    request.getRequestDispatcher("/admin/add-subject.jsp").forward(request, response);
-                    return;
-                }
-
+                String id = adminSubjectDAO.generateSubjectId();
                 Subject subject = new Subject(id, name, level, description, fee, status);
                 adminSubjectDAO.addSubject(subject);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
             } else if (action.equals("edit")) {
-                String id = request.getParameter("id"); // Đổi từ id_sub
+                String id = request.getParameter("id");
                 String name = request.getParameter("name");
                 String level = request.getParameter("level");
                 String description = request.getParameter("description");
@@ -118,7 +124,7 @@ public class AdminSubjectController extends HttpServlet {
                 if (name == null || name.trim().isEmpty()) {
                     request.setAttribute("error", "Tên môn học không được để trống.");
                     request.setAttribute("subject", new Subject(id, name, level, description, 0, status));
-                    request.getRequestDispatcher("/admin/edit-subject.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/subject-edit.jsp").forward(request, response);
                     return;
                 }
 
@@ -131,25 +137,49 @@ public class AdminSubjectController extends HttpServlet {
                     if (fee < 0) {
                         request.setAttribute("error", "Phí môn học không được âm.");
                         request.setAttribute("subject", new Subject(id, name, level, description, 0, status));
-                        request.getRequestDispatcher("/admin/edit-subject.jsp").forward(request, response);
+                        request.getRequestDispatcher("/admin/subject-edit.jsp").forward(request, response);
                         return;
                     }
                 } catch (NumberFormatException e) {
                     request.setAttribute("error", "Phí môn học phải là một số hợp lệ: " + e.getMessage());
                     request.setAttribute("subject", new Subject(id, name, level, description, 0, status));
-                    request.getRequestDispatcher("/admin/edit-subject.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/subject-edit.jsp").forward(request, response);
                     return;
                 }
 
                 if (status == null || (!status.equals("active") && !status.equals("inactive"))) {
                     request.setAttribute("error", "Trạng thái không hợp lệ.");
                     request.setAttribute("subject", new Subject(id, name, level, description, fee, status));
-                    request.getRequestDispatcher("/admin/edit-subject.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/subject-edit.jsp").forward(request, response);
                     return;
                 }
 
                 Subject subject = new Subject(id, name, level, description, fee, status);
                 adminSubjectDAO.updateSubject(subject);
+                response.sendRedirect(request.getContextPath() + "/admin/subject");
+            } else if ("confirmHide".equals(action)) {
+                String id = request.getParameter("id");
+                if (id == null || id.trim().isEmpty()) {
+                    request.setAttribute("error", "ID môn học không hợp lệ.");
+                    request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
+                    return;
+                }
+
+                Subject subject = adminSubjectDAO.getSubjectById(id);
+                if (subject == null) {
+                    request.setAttribute("error", "Môn học không tồn tại.");
+                    request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
+                    return;
+                }
+
+                List<Student> enrolledStudents = adminSubjectDAO.getEnrolledStudents(id);
+                for (Student student : enrolledStudents) {
+                    String message = "Môn học " + subject.getName() + " (" + subject.getLevel() + ") đã bị ẩn. Bạn đã được hoàn tiền đầy đủ.";
+                    adminSubjectDAO.sendNotification(student.getAccount().getId(), message);
+                }
+
+                adminSubjectDAO.cancelRegistrations(id);
+                adminSubjectDAO.hideSubject(id);
                 response.sendRedirect(request.getContextPath() + "/admin/subject");
             }
         } catch (SQLException e) {

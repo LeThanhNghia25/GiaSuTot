@@ -1,6 +1,6 @@
 package Controller;
 
-import DAO.CourseDAO;
+import DAO.SearchDAO;
 import model.Course;
 import model.Subject;
 
@@ -14,12 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import java.text.Normalizer;
-import java.util.regex.Pattern;
-
 @WebServlet("/searchServlet")
-public class CourseController extends HttpServlet {
-    private CourseDAO courseDAO = new CourseDAO();
+public class SearchController extends HttpServlet {
+    private SearchDAO searchDAO = new SearchDAO();
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String search = request.getParameter("search");
@@ -27,7 +24,7 @@ public class CourseController extends HttpServlet {
             search = ""; // Giá trị mặc định
         }
         try {
-            HashMap<Course, Subject> resultMap = courseDAO.FindByName(search);
+            HashMap<Course, Subject> resultMap = searchDAO.FindByName(search);
 
             request.setAttribute("resultMap", resultMap);
             request.setAttribute("search", search);

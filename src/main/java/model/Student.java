@@ -2,24 +2,23 @@ package model;
 
 import java.time.LocalDate;
 
-public class Student {
-    private String id; // Đổi từ id_st thành id
+public class Student extends Account {
+    private String id;
     private String name;
     private LocalDate birth;
-    private String description; // Đổi từ describe thành description
-    private String accountId; // Đổi từ id_acc thành accountId
+    private String description;
+    private Account account;
 
     public Student() {}
 
-    public Student(String id, String name, LocalDate birth, String description, String accountId) {
+    public Student(String id, String name, LocalDate birth, String description, Account account) {
         this.id = id;
         this.name = name;
         this.birth = birth;
         this.description = description;
-        this.accountId = accountId;
+        this.account = account;
     }
 
-    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -44,16 +43,20 @@ public class Student {
         this.birth = birth;
     }
 
-    public String getDescription() { // Đổi từ getDescribe thành getDescription
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) { // Đổi từ setDescribe thành setDescription
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getAccountId() { // Đổi từ getAccountId thành getAccountId (đã đúng, chỉ cần đồng bộ tên biến)
-        return accountId;
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     @Override
@@ -63,11 +66,7 @@ public class Student {
                 ", name='" + name + '\'' +
                 ", birth=" + birth +
                 ", description='" + description + '\'' +
-                ", accountId='" + accountId + '\'' +
+                ", account=" + (account != null ? account.getId() + " (" + account.getEmail() + ")" : "null") +
                 '}';
-    }
-
-    public void setAccountId(String accountId) { // Đổi từ setAccountId thành setAccountId (đã đúng, chỉ cần đồng bộ tên biến)
-        this.accountId = accountId;
     }
 }

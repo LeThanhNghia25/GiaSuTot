@@ -64,18 +64,23 @@ public class AccountController extends HttpServlet {
                 if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatus())) {
                     HttpSession session = request.getSession();
                     session.setAttribute("account", acc);
-                    System.out.println("Login successful. Account ID: " + acc.getId());
+
+                    // Thiết lập userName và role dựa trên vai trò
                     if (acc.getRole() == 1) { // Student
                         Student student = studentDAO.getStudentByAccountId(acc.getId());
                         if (student != null) {
                             session.setAttribute("userName", student.getName());
+                            session.setAttribute("role", "student"); // Thiết lập role dạng chuỗi
                         }
                     } else if (acc.getRole() == 2) { // Tutor
                         Tutor tutor = tutorDAO.getTutorByAccountId(acc.getId());
                         if (tutor != null) {
                             session.setAttribute("userName", tutor.getName());
+                            session.setAttribute("role", "tutor"); // Thiết lập role dạng chuỗi
                         }
                     }
+
+                    System.out.println("Login successful. Account ID: " + acc.getId());
                     response.sendRedirect(request.getContextPath() + "/index.jsp");
                 } else {
                     request.setAttribute("error", "Email hoặc mật khẩu không đúng, hoặc tài khoản chưa kích hoạt.");
@@ -87,7 +92,7 @@ public class AccountController extends HttpServlet {
                 String name = request.getParameter("name");
                 String birthStr = request.getParameter("birth");
                 LocalDate birth = LocalDate.parse(birthStr);
-                String describe = request.getParameter("describe");
+                String description = request.getParameter("description"); // Đổi từ describe thành description
 
                 if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()
                         || name == null || name.trim().isEmpty() || birth == null || birthStr.trim().isEmpty()) {
@@ -103,14 +108,15 @@ public class AccountController extends HttpServlet {
                     return;
                 }
 
-                String idAcc = accountDAO.generateAccountId(); // Đổi từ generateaccount_id()
+                String idAcc = accountDAO.generateAccountId();
                 Account acc = new Account(idAcc, email, password, 1, "inactive");
                 accountDAO.insertAccount(acc);
 
+                // Thiết lập các thuộc tính để chuyển tiếp đến StudentController
                 request.setAttribute("name", name);
                 request.setAttribute("birth", birth);
-                request.setAttribute("description", describe); // Đổi từ describe
-                request.setAttribute("id_acc", idAcc);
+                request.setAttribute("description", description); // Đổi từ describe thành description
+                request.setAttribute("account_id", idAcc); // Đổi từ id_acc thành account_id
 
                 request.getRequestDispatcher("/student").forward(request, response);
             }

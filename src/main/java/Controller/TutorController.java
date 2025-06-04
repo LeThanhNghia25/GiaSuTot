@@ -11,9 +11,12 @@ import model.Account;
 import model.Tutor;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import com.google.gson.Gson;
 
 @WebServlet("/tutor")
 public class TutorController extends HttpServlet {
@@ -22,12 +25,7 @@ public class TutorController extends HttpServlet {
     @Override
     public void init() {
         System.out.println("Initializing TutorController");
-        try {
-            tutorDAO = new TutorDAO();
-        } catch (Exception e) {
-            System.err.println("Failed to initialize TutorDAO: " + e.getMessage());
-            throw new RuntimeException("Database connection error during initialization", e);
-        }
+        tutorDAO = new TutorDAO(); // Ngoại lệ sẽ được xử lý trong TutorDAO
     }
 
     @Override
@@ -80,28 +78,46 @@ public class TutorController extends HttpServlet {
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             String specialization = request.getParameter("specialization");
-            String description = request.getParameter("description"); // Đổi từ describe_tutor
-            int idCardNumber = Integer.parseInt(request.getParameter("id_card_number")); // Đổi từ cccd
-            int bankAccountNumber = Integer.parseInt(request.getParameter("bank_account_number")); // Đổi từ bank_code
+            String description = request.getParameter("description");
+            long idCardNumber = 0;
+            long bankAccountNumber = 0;
+            try {
+                idCardNumber = Long.parseLong(request.getParameter("id_card_number"));
+                bankAccountNumber = Long.parseLong(request.getParameter("bank_account_number"));
+            } catch (NumberFormatException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Số CMND/CCCD hoặc số tài khoản không hợp lệ: " + e.getMessage());
+                return;
+            }
             String bankName = request.getParameter("bank_name");
             String birthStr = request.getParameter("birth");
-            Date birth = null;
+            LocalDate birth = null;
             if (birthStr != null && !birthStr.trim().isEmpty()) {
-                birth = new SimpleDateFormat("yyyy-MM-dd").parse(birthStr);
+                birth = LocalDate.parse(birthStr, DateTimeFormatter.ISO_LOCAL_DATE);
             }
 
             Tutor updatedTutor = new Tutor(
                     existingTutor.getId(), name, email, birth, phone, address, specialization,
-                    description, idCardNumber, bankAccountNumber, bankName, accountId, existingTutor.getEvaluate()
+                    description, idCardNumber, bankAccountNumber, bankName, account, existingTutor.getEvaluate()
             );
             tutorDAO.updateTutor(updatedTutor);
 
             Tutor refreshedTutor = tutorDAO.getTutorById(existingTutor.getId());
             request.setAttribute("tutor", refreshedTutor);
-            request.getRequestDispatcher("profile.jsp").forward(request, response);
+
+            // Phản hồi JSON thành công
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("status", "success");
+            responseData.put("message", "Cập nhật thông tin thành công");
+            responseData.put("tutor", refreshedTutor);
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out = response.getWriter();
+            out.print(new Gson().toJson(responseData));
+            out.flush();
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("error.jsp");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi khi cập nhật thông tin: " + e.getMessage());
         }
     }
 }
