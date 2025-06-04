@@ -10,10 +10,10 @@ public class Course {
     private LocalDateTime time;
     private Subject subject;
     private Tutor tutor;
-    private String studentId; // ID học viên
-    private String studentName; // Tên học viên
-    private LocalDate startDate; // Ngày bắt đầu học
-    private LocalDate endDate; // Ngày hoàn thành khóa học
+    private String studentId;
+    private String studentName;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Course() {}
 

@@ -6,7 +6,7 @@ public class Payment {
     private String id;
     private String courseId;
     private String tutorId;
-    private String studentId; // Thêm studentId
+    private String studentId;
     private double amount;
     private LocalDateTime paymentDate;
     private String status;
@@ -21,7 +21,6 @@ public class Payment {
         this.status = status;
     }
 
-    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -76,5 +75,18 @@ public class Payment {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id='" + id + '\'' +
+                ", courseId='" + courseId + '\'' +
+                ", tutorId='" + tutorId + '\'' +
+                ", studentId='" + studentId + '\'' +
+                ", amount=" + amount +
+                ", paymentDate=" + paymentDate +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

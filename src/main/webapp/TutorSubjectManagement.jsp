@@ -1,11 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: thutr
-  Date: 02/06/2025
-  Time: 00:45
-  To change this template use File | Settings | File Templates.
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.Tutor" %>
@@ -44,9 +36,9 @@
 <body class="bg-gray-50 font-sans">
 <%
   Tutor tutor = (Tutor) request.getAttribute("tutor");
-  List<String> listIdStudent= (List<String>) request.getAttribute("StIDList");
-
+  List<String> listIdStudent = (List<String>) request.getAttribute("StIDList");
 %>
+
 <!-- Header -->
 <header class="gradient-bg text-white shadow-lg">
   <div class="container mx-auto px-4 py-6">
@@ -59,7 +51,7 @@
         <a href="#" class="hover:text-blue-200 transition">Trang chủ</a>
         <a href="#" class="hover:text-blue-200 transition">Lịch dạy</a>
         <a href="#" class="hover:text-blue-200 transition">Học viên</a>
-        <a href="#" class="hover:text-blue-200 transition"><%= tutor.getName() %> </a>
+        <a href="#" class="hover:text-blue-200 transition"><%= tutor.getName() %></a>
       </nav>
       <div class="flex items-center space-x-4">
         <div class="relative">
@@ -145,7 +137,7 @@
 
         <!-- Form Section -->
         <div class="p-6">
-          <form id="sessionForm" class="space-y-6">
+          <form id="sessionForm" action="lessonController" method="post" class="space-y-6">
             <!-- Student Info -->
             <div class="fade-in">
               <h3 class="text-lg font-medium text-gray-700 mb-4 flex items-center">
@@ -154,29 +146,23 @@
               </h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label for="studentId" class="block text-sm font-medium text-gray-700 mb-1">Mã học viên</label>
-                  <form action="lessontController" method="post">
-                    <select id="idStudent" name="idStudent"
+                  <label for="idStudent" class="block text-sm font-medium text-gray-700 mb-1">Mã học viên</label>
+                  <select id="idStudent" name="idStudent"
                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition" required>
-                    <c:forEach var="idst" items="${StIDList}" >
-                      <option value="" >${idst}</option>
+                    <option value="" disabled selected>Chọn mã học viên</option>
+                    <c:forEach var="idst" items="${StIDList}">
+                      <option value="${idst}">${idst}</option>
                     </c:forEach>
-
-                   </select>
-                  </form>
-                  </div>
+                  </select>
                 </div>
                 <div>
                   <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">Tên học viên</label>
                   <input type="text" id="studentName" name="studentName"
-
                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
-                         placeholder="Tên học viên" readonly
-                         value=<%= request.getAttribute("student") %>
-                  >
+                         placeholder="Tên học viên" readonly>
                 </div>
               </div>
-
+            </div>
 
             <!-- Session Details -->
             <div class="fade-in">
@@ -285,6 +271,52 @@
   </div>
 </div>
 
+<!-- JavaScript for handling student selection -->
+<script>
+  document.getElementById('idStudent').addEventListener('change', function () {
+    const studentId = this.value;
+    if (studentId) {
+      // Gửi yêu cầu AJAX POST đến LessonController
+      console.log('Sending AJAX request for studentId: ' + studentId); // Debug
+      fetch('${pageContext.request.contextPath}/lesson', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'studentId=' + encodeURIComponent(studentId)
+      })
+              .then(response => {
+                console.log('Response status: ' + response.status); // Debug
+                if (!response.ok) {
+                  throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.json();
+              })
+              .then(data => {
+                console.log('Received data: ', data); // Debug
+                if (data.status === 'success') {
+                  // Cập nhật các ô thông tin
+                  document.getElementById('studentName').value = data.studentName || '';
+                  document.getElementById('subject').value = data.subject || '';
+                } else {
+                  alert('Không tìm thấy thông tin học viên: ' + data.message);
+                  document.getElementById('studentName').value = '';
+                  document.getElementById('subject').value = '';
+                }
+              })
+              .catch(error => {
+                console.error('Error fetching student info:', error);
+                alert('Đã xảy ra lỗi khi lấy thông tin học viên: ' + error.message);
+                document.getElementById('studentName').value = '';
+                document.getElementById('subject').value = '';
+              });
+    } else {
+      // Reset các ô nếu không chọn học viên
+      document.getElementById('studentName').value = '';
+      document.getElementById('subject').value = '';
+    }
+  });
+</script>
 
 </body>
 </html>

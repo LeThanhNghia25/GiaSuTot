@@ -21,11 +21,7 @@ public class StudentController extends HttpServlet {
 
     @Override
     public void init() {
-        try {
-            studentDAO = new StudentDAO();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        studentDAO = new StudentDAO();
     }
 
     @Override

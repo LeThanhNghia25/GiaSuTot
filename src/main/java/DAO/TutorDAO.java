@@ -1,12 +1,12 @@
 package DAO;
 
 import model.Tutor;
+import model.Account;
 import Utils.DBConnection;
 
 import java.sql.*;
 
 public class TutorDAO {
-
     public Tutor getTutorById(String id) {
         Tutor tutor = null;
         String sql = "SELECT * FROM tutor WHERE id = ?";
@@ -20,19 +20,23 @@ public class TutorDAO {
                 System.out.println("Executing query for tutor id: " + id);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
+                        Account account = new Account();
+                        account.setId(rs.getString("account_id"));
+                        account.setEmail(rs.getString("email"));
+
                         tutor = new Tutor(
                                 rs.getString("id"),
                                 rs.getString("name"),
                                 rs.getString("email"),
-                                rs.getDate("birth").toLocalDate(), // Sử dụng toLocalDate()
+                                rs.getDate("birth").toLocalDate(),
                                 rs.getString("phone"),
                                 rs.getString("address"),
                                 rs.getString("specialization"),
                                 rs.getString("description"),
-                                rs.getLong("id_card_number"),      // Sử dụng getLong()
-                                rs.getLong("bank_account_number"), // Sử dụng getLong()
+                                rs.getLong("id_card_number"),
+                                rs.getLong("bank_account_number"),
                                 rs.getString("bank_name"),
-                                rs.getString("account_id"),
+                                account,
                                 rs.getInt("evaluate")
                         );
                         System.out.println("Tutor found: " + tutor.getName());
@@ -63,19 +67,23 @@ public class TutorDAO {
                 stmt.setString(1, accountId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
+                        Account account = new Account();
+                        account.setId(rs.getString("account_id"));
+                        account.setEmail(rs.getString("email"));
+
                         tutor = new Tutor(
                                 rs.getString("id"),
                                 rs.getString("name"),
                                 rs.getString("email"),
-                                rs.getDate("birth").toLocalDate(), // Sử dụng toLocalDate()
+                                rs.getDate("birth").toLocalDate(),
                                 rs.getString("phone"),
                                 rs.getString("address"),
                                 rs.getString("specialization"),
                                 rs.getString("description"),
-                                rs.getLong("id_card_number"),      // Sử dụng getLong()
-                                rs.getLong("bank_account_number"), // Sử dụng getLong()
+                                rs.getLong("id_card_number"),
+                                rs.getLong("bank_account_number"),
                                 rs.getString("bank_name"),
-                                rs.getString("account_id"),
+                                account,
                                 rs.getInt("evaluate")
                         );
                     }
@@ -99,14 +107,19 @@ public class TutorDAO {
             stmt.setString(5, tutor.getAddress());
             stmt.setString(6, tutor.getSpecialization());
             stmt.setString(7, tutor.getDescription());
-            stmt.setLong(8, tutor.getIdCardNumber());     // Sử dụng setLong()
-            stmt.setLong(9, tutor.getBankAccountNumber()); // Sử dụng setLong()
+            stmt.setLong(8, tutor.getIdCardNumber());
+            stmt.setLong(9, tutor.getBankAccountNumber());
             stmt.setString(10, tutor.getBankName());
             stmt.setInt(11, tutor.getEvaluate());
             stmt.setString(12, tutor.getId());
-            stmt.executeUpdate();
-            System.out.println("Tutor updated successfully.");
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Tutor updated successfully.");
+            } else {
+                System.err.println("No tutor updated.");
+            }
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -130,7 +143,7 @@ public class TutorDAO {
             System.out.println("ID Card Number: " + tutor.getIdCardNumber());
             System.out.println("Bank Account Number: " + tutor.getBankAccountNumber());
             System.out.println("Bank Name: " + tutor.getBankName());
-            System.out.println("Account ID: " + tutor.getAccountId());
+            System.out.println("Account ID: " + (tutor.getAccount() != null ? tutor.getAccount().getId() : "null"));
         } else {
             System.out.println("Failed to retrieve tutor with id: " + testId);
         }

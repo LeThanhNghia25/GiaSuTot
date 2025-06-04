@@ -32,7 +32,7 @@ public class CourseDAO {
                 subject.setName(rs.getString("subject_name"));
                 subject.setLevel(rs.getString("level"));
                 subject.setFee(rs.getDouble("fee"));
-                subject.setStatus("active");
+                subject.setStatus("active"); // Đã lọc theo status = 'active' trong truy vấn
                 course.setSubject(subject);
                 Tutor tutor = new Tutor();
                 tutor.setId(rs.getString("tutor_id"));
@@ -48,6 +48,44 @@ public class CourseDAO {
             e.printStackTrace();
         }
         return courses;
+    }
+
+    public Course getCourseById(String courseId) throws SQLException {
+        System.out.println("Fetching course with ID: " + courseId);
+        String sql = "SELECT c.*, s.name AS subject_name, s.level, s.fee, s.status, t.name AS tutor_name, t.specialization, t.address " +
+                "FROM course c JOIN subject s ON c.subject_id = s.id " +
+                "JOIN tutor t ON c.tutor_id = t.id " +
+                "WHERE c.id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, courseId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Course course = new Course();
+                course.setId(rs.getString("id"));
+                course.setSubjectId(rs.getString("subject_id"));
+                course.setTutorId(rs.getString("tutor_id"));
+                course.setTime(rs.getTimestamp("time").toLocalDateTime());
+                Subject subject = new Subject();
+                subject.setId(rs.getString("subject_id"));
+                subject.setName(rs.getString("subject_name"));
+                subject.setLevel(rs.getString("level"));
+                subject.setFee(rs.getDouble("fee"));
+                subject.setStatus(rs.getString("status")); // Bây giờ cột status được lấy từ DB
+                course.setSubject(subject);
+                Tutor tutor = new Tutor();
+                tutor.setId(rs.getString("tutor_id"));
+                tutor.setName(rs.getString("tutor_name"));
+                tutor.setAddress(rs.getString("address"));
+                tutor.setSpecialization(rs.getString("specialization"));
+                course.setTutor(tutor);
+                System.out.println("Course found: " + course.getId() + ", subject: " + subject.getName());
+                return course;
+            }
+            System.out.println("Course not found for ID: " + courseId);
+        }
+        return null;
     }
 
     public void registerCourse(String courseId, String studentId) {

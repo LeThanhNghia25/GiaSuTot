@@ -1,20 +1,18 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class RegisteredSubjects {
     private String course_id;
     private String student_id;
-    private Date registration_date;
+    private LocalDate registration_date;
     private int number_of_lessons;
     private String status;
-
-    // Thêm đối tượng student
     private Student student;
 
     public RegisteredSubjects() {}
 
-    public RegisteredSubjects(String course_id, String student_id, Date registration_date, int number_of_lessons, String status) {
+    public RegisteredSubjects(String course_id, String student_id, LocalDate registration_date, int number_of_lessons, String status) {
         this.course_id = course_id;
         this.student_id = student_id;
         this.registration_date = registration_date;
@@ -22,36 +20,35 @@ public class RegisteredSubjects {
         this.status = status;
     }
 
-    // Getters và Setters
-    public String getCourseId() {
+    public String getCourse_id() {
         return course_id;
     }
 
-    public void setCourseId(String course_id) {
+    public void setCourse_id(String course_id) {
         this.course_id = course_id;
     }
 
-    public String getStudentId() {
+    public String getStudent_id() {
         return student_id;
     }
 
-    public void setStudentId(String student_id) {
+    public void setStudent_id(String student_id) {
         this.student_id = student_id;
     }
 
-    public Date getRegistrationDate() {
+    public LocalDate getRegistration_date() {
         return registration_date;
     }
 
-    public void setRegistrationDate(Date registration_date) {
+    public void setRegistration_date(LocalDate registration_date) {
         this.registration_date = registration_date;
     }
 
-    public int getNumberOfLessons() {
+    public int getNumber_of_lessons() {
         return number_of_lessons;
     }
 
-    public void setNumberOfLessons(int number_of_lessons) {
+    public void setNumber_of_lessons(int number_of_lessons) {
         this.number_of_lessons = number_of_lessons;
     }
 
@@ -63,12 +60,23 @@ public class RegisteredSubjects {
         this.status = status;
     }
 
-    // Getter và Setter cho student
     public Student getStudent() {
         return student;
     }
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    @Override
+    public String toString() {
+        return "RegisteredSubjects{" +
+                "course_id='" + course_id + '\'' +
+                ", student_id='" + student_id + '\'' +
+                ", registration_date=" + registration_date +
+                ", number_of_lessons=" + number_of_lessons +
+                ", status='" + status + '\'' +
+                ", student=" + (student != null ? student.getName() : "null") +
+                '}';
     }
 }
