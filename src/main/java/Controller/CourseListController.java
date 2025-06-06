@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Course;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,15 +30,24 @@ public class CourseListController extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("Received GET request for /courses");
 
-        // Lấy tham số lọc từ request
         String tenMon = request.getParameter("tenMon");
         String lop = request.getParameter("lop");
         String tinh = request.getParameter("tinh");
+        System.out.println("Filter parameters - tenMon: " + tenMon + ", lop: " + lop + ", tinh: " + tinh);
 
-        // Lấy danh sách tất cả khóa học
-        List<Course> allCourses = courseDAO.getAllAvailableCourses();
+        long startTime = System.currentTimeMillis();
+        List<Course> allCourses = null;
+        try {
+            allCourses = courseDAO.getAllAvailableCourses();
+        } catch (Exception e) {
+            System.err.println("Error fetching courses: " + e.getMessage());
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error fetching courses");
+            return;
+        }
+        long fetchTime = System.currentTimeMillis() - startTime;
+        System.out.println("Time to fetch courses: " + fetchTime + "ms");
 
-        // Áp dụng bộ lọc
         if (allCourses != null) {
             List<Course> filteredCourses = allCourses.stream()
                     .filter(course -> {
@@ -59,11 +69,18 @@ public class CourseListController extends HttpServlet {
         }
 
         System.out.println("Number of available courses after filtering: " + (allCourses != null ? allCourses.size() : "null"));
-        request.setAttribute("allCourses", allCourses);
 
-        // Xử lý phân trang
+        // Chuyển đổi LocalDateTime thành chuỗi trước khi gửi tới JSP
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        if (allCourses != null) {
+            allCourses.forEach(course -> {
+                String formattedTime = course.getTime().format(formatter);
+                request.setAttribute("formattedTime_" + course.getId(), formattedTime);
+            });
+        }
+
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-        int pageSize = 15; // 5 hàng x 3 cột = 15 khóa học mỗi trang
+        int pageSize = 9;
         int totalCourses = allCourses != null ? allCourses.size() : 0;
         int totalPages = (int) Math.ceil((double) totalCourses / pageSize);
 
@@ -76,8 +93,14 @@ public class CourseListController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
 
         System.out.println("Forwarding to courses.jsp");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/courses.jsp");
-        dispatcher.forward(request, response);
+        try {
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/courses.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            System.err.println("Error forwarding to courses.jsp: " + e.getMessage());
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error rendering page");
+        }
     }
 
     @Override
@@ -89,14 +112,18 @@ public class CourseListController extends HttpServlet {
         String studentId = (String) request.getSession().getAttribute("studentId");
 
         if (courseId != null && studentId != null) {
-            if ("register".equalsIgnoreCase(action)) {
-                // Đăng ký khóa học chính thức
-                courseDAO.registerCourse(courseId, studentId);
-                response.sendRedirect(request.getContextPath() + "/courses?page=" + request.getParameter("page"));
-            } else if ("trial".equalsIgnoreCase(action)) {
-                // Đăng ký học thử
-                courseDAO.registerTrial(courseId, studentId);
-                response.sendRedirect(request.getContextPath() + "/courses?page=" + request.getParameter("page"));
+            try {
+                if ("register".equalsIgnoreCase(action)) {
+                    courseDAO.registerCourse(courseId, studentId);
+                    response.sendRedirect(request.getContextPath() + "/courses?page=" + request.getParameter("page"));
+                } else if ("trial".equalsIgnoreCase(action)) {
+                    courseDAO.registerTrial(courseId, studentId);
+                    response.sendRedirect(request.getContextPath() + "/courses?page=" + request.getParameter("page"));
+                }
+            } catch (Exception e) {
+                System.err.println("Error processing POST request: " + e.getMessage());
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing request");
             }
             return;
         }
