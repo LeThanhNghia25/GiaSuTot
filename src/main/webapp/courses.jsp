@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="model.Course" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,40 +35,101 @@
     <style>
         .course-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
         }
         .course-item {
-            background: #f8f9fa;
-            border-radius: 10px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .course-item:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .course-content {
+            padding: 20px;
+        }
+        .course-header {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+        }
+        .course-header h5 {
+            font-size: 1.25rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .course-header .fee {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .course-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .course-info {
+            display: flex;
+            flex-wrap: wrap;
+            border-top: 1px solid #e9ecef;
+            margin-top: 15px;
+        }
+        .course-info small {
+            flex: 1 1 50%;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        .course-info small i {
+            margin-right: 5px;
         }
         .course-actions {
             display: flex;
             justify-content: center;
             gap: 10px;
-            padding: 10px;
+            padding: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+        .course-actions .btn {
+            font-size: 0.9rem;
+            padding: 8px 15px;
+        }
+        .rating-stars .fa-star {
+            color: #ffc107;
         }
         .pagination {
             display: flex;
             justify-content: center;
             gap: 10px;
+            margin-top: 30px;
         }
         .pagination a {
             text-decoration: none;
-            padding: 5px 10px;
+            padding: 8px 15px;
             color: #007bff;
             border: 1px solid #007bff;
             border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .pagination a:hover {
+            background: #007bff;
+            color: white;
         }
         .pagination a.active {
             background: #007bff;
             color: white;
+            border-color: #007bff;
         }
     </style>
 </head>
@@ -80,8 +142,8 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">Courses</h6>
-            <h1 class="mb-5">All Available Courses</h1>
+            <h6 class="section-title bg-white text-center text-primary px-3">Khóa Học</h6>
+            <h1 class="mb-5">Tất Cả Khóa Học Có Sẵn</h1>
         </div>
         <c:choose>
             <c:when test="${empty allCourses}">
@@ -91,48 +153,50 @@
             </c:when>
             <c:otherwise>
                 <div class="course-grid">
-                <c:forEach var="course" items="${allCourses}" varStatus="loop">
-                    <div class="course-item wow fadeInUp" data-wow-delay="${loop.index % 3 == 0 ? '0.1s' : loop.index % 3 == 1 ? '0.3s' : '0.5s'}">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid" src="img/course-${loop.index % 3 + 1}.jpg" alt="${course.subject.name}">
-                            <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                                <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Read More</a>
+                    <c:forEach var="course" items="${allCourses}" varStatus="loop">
+                        <div class="course-item wow fadeInUp" data-wow-delay="${loop.index * 0.2}s">
+                            <div class="course-header">
+                                <h5 class="mb-4">
+                                    <c:out value="${course.subject.name}"/> - <c:out value="${course.subject.level}"/>
+                                </h5>
+                                <div class="fee">
+                                    <fmt:formatNumber value="${course.subject.fee}" pattern="#,##0"/> VND
+                                </div>
+                            </div>
+                            <div class="course-content">
+                                <p class="course-description">
+                                    <c:out value="${course.subject.description}"/>
+                                </p>
+                                <div class="rating-stars mb-3">
+                                    <c:forEach begin="1" end="${course.tutor.evaluate}">
+                                        <small class="fa fa-star"></small>
+                                    </c:forEach>
+                                    <c:forEach begin="${course.tutor.evaluate + 1}" end="5">
+                                        <small class="fa fa-star text-muted"></small>
+                                    </c:forEach>
+                                    <small>(${course.tutor.evaluate})</small>
+                                </div>
+                                <div class="course-info">
+                                    <small><i class="fa fa-user-tie text-primary"></i><c:out value="${course.tutor.name}"/></small>
+                                    <small><i class="fa fa-book text-primary"></i><c:out value="${course.tutor.specialization}"/></small>
+                                    <small><i class="fa fa-clock text-primary"></i>${requestScope['formattedTime_' += course.id]}</small>
+                                    <small><i class="fa fa-users text-primary"></i>${course.studentCount} học viên</small>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <form action="${pageContext.request.contextPath}/courses" method="post" style="margin: 0;">
+                                    <input type="hidden" name="courseId" value="${course.id}">
+                                    <input type="hidden" name="action" value="register">
+                                    <button type="submit" class="btn btn-primary btn-sm">Đăng ký</button>
+                                </form>
+                                <form action="${pageContext.request.contextPath}/courses" method="post" style="margin: 0;">
+                                    <input type="hidden" name="courseId" value="${course.id}">
+                                    <input type="hidden" name="action" value="trial">
+                                    <button type="submit" class="btn btn-secondary btn-sm">Học thử</button>
+                                </form>
                             </div>
                         </div>
-                        <div class="text-center p-4 pb-0">
-                            <h3 class="mb-0">$<c:out value="${course.subject.fee}"/></h3>
-                            <div class="mb-3">
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small>(123)</small>
-                            </div>
-                            <h5 class="mb-4"><c:out value="${course.subject.name}"/> - <c:out value="${course.subject.level}"/></h5>
-                        </div>
-                        <div class="d-flex border-top">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>${course.tutor.name}</small>
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>2.5 Hrs</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>50 Students</small>
-                        </div>
-                        <div class="course-actions">
-                            <form action="${pageContext.request.contextPath}/courses" method="post" style="margin: 0;">
-                                <input type="hidden" name="courseId" value="${course.id}">
-                                <input type="hidden" name="action" value="register">
-                                <button type="submit" class="btn btn-primary btn-sm">Đăng ký</button>
-                            </form>
-                            <form action="${pageContext.request.contextPath}/courses" method="post" style="margin: 0;">
-                                <input type="hidden" name="courseId" value="${course.id}">
-                                <input type="hidden" name="action" value="trial">
-                                <button type="submit" class="btn btn-secondary btn-sm">Đăng ký học thử</button>
-                            </form>
-                        </div>
-                    </div>
-                    <c:if test="${(loop.index + 1) % 3 == 0 && loop.index < (allCourses.size() - 1)}">
-                        </div><div class="course-grid">
-                    </c:if>
-                </c:forEach>
+                    </c:forEach>
                 </div>
                 <!-- Phân trang -->
                 <c:if test="${not empty allCourses and totalPages > 1}">

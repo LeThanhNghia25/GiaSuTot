@@ -14,6 +14,7 @@ public class Course {
     private String studentName;
     private LocalDate startDate;
     private LocalDate endDate;
+    private int studentCount; // Số học viên từng học
 
     public Course() {}
 
@@ -104,6 +105,14 @@ public class Course {
         this.endDate = endDate;
     }
 
+    public int getStudentCount() {
+        return studentCount;
+    }
+
+    public void setStudentCount(int studentCount) {
+        this.studentCount = studentCount;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
@@ -113,6 +122,7 @@ public class Course {
                 ", time=" + time +
                 ", subject=" + (subject != null ? subject.getName() : "null") +
                 ", tutor=" + (tutor != null ? tutor.getName() : "null") +
+                ", studentCount=" + studentCount +
                 '}';
     }
 }
