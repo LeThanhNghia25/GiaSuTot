@@ -1,18 +1,17 @@
 package model;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
-public class Student extends Account{
-    private String id; // Đổi từ id_st thành id
+public class Student extends Account {
+    private String id;
     private String name;
     private LocalDate birth;
-    private String description; // Đổi từ describe thành description
-    private Account account; // Thay vì String accountId
+    private String description;
+    private Account account;
 
     public Student() {}
 
-    public Student(String id, String name, LocalDate birth, String description,  Account account) {
+    public Student(String id, String name, LocalDate birth, String description, Account account) {
         this.id = id;
         this.name = name;
         this.birth = birth;
@@ -20,7 +19,6 @@ public class Student extends Account{
         this.account = account;
     }
 
-    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -45,11 +43,11 @@ public class Student extends Account{
         this.birth = birth;
     }
 
-    public String getDescription() { // Đổi từ getDescribe thành getDescription
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) { // Đổi từ setDescribe thành setDescription
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -59,5 +57,16 @@ public class Student extends Account{
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", birth=" + birth +
+                ", description='" + description + '\'' +
+                ", account=" + (account != null ? account.getId() + " (" + account.getEmail() + ")" : "null") +
+                '}';
     }
 }

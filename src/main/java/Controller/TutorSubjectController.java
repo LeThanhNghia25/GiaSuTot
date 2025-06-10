@@ -26,11 +26,7 @@ public class TutorSubjectController extends HttpServlet {
 
     @Override
     public void init() {
-        try {
-            subjectDAO = new TutorSubjectDAO();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        subjectDAO = new TutorSubjectDAO(); // Không cần try-catch nếu không có SQLException
     }
 
     @Override
@@ -44,7 +40,6 @@ public class TutorSubjectController extends HttpServlet {
         }
 
         try {
-            // Lấy ID tutor từ bảng tutor dựa trên account_id
             String tutorId = getTutorIdByAccountId(account.getId());
             if (tutorId == null) {
                 request.setAttribute("error", "Không tìm thấy thông tin tutor.");
@@ -52,32 +47,23 @@ public class TutorSubjectController extends HttpServlet {
                 return;
             }
 
-            // Lấy danh sách môn học active
             List<Subject> subjects = subjectDAO.getActiveSubjectsByTutor(tutorId);
-            // Tạo map lưu danh sách registeredSubjects cho từng subject
+            if (subjects == null || subjects.isEmpty()) {
+                request.setAttribute("error", "Không có môn học nào đang hoạt động.");
+                request.getRequestDispatcher("/manager_subject.jsp").forward(request, response);
+                return;
+            }
+
             Map<String, List<RegisteredSubjects>> registeredSubjectsMap = new HashMap<>();
-            Map<String, Integer> lessonCountsMap = new HashMap<>();
-            Map<String, Integer> totalLessonMap = new HashMap<>();
             for (Subject subject : subjects) {
                 List<RegisteredSubjects> registeredSubjects = subjectDAO.getRegisteredSubjectsByCourse(subject.getId());
-                registeredSubjectsMap.put(subject.getId(), registeredSubjects);
-
-                // Lấy số buổi đã học cho mỗi học viên
-                for (RegisteredSubjects rs : registeredSubjects) {
-                    if ("completed".equals(rs.getStatus())) {
-                        int lessonCount = subjectDAO.getLessonCount(rs.getCourseId(), rs.getStudentId());
-                        lessonCountsMap.put(rs.getCourseId() + "_" + rs.getStudentId(), lessonCount);
-                    }
-                    int totalLesson = subjectDAO.getTotalLessonByCourseId(rs.getCourseId());
-                    totalLessonMap.put(rs.getCourseId(), totalLesson);
+                if (registeredSubjects != null) {
+                    registeredSubjectsMap.put(subject.getId(), registeredSubjects);
                 }
             }
 
-            // Truyền dữ liệu về JSP
             request.setAttribute("subjects", subjects);
             request.setAttribute("registeredSubjectsMap", registeredSubjectsMap);
-            request.setAttribute("lessonCountsMap", lessonCountsMap);
-            request.setAttribute("totalLessonMap", totalLessonMap);
             request.getRequestDispatcher("/manager_subject.jsp").forward(request, response);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,18 +71,16 @@ public class TutorSubjectController extends HttpServlet {
             request.getRequestDispatcher("/manager_subject.jsp").forward(request, response);
         }
         System.out.println("TutorSubjectController invoked");
-
     }
 
-    // Lấy tutor_id từ account_id
     private String getTutorIdByAccountId(String accountId) throws SQLException {
-        Connection conn = subjectDAO.getConnection();
-        String sql = "SELECT id FROM tutor WHERE account_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Utils.DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT id FROM tutor WHERE account_id = ?")) {
             ps.setString(1, accountId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString("id");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("id");
+                }
             }
         }
         return null;
