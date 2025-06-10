@@ -64,23 +64,24 @@
                             <td>
                                 <c:forEach var="rs" items="${registeredSubjectsMap[subject.id]}">
                                     <c:if test="${rs.status == 'completed'}">
-                                        <c:set var="mapKey" value="${rs.courseId}_${rs.studentId}" />
-                                        <c:set var="totalLesson" value="${totalLessonMap[rs.courseId]}" />
-                                        ${totalLesson}<br>
+                                        ${rs.number_of_lessons}<br>
                                     </c:if>
                                 </c:forEach>
                             </td>
 
+
                             <td>
                                 <c:forEach var="rs" items="${registeredSubjectsMap[subject.id]}">
                                     <c:if test="${rs.status == 'completed'}">
-                                    <c:set var="mapKey" value="${rs.courseId}_${rs.studentId}" />
-                                        <c:set var="lessonCount" value="${lessonCountsMap[mapKey]}" />
-                                    • <a href="${pageContext.request.contextPath}/student?id=${rs.student.id}">
-                                        ${rs.student.name}</a>/  ${lessonCount} buổi<br>
+                                        <c:set var="mapKey" value="${rs.course_id}_${rs.student_id}" />
+                                        • <a href="${pageContext.request.contextPath}/student?id=${rs.student.id}">
+                                            ${rs.student.name}
+                                    </a> /
+                                        ${lessonCountsMap[mapKey] != null ? lessonCountsMap[mapKey] : 0} buổi<br>
                                     </c:if>
                                 </c:forEach>
                             </td>
+
 
                         </tr>
                     </c:forEach>

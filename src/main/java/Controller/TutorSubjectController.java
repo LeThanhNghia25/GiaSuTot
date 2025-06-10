@@ -55,14 +55,15 @@ public class TutorSubjectController extends HttpServlet {
             }
 
             Map<String, List<RegisteredSubjects>> registeredSubjectsMap = new HashMap<>();
+            Map<String, Integer> lessonCountsMap = subjectDAO.getCompletedLessonCounts();
             for (Subject subject : subjects) {
                 List<RegisteredSubjects> registeredSubjects = subjectDAO.getRegisteredSubjectsByCourse(subject.getId());
                 if (registeredSubjects != null) {
                     registeredSubjectsMap.put(subject.getId(), registeredSubjects);
                 }
             }
-
             request.setAttribute("subjects", subjects);
+            request.setAttribute("lessonCountsMap", lessonCountsMap);
             request.setAttribute("registeredSubjectsMap", registeredSubjectsMap);
             request.getRequestDispatcher("/manager_subject.jsp").forward(request, response);
         } catch (SQLException e) {
