@@ -49,7 +49,7 @@
                         <th>Mô tả</th>
                         <th>Học phí</th>
                         <th>Buổi học</th>
-                        <th>Danh sách học viên</th>
+                        <th>Danh sách học viên/ Buổi học hoàn thành</th>
 
                     </tr>
                     </thead>
@@ -65,19 +65,23 @@
                                 <c:forEach var="rs" items="${registeredSubjectsMap[subject.id]}">
                                     <c:if test="${rs.status == 'completed'}">
                                         <c:set var="mapKey" value="${rs.courseId}_${rs.studentId}" />
-                                        <c:set var="lessonCount" value="${lessonCountsMap[mapKey]}" />
                                         <c:set var="totalLesson" value="${totalLessonMap[rs.courseId]}" />
-                                        Hoàn thành: ${lessonCount}/${totalLesson}<br>
+                                        ${totalLesson}<br>
                                     </c:if>
                                 </c:forEach>
                             </td>
 
                             <td>
                                 <c:forEach var="rs" items="${registeredSubjectsMap[subject.id]}">
-                                    • ${rs.student.name}
-                                    <a href="${pageContext.request.contextPath}/student?id=${rs.student.id}">Xem thông tin</a><br>
+                                    <c:if test="${rs.status == 'completed'}">
+                                    <c:set var="mapKey" value="${rs.courseId}_${rs.studentId}" />
+                                        <c:set var="lessonCount" value="${lessonCountsMap[mapKey]}" />
+                                    • <a href="${pageContext.request.contextPath}/student?id=${rs.student.id}">
+                                        ${rs.student.name}</a>/  ${lessonCount} buổi<br>
+                                    </c:if>
                                 </c:forEach>
                             </td>
+
                         </tr>
                     </c:forEach>
                     <c:if test="${empty subjects}">
