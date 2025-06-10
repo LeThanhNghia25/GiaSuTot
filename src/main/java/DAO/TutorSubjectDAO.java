@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TutorSubjectDAO {
     public TutorSubjectDAO() {}
@@ -71,4 +73,23 @@ public class TutorSubjectDAO {
         }
         return registeredSubjects;
     }
+
+    public Map<String, Integer> getCompletedLessonCounts() throws SQLException {
+        Map<String, Integer> lessonCounts = new HashMap<>();
+        String sql = "SELECT course_id, student_id, COUNT(*) AS completed_count " +
+                "FROM lesson " +
+                "WHERE status = 'completed' " +
+                "GROUP BY course_id, student_id";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String key = rs.getString("course_id") + "_" + rs.getString("student_id");
+                lessonCounts.put(key, rs.getInt("completed_count"));
+            }
+        }
+        return lessonCounts;
+    }
+
+
 }
