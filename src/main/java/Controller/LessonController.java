@@ -54,7 +54,9 @@ public class LessonController extends HttpServlet {
         LessonDAO lessonDAO = new LessonDAO();
         List<String> idStudentList = null;
         List<Student> studentList = new ArrayList<>();
+        List<Course> courseList = null;
         try {
+            courseList = lessonDAO.getListCourseByTutor(tutor);
             idStudentList = lessonDAO.getListStudentIdByTutor(tutor);
             if (idStudentList != null && !idStudentList.isEmpty()) {
                 StudentDAO studentDAO = new StudentDAO();
@@ -69,6 +71,8 @@ public class LessonController extends HttpServlet {
             throw new ServletException("Error retrieving students", e);
         }
 
+
+        request.setAttribute("idCourse", courseList);
         request.setAttribute("studentList", studentList);
         request.setAttribute("StIDList", idStudentList);
         request.setAttribute("tutor", tutor);
@@ -113,7 +117,9 @@ public class LessonController extends HttpServlet {
                             System.out.println("Course found: " + course.getId() + ", subject: " + course.getSubject().getName());
                             responseData.put("status", "success");
                             responseData.put("studentName", student.getName());
-                            responseData.put("subject", mapSubjectToDropdownValue(course.getSubject().getName()));
+                            responseData.put("subject", course.getSubject().getName());
+                           responseData.put("courseId", course.getId());
+                           // responseData.put("course_id", mapSubjectToDropdownValue(course.getId()));
                         } else {
                             responseData.put("status", "error");
                             responseData.put("message", "Không tìm thấy khóa học hoặc môn học cho course_id: " + registeredSubject.getCourse_id());
