@@ -38,7 +38,7 @@ CREATE TABLE subject (
                          name VARCHAR(100) NOT NULL,
                          level VARCHAR(50) NOT NULL,
                          description TEXT,
-                         fee DECIMAL(10, 2) NOT NULL,
+                         fee DECIMAL(12) NOT NULL,
                          status VARCHAR(50) NOT NULL CHECK (status IN ('active', 'inactive'))
 );
 
@@ -109,7 +109,7 @@ CREATE TABLE payment (
                          course_id CHAR(20) NOT NULL,
                          tutor_id CHAR(20) NOT NULL,
                          student_id CHAR(20) NOT NULL,
-                         amount DECIMAL(10, 2) NOT NULL,
+                         amount DECIMAL(12) NOT NULL,
                          payment_date DATETIME NOT NULL,
                          status VARCHAR(50) NOT NULL CHECK (status IN ('completed', 'pending', 'failed')),
                          FOREIGN KEY (course_id) REFERENCES course(id),
@@ -169,24 +169,24 @@ INSERT INTO tutor (id, name, email, birth, phone, address, specialization, descr
 
 -- Chèn dữ liệu vào bảng subject
 INSERT INTO subject (id, name, level, description, fee, status) VALUES
-                                                                    ('sub001', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 200000.00, 'active'),
-                                                                    ('sub002', 'Tieng Anh', 'Giao tiep', 'Tieng Anh giao tiep co ban', 180000.00, 'active'),
-                                                                    ('sub003', 'Hoa hoc', 'Lop 10', 'Hoc Hoa hoc co ban lop 10', 190000.00, 'inactive'),
-                                                                    ('sub004', 'Vat ly', 'Lop 12', 'Hoc Vat ly nang cao lop 12', 200000.00, 'active'),
-                                                                    ('sub005', 'Ngu van', 'Lop 11', 'Hoc Ngu van nang cao lop 11', 200000.00, 'active'),
-                                                                    ('sub006', 'Sinh hoc', 'Lop 10', 'Hoc Sinh hoc co ban lop 10', 190000.00, 'inactive'),
-                                                                    ('sub007', 'Toan', 'Lop 5', 'Hoc Toan nang cao lop 5', 200000.00, 'active'),
-                                                                    ('sub008', 'Tieng Anh', 'Lop 5', 'Tieng Anh giao tiep nang cao lop 5', 180000.00, 'active'),
-                                                                    ('sub009', 'Toan', 'Lop 6', 'Hoc Toan co ban lop 6', 190000.00, 'inactive'),
-                                                                    ('sub010', 'Vat ly', 'Lop 11', 'Hoc Vat ly nang cao lop 11', 200000.00, 'active'),
-                                                                    ('sub011', 'Hoa hoc', 'Lop 9', 'Hoc Hoa hoc co ban lop 9', 180000.00, 'active'),
-                                                                    ('sub012', 'Sinh hoc', 'Lop 8', 'Hoc Sinh hoc co ban lop 8', 190000.00, 'inactive'),
-                                                                    ('sub013', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 200000.00, 'active'),
-                                                                    ('sub014', 'Tieng Anh', 'Lop 10', 'Tieng Anh co ban lop 10', 180000.00, 'active'),
-                                                                    ('sub015', 'Hoa hoc', 'Lop 7', 'Hoc Hoa hoc co ban lop 7', 190000.00, 'inactive'),
-                                                                    ('sub016', 'Dia ly', 'Lop 10', 'Hoc Dia ly co ban lop 10', 180000.00, 'active'),
-                                                                    ('sub017', 'Giao duc cong dan', 'Lop 12', 'Hoc Giao duc cong dan lop 12', 170000.00, 'active'),
-                                                                    ('sub018', 'Lich su', 'Lop 8', 'Hoc Lich su co ban lop 8', 160000.00, 'active');
+                                                                    ('sub001', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 2000000, 'active'),
+                                                                    ('sub002', 'Tieng Anh', 'Giao tiep', 'Tieng Anh giao tiep co ban', 1800000, 'active'),
+                                                                    ('sub003', 'Hoa hoc', 'Lop 10', 'Hoc Hoa hoc co ban lop 10', 1900000, 'inactive'),
+                                                                    ('sub004', 'Vat ly', 'Lop 12', 'Hoc Vat ly nang cao lop 12', 2000000, 'active'),
+                                                                    ('sub005', 'Ngu van', 'Lop 11', 'Hoc Ngu van nang cao lop 11', 2000000, 'active'),
+                                                                    ('sub006', 'Sinh hoc', 'Lop 10', 'Hoc Sinh hoc co ban lop 10', 1900000, 'inactive'),
+                                                                    ('sub007', 'Toan', 'Lop 5', 'Hoc Toan nang cao lop 5', 2000000, 'active'),
+                                                                    ('sub008', 'Tieng Anh', 'Lop 5', 'Tieng Anh giao tiep nang cao lop 5', 1800000, 'active'),
+                                                                    ('sub009', 'Toan', 'Lop 6', 'Hoc Toan co ban lop 6', 1900000, 'inactive'),
+                                                                    ('sub010', 'Vat ly', 'Lop 11', 'Hoc Vat ly nang cao lop 11', 2000000, 'active'),
+                                                                    ('sub011', 'Hoa hoc', 'Lop 9', 'Hoc Hoa hoc co ban lop 9', 1800000, 'active'),
+                                                                    ('sub012', 'Sinh hoc', 'Lop 8', 'Hoc Sinh hoc co ban lop 8', 1900000, 'inactive'),
+                                                                    ('sub013', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 2000000, 'active'),
+                                                                    ('sub014', 'Tieng Anh', 'Lop 10', 'Tieng Anh co ban lop 10', 1800000, 'active'),
+                                                                    ('sub015', 'Hoa hoc', 'Lop 7', 'Hoc Hoa hoc co ban lop 7', 1900000, 'inactive'),
+                                                                    ('sub016', 'Dia ly', 'Lop 10', 'Hoc Dia ly co ban lop 10', 1800000, 'active'),
+                                                                    ('sub017', 'Giao duc cong dan', 'Lop 12', 'Hoc Giao duc cong dan lop 12', 1700000, 'active'),
+                                                                    ('sub018', 'Lich su', 'Lop 8', 'Hoc Lich su co ban lop 8', 1600000, 'active');
 
 -- Chèn dữ liệu vào bảng course (20 khóa học)
 INSERT INTO course (id, subject_id, tutor_id, time) VALUES

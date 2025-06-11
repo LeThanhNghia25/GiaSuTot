@@ -13,10 +13,17 @@ public class CourseDAO {
     public List<Course> getAllAvailableCourses() {
         System.out.println("Fetching all available courses...");
         List<Course> courses = new ArrayList<>();
-        String sql = "SELECT c.*, s.name AS subject_name, s.level, s.fee, t.name AS tutor_name, t.specialization, t.address " +
-                "FROM course c JOIN subject s ON c.subject_id = s.id " +
+        String sql = "SELECT c.*, s.name AS subject_name, s.level, s.fee, s.status, s.description, " +
+                "t.name AS tutor_name, t.specialization, t.address, t.evaluate, " +
+                "COUNT(rs.course_id) AS student_count " +
+                "FROM course c " +
+                "JOIN subject s ON c.subject_id = s.id " +
                 "JOIN tutor t ON c.tutor_id = t.id " +
-                "WHERE s.status = 'active'";
+                "LEFT JOIN registered_subjects rs ON c.id = rs.course_id " +
+                "WHERE s.status = 'active' " +
+                "GROUP BY c.id, c.subject_id, c.tutor_id, c.time, " +
+                "s.name, s.level, s.fee, s.status, s.description, " +
+                "t.name, t.specialization, t.address, t.evaluate";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -32,30 +39,42 @@ public class CourseDAO {
                 subject.setName(rs.getString("subject_name"));
                 subject.setLevel(rs.getString("level"));
                 subject.setFee(rs.getDouble("fee"));
-                subject.setStatus("active"); // Đã lọc theo status = 'active' trong truy vấn
+                subject.setStatus("active");
+                subject.setDescription(rs.getString("description"));
                 course.setSubject(subject);
                 Tutor tutor = new Tutor();
                 tutor.setId(rs.getString("tutor_id"));
                 tutor.setName(rs.getString("tutor_name"));
                 tutor.setAddress(rs.getString("address"));
                 tutor.setSpecialization(rs.getString("specialization"));
+                tutor.setEvaluate(rs.getInt("evaluate"));
                 course.setTutor(tutor);
+                // Lấy số học viên từ truy vấn chính
+                course.setStudentCount(rs.getInt("student_count"));
                 courses.add(course);
             }
             System.out.println("Fetched " + courses.size() + " courses from database.");
         } catch (SQLException e) {
-            System.err.println("SQL Error: " + e.getMessage());
+            System.err.println("SQL Error in getAllAvailableCourses: " + e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException("Failed to fetch courses", e); // Ném lại exception để debug dễ hơn
         }
         return courses;
     }
 
     public Course getCourseById(String courseId) throws SQLException {
         System.out.println("Fetching course with ID: " + courseId);
-        String sql = "SELECT c.*, s.name AS subject_name, s.level, s.fee, s.status, t.name AS tutor_name, t.specialization, t.address " +
-                "FROM course c JOIN subject s ON c.subject_id = s.id " +
+        String sql = "SELECT c.*, s.name AS subject_name, s.level, s.fee, s.status, s.description, " +
+                "t.name AS tutor_name, t.specialization, t.address, t.evaluate, " +
+                "COUNT(rs.course_id) AS student_count " +
+                "FROM course c " +
+                "JOIN subject s ON c.subject_id = s.id " +
                 "JOIN tutor t ON c.tutor_id = t.id " +
-                "WHERE c.id = ?";
+                "LEFT JOIN registered_subjects rs ON c.id = rs.course_id " +
+                "WHERE c.id = ? " +
+                "GROUP BY c.id, c.subject_id, c.tutor_id, c.time, " +
+                "s.name, s.level, s.fee, s.status, s.description, " +
+                "t.name, t.specialization, t.address, t.evaluate";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -72,20 +91,28 @@ public class CourseDAO {
                 subject.setName(rs.getString("subject_name"));
                 subject.setLevel(rs.getString("level"));
                 subject.setFee(rs.getDouble("fee"));
-                subject.setStatus(rs.getString("status")); // Bây giờ cột status được lấy từ DB
+                subject.setStatus(rs.getString("status"));
+                subject.setDescription(rs.getString("description"));
                 course.setSubject(subject);
                 Tutor tutor = new Tutor();
                 tutor.setId(rs.getString("tutor_id"));
                 tutor.setName(rs.getString("tutor_name"));
                 tutor.setAddress(rs.getString("address"));
                 tutor.setSpecialization(rs.getString("specialization"));
+                tutor.setEvaluate(rs.getInt("evaluate"));
                 course.setTutor(tutor);
+                // Lấy số học viên từ truy vấn chính
+                course.setStudentCount(rs.getInt("student_count"));
                 System.out.println("Course found: " + course.getId() + ", subject: " + subject.getName());
                 return course;
             }
             System.out.println("Course not found for ID: " + courseId);
+            return null;
+        } catch (SQLException e) {
+            System.err.println("SQL Error in getCourseById: " + e.getMessage());
+            e.printStackTrace();
+            throw e; // Ném lại để debug
         }
-        return null;
     }
 
     public void registerCourse(String courseId, String studentId) {
@@ -99,8 +126,9 @@ public class CourseDAO {
             stmt.executeUpdate();
             System.out.println("Course registered.");
         } catch (SQLException e) {
-            System.err.println("SQL Error: " + e.getMessage());
+            System.err.println("SQL Error in registerCourse: " + e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException("Failed to register course", e);
         }
     }
 
@@ -133,7 +161,7 @@ public class CourseDAO {
             conn.commit();
             System.out.println("Trial lesson scheduled successfully.");
         } catch (SQLException e) {
-            System.err.println("SQL Error: " + e.getMessage());
+            System.err.println("SQL Error in registerTrial: " + e.getMessage());
             e.printStackTrace();
             if (conn != null) {
                 try {
@@ -142,6 +170,7 @@ public class CourseDAO {
                     ex.printStackTrace();
                 }
             }
+            throw new RuntimeException("Failed to register trial lesson", e);
         } finally {
             if (conn != null) {
                 try {
