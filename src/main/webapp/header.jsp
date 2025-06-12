@@ -82,25 +82,22 @@
               <c:when test="${sessionScope.role == 'student'}">
                 <!-- Link tới student profile -->
                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/student">Thông tin cá nhân</a></li>
+                <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
               </c:when>
               <c:when test="${sessionScope.role == 'tutor'}">
                 <!-- Link tới tutor profile -->
                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/tutor-subjects"> Quản lý môn học</a></li>
+                <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/tutor-subjects">Quản lý môn học</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                  <a class="dropdown-item" href="${pageContext.request.contextPath}/lesson" methods="get" >
+                  <a class="dropdown-item" href="${pageContext.request.contextPath}/lesson" methods="get">
                     Tạo buổi học
                   </a>
                   <a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a>
-
                 </li>
               </c:when>
             </c:choose>
-
-
-
           </ul>
         </div>
       </c:when>
