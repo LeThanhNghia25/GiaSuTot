@@ -2,33 +2,26 @@ package DAO;
 
 import Utils.DBConnection;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class AddLessonDao {
-    private Connection conn = DBConnection.getConnection();    public AddLessonDao() {}
+
+    public AddLessonDao() {}
+
     public void insertLession(String course_id, String student_id, String time) throws SQLException {
-        String sql = "insert into Lesson values(?,?,?,?)";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-
-        stmt.setString(1, course_id);
-        stmt.setString(2, student_id);
-        stmt.setString(3, "scheduled");
-        stmt.setTimestamp(4, Timestamp.valueOf(time));
-        stmt.executeUpdate();
-
+        String sql = "INSERT INTO Lesson (course_id, student_id, status, time) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, course_id);
+            stmt.setString(2, student_id);
+            stmt.setString(3, "scheduled");
+            stmt.setTimestamp(4, Timestamp.valueOf(time)); // Đảm bảo time là yyyy-MM-dd HH:mm:ss
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Lỗi khi chèn buổi học: " + e.getMessage(), e);
+        }
     }
-//    public List<Lession> getLession(String course_id,String student_id) throws SQLException {
-//        String sql = "select * from Lession where course_id=? and student_id=?";
-//        PreparedStatement stmt = conn.prepareStatement(sql);
-//        stmt.setString(1, course_id);
-//        stmt.setString(2, student_id);
-//        ResultSet rs = stmt.executeQuery();
-//        List<Lession> list = new ArrayList<Lession>();
-//        while (rs.next()) {
-//
-//
-//        }
-
-    }
-
-
+}
