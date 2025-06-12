@@ -4,7 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="model.Lession" %>
+<%@ page import="model.Lesson" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -40,7 +40,6 @@
 <%
     Tutor tutor = (Tutor) request.getAttribute("tutor");
     // Giả định danh sách lịch dạy được lấy từ request attribute
-  //  List<Lession> lessonSchedule = (List<Lession>) request.getAttribute("lessons");
 
 %>
 <!-- Header -->
@@ -53,7 +52,7 @@
             </div>
             <nav class="hidden md:flex space-x-6">
                 <a href="index.jsp" class="hover:text-blue-200 transition">Trang chủ</a>
-                <a href="lessonSchedule.jsp" class="hover:text-blue-200 transition">Lịch dạy</a>
+                <a href="lesson_schedule.jsp" class="hover:text-blue-200 transition">Lịch dạy</a>
                 <a href="#" class="hover:text-blue-200 transition">Học viên</a>
                 <a href="#" class="hover:text-blue-200 transition"><%= tutor.getName() %></a>
             </nav>
@@ -83,7 +82,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="lessonSchedule.jsp" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
+                        <a href="lesson_schedule.jsp" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Lịch dạy</span>
                         </a>

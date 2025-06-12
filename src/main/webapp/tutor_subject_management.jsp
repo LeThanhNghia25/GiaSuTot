@@ -268,31 +268,26 @@
     </div>
 </div>
 
-<!-- JavaScript for handling student selection -->
+<!-- JavaScript -->
 <script>
+    // 1. Xử lý chọn học viên
     document.getElementById('idStudent').addEventListener('change', function () {
         const studentId = this.value;
         if (studentId) {
-            // Gửi yêu cầu AJAX POST đến LessonController
-            console.log('Sending AJAX request for studentId: ' + studentId); // Debug
+            console.log('Sending AJAX request for studentId: ' + studentId);
             fetch('${pageContext.request.contextPath}/lesson', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'studentId=' + encodeURIComponent(studentId)
             })
                 .then(response => {
-                    console.log('Response status: ' + response.status); // Debug
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
+                    console.log('Response status: ' + response.status);
+                    if (!response.ok) throw new Error('Network response was not ok: ' + response.statusText);
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Received data: ', data); // Debug
+                    console.log('Received data: ', data);
                     if (data.status === 'success') {
-                        // Cập nhật các ô thông tin
                         document.getElementById('studentName').value = data.studentName || '';
                         document.getElementById('subject').value = data.subject || '';
                     } else {
@@ -308,33 +303,28 @@
                     document.getElementById('subject').value = '';
                 });
         } else {
-            // Reset các ô nếu không chọn học viên
             document.getElementById('studentName').value = '';
             document.getElementById('subject').value = '';
         }
     });
 
+    // 2. Xử lý chọn khóa học
     document.getElementById('course_id').addEventListener('change', function () {
         const course_id = this.value;
         if (course_id) {
-            // Gửi yêu cầu AJAX POST đến LessonController
-            console.log('Sending AJAX request for course: ' + course_id); // Debug
+            console.log('Sending AJAX request for course: ' + course_id);
             fetch('${pageContext.request.contextPath}/lesson2', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'course_id=' + encodeURIComponent(course_id)
             })
                 .then(response => {
-                    console.log('Response status: ' + response.status); // Debug
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
+                    console.log('Response status: ' + response.status);
+                    if (!response.ok) throw new Error('Network response was not ok: ' + response.statusText);
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Received data: ', data); // Debug
+                    console.log('Received data: ', data);
                     if (data.status === 'success') {
                         document.getElementById('subject').value = data.subject || '';
                     } else {
@@ -344,7 +334,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching course info:', error);
-                    alert('Đã xảy ra lỗi khi lấy thông tin khóa học ' + error.message);
+                    alert('Đã xảy ra lỗi khi lấy thông tin khóa học: ' + error.message);
                     document.getElementById('subject').value = '';
                 });
         } else {
@@ -352,24 +342,18 @@
         }
     });
 
-    // Lấy ngày và giờ hiện tại (theo múi giờ +07:00)
+    // 3. Xử lý ngày và giờ hiện tại
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset() + 7 * 60); // Điều chỉnh múi giờ +07:00
-
-    // Định dạng ngày hiện tại thành YYYY-MM-DD
     const today = now.toISOString().split('T')[0];
-
-    // Định dạng giờ hiện tại thành HH:mm
     const currentTime = now.toISOString().split('T')[1].substring(0, 5);
 
-    // Đặt giá trị min cho trường date
     document.getElementById('date').setAttribute('min', today);
 
-    // Kiểm tra ngày và giờ khi người dùng thay đổi
+    // 4. Kiểm tra ngày
     document.getElementById('date').addEventListener('change', function () {
         const selectedDate = new Date(this.value);
         const todayDate = new Date(today);
-
         if (selectedDate < todayDate) {
             alert('Không thể chọn ngày trong quá khứ!');
             this.value = today;
@@ -382,10 +366,10 @@
         }
     });
 
+    // 5. Kiểm tra giờ
     document.getElementById('time').addEventListener('change', function () {
         const selectedDate = new Date(document.getElementById('date').value);
         const todayDate = new Date(today);
-
         if (selectedDate.toDateString() === todayDate.toDateString()) {
             const selectedTime = this.value;
             if (selectedTime < currentTime) {
@@ -393,6 +377,46 @@
                 this.value = currentTime;
             }
         }
+    });
+
+    // 6. Xử lý submit form
+    document.getElementById('sessionForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const datetimeStr = formData.get('date') + ' ' + formData.get('time') + ':00';
+
+        fetch('${pageContext.request.contextPath}/addLesson', {
+            method: 'POST',
+            body: new URLSearchParams(formData).toString(),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data: ', data);
+                if (data.status === 'success') {
+                    document.getElementById('modalMessage').textContent = data.message;
+                    document.getElementById('successModal').classList.remove('hidden');
+                    setTimeout(() => {
+                        document.getElementById('successModal').classList.add('hidden');
+                        this.reset();
+                        window.location.href = 'schedule';
+                    }, 2000);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Đã xảy ra lỗi khi tạo buổi học: ' + error.message);
+            });
+    });
+
+    // 7. Đóng modal
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('successModal').classList.add('hidden');
     });
 </script>
 </body>

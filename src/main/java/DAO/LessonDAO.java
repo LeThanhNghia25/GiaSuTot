@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 public class LessonDAO {
-    private Connection conn = DBConnection.getConnection();
+
     public LessonDAO() {}
 
     public List<Course> getListCourseByTutor(Tutor tutor) throws SQLException {
@@ -27,7 +27,6 @@ public class LessonDAO {
         }
         return filteredCourses;
     }
-
 
     public List<String> getListStudentIdByTutor(Tutor tutor) throws SQLException {
         Set<String> studentIds = new HashSet<>();
@@ -43,41 +42,35 @@ public class LessonDAO {
         }
         return new ArrayList<>(studentIds);
     }
-    public List<Lession> getListLessonByTutor(Tutor tutor) throws SQLException {
+
+    public List<Lesson> getListLessonByTutor(Tutor tutor) throws SQLException {
         List<Course> courses = getListCourseByTutor(tutor);
-        String sql = "SELECT * FROM LESSON WHERE course_id = ? AND status = 'scheduled'";
-        List<Lession> lessions = new ArrayList<>();
-        conn = DBConnection.getConnection();
-        for (Course course : courses) {
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, course.getId());
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Lession lession = new Lession();
-            lession.setCourse_id(rs.getString("course_id"));
-            lession.setStudent_id(rs.getString("student_id"));
-            lession.setStatus(rs.getString("status"));
-            lession.setTime(rs.getTimestamp("time"));
-            lessions.add(lession);
+        if (courses.isEmpty()) return new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM LESSON WHERE course_id IN (");
+        for (int i = 0; i < courses.size(); i++) {
+            sql.append("?");
+            if (i < courses.size() - 1) sql.append(",");
         }
+        sql.append(") AND status = 'scheduled'");
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < courses.size(); i++) {
+                ps.setString(i + 1, courses.get(i).getId());
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Lesson> lessons = new ArrayList<>();
+                while (rs.next()) {
+                    Lesson lesson = new Lesson();
+                    lesson.setCourse_id(rs.getString("course_id"));
+                    lesson.setStudent_id(rs.getString("student_id"));
+                    lesson.setStatus(rs.getString("status"));
+                    lesson.setTime(rs.getTimestamp("time"));
+                    lessons.add(lesson);
+                }
+                return lessons;
+            }
         }
-        return lessions;
-    }
-    public static void main(String[] args) throws SQLException {
-        TutorDAO tutorDAO = new TutorDAO();
-        Tutor tutor = tutorDAO.getTutorById("tut004");
-        LessonDAO lessonDAO = new LessonDAO();
-//        List<Course> courses = lessonDAO.getListCourseByTutor(tutor);
-//        for (Course course : courses) {
-//            System.out.println(course);
-//        }
-        List<Lession> lessons = lessonDAO.getListLessonByTutor(tutor);
-        for (Lession lesson : lessons) {
-            System.out.println(lesson);
-        }
-//        List<String> studentIds = lessonDAO.getListStudentIdByTutor(tutor);
-//        for (String studentId : studentIds) {
-//            System.out.println(studentId);
-//        }
     }
 }
