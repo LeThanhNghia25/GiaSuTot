@@ -1,6 +1,6 @@
 package Controller;
 
-import DAO.AddLessionDao;
+import DAO.AddLessonDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,14 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static java.lang.System.out;
 
 @WebServlet(name = "addLessonController", urlPatterns = {"/addLesson"})
-public class AddLessionController extends HttpServlet {
+public class AddLessonController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idStudent = request.getParameter("idStudent");
         String idCourse = request.getParameter("course_id");
@@ -29,8 +26,8 @@ public class AddLessionController extends HttpServlet {
     ;
         try {
             //lessonDateTime = sdf.parse(datetimeStr);
-            AddLessionDao addLessionDao = new AddLessionDao();
-            addLessionDao.insertLession(idCourse, idStudent, datetimeStr);
+            AddLessonDao addLessonDao = new AddLessonDao();
+            addLessonDao.insertLession(idCourse, idStudent, datetimeStr);
             response.sendRedirect("schedule");
         } catch (SQLException e) {
             out.write("{\"status\": \"error\", \"message\": \"Lưu buổi học thất bại!\"}".getBytes());throw new RuntimeException(e);

@@ -1,15 +1,11 @@
 package DAO;
 
 import Utils.DBConnection;
-import model.Lession;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-public class AddLessionDao {
-    private Connection conn = DBConnection.getConnection();    public AddLessionDao() {}
+public class AddLessonDao {
+    private Connection conn = DBConnection.getConnection();    public AddLessonDao() {}
     public void insertLession(String course_id, String student_id, String time) throws SQLException {
         String sql = "insert into Lesson values(?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);

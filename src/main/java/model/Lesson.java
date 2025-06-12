@@ -2,12 +2,12 @@ package model;
 
 import java.util.Date;
 
-public class Lession {
+public class Lesson {
     String course_id;
     String student_id;
     String status;
     Date time;
-    public Lession(){}
+    public Lesson(){}
 
     public String getStudent_id() {
         return student_id;

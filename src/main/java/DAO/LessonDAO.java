@@ -43,25 +43,25 @@ public class LessonDAO {
         }
         return new ArrayList<>(studentIds);
     }
-    public List<Lession> getListLessonByTutor(Tutor tutor) throws SQLException {
+    public List<Lesson> getListLessonByTutor(Tutor tutor) throws SQLException {
         List<Course> courses = getListCourseByTutor(tutor);
         String sql = "SELECT * FROM LESSON WHERE course_id = ? AND status = 'scheduled'";
-        List<Lession> lessions = new ArrayList<>();
+        List<Lesson> lessons = new ArrayList<>();
         conn = DBConnection.getConnection();
         for (Course course : courses) {
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, course.getId());
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            Lession lession = new Lession();
-            lession.setCourse_id(rs.getString("course_id"));
-            lession.setStudent_id(rs.getString("student_id"));
-            lession.setStatus(rs.getString("status"));
-            lession.setTime(rs.getTimestamp("time"));
-            lessions.add(lession);
+            Lesson lesson = new Lesson();
+            lesson.setCourse_id(rs.getString("course_id"));
+            lesson.setStudent_id(rs.getString("student_id"));
+            lesson.setStatus(rs.getString("status"));
+            lesson.setTime(rs.getTimestamp("time"));
+            lessons.add(lesson);
         }
         }
-        return lessions;
+        return lessons;
     }
     public static void main(String[] args) throws SQLException {
         TutorDAO tutorDAO = new TutorDAO();
@@ -71,8 +71,8 @@ public class LessonDAO {
 //        for (Course course : courses) {
 //            System.out.println(course);
 //        }
-        List<Lession> lessons = lessonDAO.getListLessonByTutor(tutor);
-        for (Lession lesson : lessons) {
+        List<Lesson> lessons = lessonDAO.getListLessonByTutor(tutor);
+        for (Lesson lesson : lessons) {
             System.out.println(lesson);
         }
 //        List<String> studentIds = lessonDAO.getListStudentIdByTutor(tutor);
