@@ -29,7 +29,7 @@
 
         <!-- Sidebar -->
         <div id="sidebar">
-            <%@ include file="slidebar.jsp" %>
+            <%@ include file="slibar.jsp" %>
         </div>
         <!-- End of Sidebar -->
 
@@ -65,7 +65,7 @@
                                     </div>
                                     <hr>
                                     Styling for the area chart can be found in the
-                                    <code>/js/demo/chart-area-demo.js</code> file.
+                                    <code>/js/demo/chart-area.js</code> file.
                                 </div>
                             </div>
 
@@ -80,7 +80,7 @@
                                     </div>
                                     <hr>
                                     Styling for the bar chart can be found in the
-                                    <code>/js/demo/chart-bar-demo.js</code> file.
+                                    <code>/js/demo/chart-bar.js</code> file.
                                 </div>
                             </div>
 
@@ -100,7 +100,7 @@
                                     </div>
                                     <hr>
                                     Styling for the donut chart can be found in the
-                                    <code>/js/demo/chart-pie-demo.js</code> file.
+                                    <code>/js/demo/chart-pie.js</code> file.
                                 </div>
                             </div>
                         </div>
@@ -137,7 +137,7 @@
     <script src="vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-area.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
     <script src="js/demo/chart-bar-demo.js"></script>
 

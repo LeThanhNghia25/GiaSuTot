@@ -15,13 +15,13 @@
 <div id="wrapper">
   <!-- Sidebar -->
   <div id="sidebar">
-    <%@ include file="slidebar.jsp" %>
+    <%@ include file="slibar.jsp" %>
   </div>
   <!-- Content Wrapper -->
   <div id="content-wrapper" class="d-flex flex-column">
     <div id="content">
       <!-- Topbar -->
-      <%@ include file="topbar.jsp" %>
+      <%@ include file="header.jsp" %>
       <!-- Main Content -->
       <div class="container-fluid">
         <h1 class="h3 mb-4 text-gray-800">Quản lý môn học</h1>
@@ -50,7 +50,7 @@
                     <td>${subject.description}</td>
                     <td>
                       <c:choose>
-                        <c:when test="${subject.status == 1}">
+                        <c:when test="${subject.status == 'active'}">
                           <span class="badge badge-success">Đang hoạt động</span>
                         </c:when>
                         <c:otherwise>
@@ -61,9 +61,8 @@
                     <td>
                       <a href="${pageContext.request.contextPath}/admin/subject?action=edit&id=${subject.id}" class="btn btn-sm btn-primary">Sửa</a>
                       <c:choose>
-                        <c:when test="${subject.status == 1}">
-                          <a href="${pageContext.request.contextPath}/admin/subject?action=delete&id=${subject.id}" class="btn btn-sm btn-danger"
-                             onclick="return confirm('Bạn có chắc muốn ẩn môn học này không?')">Ẩn</a>
+                        <c:when test="${subject.status == 'active'}">
+                          <a href="${pageContext.request.contextPath}/admin/subject?action=hide&id=${subject.id}" class="btn btn-sm btn-danger">Ẩn</a>
                         </c:when>
                         <c:otherwise>
                           <a href="${pageContext.request.contextPath}/admin/subject?action=restore&id=${subject.id}" class="btn btn-sm btn-success"
@@ -76,7 +75,7 @@
                 </tbody>
               </table>
               <c:if test="${empty subjects}">
-                <div class="text-center text-muted">Không có môn học nào.</div>
+                <div class="text-center text-muted">Không có môn học nào hoặc lỗi: ${subjects}</div>
               </c:if>
             </div>
           </div>

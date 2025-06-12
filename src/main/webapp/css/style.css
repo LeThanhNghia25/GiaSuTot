@@ -43,7 +43,10 @@
     font-weight: 600;
     transition: .5s;
 }
-
+.btn-short {
+    padding: 0.25rem 1rem !important; /* Giảm padding */
+    font-size: 0.8rem !important; /* Giảm kích thước chữ */
+}
 .btn.btn-primary,
 .btn.btn-secondary {
     color: #FFFFFF;
@@ -80,7 +83,7 @@
 .navbar .dropdown-toggle::after {
     border: none;
     content: "\f107";
-    font-family: "Font Awesome 5 Free";
+    font-family: "Font Awesome 5 Free", serif;
     font-weight: 900;
     vertical-align: middle;
     margin-left: 8px;
