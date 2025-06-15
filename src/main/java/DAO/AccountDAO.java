@@ -33,6 +33,24 @@ public class AccountDAO {
         }
     }
 
+    public boolean insertgg(Account account) {
+        String sql = "INSERT INTO account (id, email, password, role, status) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, account.getId());
+            ps.setString(2, account.getEmail());
+            ps.setString(3, account.getPassword());
+            ps.setInt(4, account.getRole());
+            ps.setString(5, account.getStatus());
+
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public Account getAccountByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM account WHERE email = ?";
         try (Connection conn = DBConnection.getConnection();
