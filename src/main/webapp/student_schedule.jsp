@@ -41,6 +41,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<!-- Header Start -->
+<%@ include file="header.jsp" %>
+<!-- Header End -->
+
 <div class="container mt-5">
     <div class="row">
         <div class="col">
@@ -112,5 +116,8 @@
         </table>
     </c:if>
 </div>
+<!-- Footer Start -->
+<%@ include file="footer.jsp" %>
+<!-- Footer End -->
 </body>
 </html>

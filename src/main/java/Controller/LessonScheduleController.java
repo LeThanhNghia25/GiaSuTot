@@ -36,7 +36,7 @@ public class LessonScheduleController extends HttpServlet {
         request.setAttribute("lessons",lessons );
         request.setAttribute("tutor", tutor);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("lesson_schedule.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_created_lesson.jsp");
         dispatcher.forward(request, response);
     }
 }
