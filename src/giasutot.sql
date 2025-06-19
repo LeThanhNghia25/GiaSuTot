@@ -26,8 +26,8 @@ CREATE TABLE account (
 CREATE TABLE student (
                          id CHAR(20) PRIMARY KEY,
                          name VARCHAR(100) NOT NULL,
-                         birth DATE NOT NULL,
-                         description TEXT,
+                         birth DATE NULL, -- Cho phép NULL
+                         description TEXT NULL, -- Cho phép NULL
                          account_id CHAR(20),
                          FOREIGN KEY (account_id) REFERENCES account(id)
 );
@@ -234,113 +234,107 @@ INSERT INTO registered_subjects (course_id, student_id, registration_date, numbe
 
 -- Chèn dữ liệu vào bảng lesson
 INSERT INTO lesson (course_id, student_id, status, time) VALUES
--- course001, st001: 10 buổi
-('course001', 'st001', 'completed', '2025-05-01 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-03 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-05 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-07 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-09 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-11 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-13 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-15 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-17 08:00:00'),
-('course001', 'st001', 'completed', '2025-05-19 08:00:00'),
--- course002, st002: 8 buổi
-('course002', 'st002', 'completed', '2025-05-02 09:00:00'),
-('course002', 'st002', 'completed', '2025-05-04 09:00:00'),
-('course002', 'st002', 'completed', '2025-05-06 09:00:00'),
-('course002', 'st002', 'completed', '2025-05-08 09:00:00'),
-('course002', 'st002', 'completed', '2025-05-10 09:00:00'),
-('course002', 'st002', 'completed', '2025-05-12 09:00:00'),
-('course002', 'st002', 'completed', '2025-05-14 09:00:00'),
-('course002', 'st002', 'absent', '2025-05-16 09:00:00'),
--- course001, st004: 12 buổi
-('course001', 'st004', 'completed', '2025-01-16 08:00:00'),
-('course001', 'st004', 'completed', '2025-01-18 08:00:00'),
-('course001', 'st004', 'completed', '2025-01-20 08:00:00'),
-('course001', 'st004', 'completed', '2025-01-22 08:00:00'),
-('course001', 'st004', 'completed', '2025-01-24 08:00:00'),
-('course001', 'st004', 'completed', '2025-01-26 08:00:00'),
-('course001', 'st004', 'completed', '2025-01-28 08:00:00'),
-('course001', 'st004', 'completed', '2025-01-30 08:00:00'),
-('course001', 'st004', 'completed', '2025-02-01 08:00:00'),
-('course001', 'st004', 'completed', '2025-02-03 08:00:00'),
-('course001', 'st004', 'completed', '2025-02-05 08:00:00'),
-('course001', 'st004', 'completed', '2025-02-07 08:00:00'),
--- course005, st006: 8 buổi
-('course005', 'st006', 'completed', '2025-02-11 09:00:00'),
-('course005', 'st006', 'completed', '2025-02-13 09:00:00'),
-('course005', 'st006', 'completed', '2025-02-15 09:00:00'),
-('course005', 'st006', 'completed', '2025-02-17 09:00:00'),
-('course005', 'st006', 'completed', '2025-02-19 09:00:00'),
-('course005', 'st006', 'completed', '2025-02-21 09:00:00'),
-('course005', 'st006', 'completed', '2025-02-23 09:00:00'),
-('course005', 'st006', 'completed', '2025-02-25 09:00:00'),
--- course006, st007: 15 buổi
-('course006', 'st007', 'completed', '2025-03-06 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-08 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-10 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-12 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-14 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-15 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-18 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-20 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-22 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-24 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-26 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-28 08:00:00'),
-('course006', 'st007', 'completed', '2025-03-30 08:00:00'),
-('course006', 'st007', 'completed', '2025-04-01 08:00:00'),
-('course006', 'st007', 'completed', '2025-04-03 08:00:00'),
--- course008, st001: 6 buổi
-('course008', 'st001', 'completed', '2025-04-16 10:00:00'),
-('course008', 'st001', 'completed', '2025-04-18 10:00:00'),
-('course008', 'st001', 'completed', '2025-04-20 10:00:00'),
-('course008', 'st001', 'completed', '2025-04-22 10:00:00'),
-('course008', 'st001', 'completed', '2025-04-24 10:00:00'),
-('course008', 'st001', 'completed', '2025-04-26 10:00:00'),
--- course009, st002: 8 buổi
-('course009', 'st002', 'completed', '2025-05-02 09:00:00'),
-('course009', 'st002', 'completed', '2025-05-04 09:00:00'),
-('course009', 'st002', 'completed', '2025-05-06 09:00:00'),
-('course009', 'st002', 'completed', '2025-05-08 09:00:00'),
-('course009', 'st002', 'completed', '2025-05-10 09:00:00'),
-('course009', 'st002', 'completed', '2025-05-12 09:00:00'),
-('course009', 'st002', 'completed', '2025-05-14 09:00:00'),
-('course009', 'st002', 'completed', '2025-05-16 09:00:00'),
--- course004, st003: 10 buổi
-('course004', 'st003', 'completed', '2025-01-26 08:00:00'),
-('course004', 'st003', 'completed', '2025-01-28 08:00:00'),
-('course004', 'st003', 'completed', '2025-01-30 08:00:00'),
-('course004', 'st003', 'completed', '2025-02-01 08:00:00'),
-('course004', 'st003', 'completed', '2025-02-03 08:00:00'),
-('course004', 'st003', 'completed', '2025-02-05 08:00:00'),
-('course004', 'st003', 'completed', '2025-02-07 08:00:00'),
-('course004', 'st003', 'completed', '2025-02-09 08:00:00'),
-('course004', 'st003', 'completed', '2025-02-11 08:00:00'),
-('course004', 'st003', 'completed', '2025-02-13 08:00:00'),
--- course010, st005: 10 buổi
-('course010', 'st005', 'scheduled', '2025-06-01 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-03 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-05 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-07 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-09 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-11 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-13 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-15 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-17 10:00:00'),
-('course010', 'st005', 'scheduled', '2025-06-19 10:00:00');
+                                                             -- course001, st001: 10 buổi
+                                                             ('course001', 'st001', 'completed', '2025-05-01 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-03 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-05 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-07 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-09 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-11 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-13 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-15 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-17 08:00:00'),
+                                                             ('course001', 'st001', 'completed', '2025-05-19 08:00:00'),
+                                                             -- course002, st002: 8 buổi
+                                                             ('course002', 'st002', 'completed', '2025-05-02 09:00:00'),
+                                                             ('course002', 'st002', 'completed', '2025-05-04 09:00:00'),
+                                                             ('course002', 'st002', 'completed', '2025-05-06 09:00:00'),
+                                                             ('course002', 'st002', 'completed', '2025-05-08 09:00:00'),
+                                                             ('course002', 'st002', 'completed', '2025-05-10 09:00:00'),
+                                                             ('course002', 'st002', 'completed', '2025-05-12 09:00:00'),
+                                                             ('course002', 'st002', 'completed', '2025-05-14 09:00:00'),
+                                                             ('course002', 'st002', 'absent', '2025-05-16 09:00:00'),
+                                                             -- course001, st004: 12 buổi
+                                                             ('course001', 'st004', 'completed', '2025-01-16 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-01-18 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-01-20 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-01-22 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-01-24 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-01-26 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-01-28 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-01-30 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-02-01 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-02-03 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-02-05 08:00:00'),
+                                                             ('course001', 'st004', 'completed', '2025-02-07 08:00:00'),
+                                                             -- course005, st006: 8 buổi
+                                                             ('course005', 'st006', 'completed', '2025-02-11 09:00:00'),
+                                                             ('course005', 'st006', 'completed', '2025-02-13 09:00:00'),
+                                                             ('course005', 'st006', 'completed', '2025-02-15 09:00:00'),
+                                                             ('course005', 'st006', 'completed', '2025-02-17 09:00:00'),
+                                                             ('course005', 'st006', 'completed', '2025-02-19 09:00:00'),
+                                                             ('course005', 'st006', 'completed', '2025-02-21 09:00:00'),
+                                                             ('course005', 'st006', 'completed', '2025-02-23 09:00:00'),
+                                                             ('course005', 'st006', 'completed', '2025-02-25 09:00:00'),
+                                                             -- course006, st007: 15 buổi
+                                                             ('course006', 'st007', 'completed', '2025-03-06 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-08 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-10 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-12 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-14 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-15 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-18 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-20 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-22 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-24 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-26 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-28 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-30 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-04-01 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-04-03 08:00:00'),
+                                                             -- course008, st001: 6 buổi
+                                                             ('course008', 'st001', 'completed', '2025-04-16 10:00:00'),
+                                                             ('course008', 'st001', 'completed', '2025-04-18 10:00:00'),
+                                                             ('course008', 'st001', 'completed', '2025-04-20 10:00:00'),
+                                                             ('course008', 'st001', 'completed', '2025-04-22 10:00:00'),
+                                                             ('course008', 'st001', 'completed', '2025-04-24 10:00:00'),
+                                                             ('course008', 'st001', 'completed', '2025-04-26 10:00:00'),
+                                                             -- course009, st002: 8 buổi
+                                                             ('course009', 'st002', 'completed', '2025-05-02 09:00:00'),
+                                                             ('course009', 'st002', 'completed', '2025-05-04 09:00:00'),
+                                                             ('course009', 'st002', 'completed', '2025-05-06 09:00:00'),
+                                                             ('course009', 'st002', 'completed', '2025-05-08 09:00:00'),
+                                                             ('course009', 'st002', 'completed', '2025-05-10 09:00:00'),
+                                                             ('course009', 'st002', 'completed', '2025-05-12 09:00:00'),
+                                                             ('course009', 'st002', 'completed', '2025-05-14 09:00:00'),
+                                                             ('course009', 'st002', 'completed', '2025-05-16 09:00:00'),
+                                                             -- course004, st003: 10 buổi
+                                                             ('course004', 'st003', 'completed', '2025-01-26 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-01-28 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-01-30 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-02-01 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-02-03 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-02-05 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-02-07 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-02-09 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-02-11 08:00:00'),
+                                                             ('course004', 'st003', 'completed', '2025-02-13 08:00:00'),
+                                                             -- course010, st005: 10 buổi
+                                                             ('course010', 'st005', 'scheduled', '2025-06-01 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-03 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-05 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-07 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-09 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-11 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-13 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-15 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-17 10:00:00'),
+                                                             ('course010', 'st005', 'scheduled', '2025-06-19 10:00:00');
 
-
-(các cột birth, description có thể null)
-ALTER TABLE student
-MODIFY birth DATE NULL;
-ALTER TABLE student
-MODIFY COLUMN description TEXT NULL;
-
-(cài đặt lại chế độ tiếng việt cho name)
+-- Cài đặt lại chế độ tiếng Việt cho cột name trong bảng student
 ALTER TABLE student
     MODIFY COLUMN name VARCHAR(100)
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci
     NOT NULL;
+
