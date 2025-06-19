@@ -52,13 +52,13 @@
                 <h2 class="text-lg font-semibold text-gray-700 mb-4">Menu</h2>
                 <ul class="space-y-2">
                     <li>
-                        <a href="index.jsp" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
+                        <a href="${pageContext.request.contextPath}/lesson" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
                             <i class="fas fa-plus-circle"></i>
                             <span>Tạo buổi học</span>
                         </a>
                     </li>
                     <li>
-                        <a href="schedule" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                        <a href="tutor_created_lesson.js" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Lịch dạy</span>
                         </a>

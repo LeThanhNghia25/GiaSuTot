@@ -37,35 +37,10 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-<%
-    Tutor tutor = (Tutor) request.getAttribute("tutor");
-    // Giả định danh sách lịch dạy được lấy từ request attribute
 
-%>
 <!-- Header -->
-<header class="gradient-bg text-white shadow-lg">
-    <div class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-chalkboard-teacher text-3xl"></i>
-                <h1 class="text-2xl font-bold">GIASUTOT</h1>
-            </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="index.jsp" class="hover:text-blue-200 transition">Trang chủ</a>
-                <a href="lesson_schedule.jsp" class="hover:text-blue-200 transition">Lịch dạy</a>
-                <a href="#" class="hover:text-blue-200 transition">Học viên</a>
-                <a href="#" class="hover:text-blue-200 transition"><%= tutor.getName() %></a>
-            </nav>
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <i class="fas fa-bell text-xl cursor-pointer hover:text-blue-200"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold cursor-pointer">GT</div>
-            </div>
-        </div>
-    </div>
-</header>
+<%@ include file="header.jsp" %>
+<!-- Header End -->
 
 <!-- Main Content -->
 <main class="container mx-auto px-4 py-8">
@@ -76,13 +51,13 @@
                 <h2 class="text-lg font-semibold text-gray-700 mb-4">Menu</h2>
                 <ul class="space-y-2">
                     <li>
-                        <a href="index.jsp" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                        <a href="${pageContext.request.contextPath}/lesson" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
                             <i class="fas fa-plus-circle"></i>
                             <span>Tạo buổi học</span>
                         </a>
                     </li>
                     <li>
-                        <a href="lesson_schedule.jsp" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
+                        <a href="tutor_created_lesson.jsp" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Lịch dạy</span>
                         </a>
