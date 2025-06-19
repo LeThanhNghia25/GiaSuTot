@@ -10,8 +10,7 @@ import java.io.IOException;
 
 @WebServlet("/login-google")
 public class GoogleLoginServlet extends HttpServlet {
-    // a = 89847902492-afni2s5f5hb60nuqbd8h6eisrp0ipk35.apps.googleusercontent.com
-    private static final String CLIENT_ID = "a";
+    private static final String CLIENT_ID = "89847902492-afni2s5f5hb60nuqbd8h6eisrp0ipk35.apps.googleusercontent.com";
     private static final String REDIRECT_URI = "http://localhost:8080/GiaSuTot_war_exploded/oauth2callback";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

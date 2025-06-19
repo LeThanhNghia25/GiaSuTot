@@ -344,3 +344,4 @@ ALTER TABLE student
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci
     NOT NULL;
+ALTER TABLE account ADD COLUMN reset_token VARCHAR(255);

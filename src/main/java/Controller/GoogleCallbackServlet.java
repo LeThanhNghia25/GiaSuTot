@@ -15,16 +15,20 @@ import model.Tutor;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 
+import Utils.EmailSender;
+
+
 @WebServlet("/oauth2callback")
 public class GoogleCallbackServlet extends HttpServlet {
     // a = 89847902492-afni2s5f5hb60nuqbd8h6eisrp0ipk35.apps.googleusercontent.com (Lúc làm thế a vào nhé)
-    private static final String CLIENT_ID = "a";
+    private static final String CLIENT_ID = "89847902492-afni2s5f5hb60nuqbd8h6eisrp0ipk35.apps.googleusercontent.com";
     // b = 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
-    private static final String CLIENT_SECRET = "b";
+    private static final String CLIENT_SECRET = "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";
     // http://localhost:8080/GiaSuTot_war/oauth2callback ( Thay bằng đường dẫn của mọi người, nếu khác 2 đường dẫn này thì nhắn lại để H cấp quyền)
     private static final String REDIRECT_URI = "http://localhost:8080/GiaSuTot_war_exploded/oauth2callback";
 
@@ -85,6 +89,7 @@ public class GoogleCallbackServlet extends HttpServlet {
             account.setRole(1); // mặc định học sinh
             account.setStatus("inactive");
 
+
             student.setId(stDao.generateStudentId());
             student.setName(name);
             student.setAccount(account);
@@ -99,10 +104,21 @@ public class GoogleCallbackServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy lại account từ DB để chắc chắn đúng ID
+            // (3) Gửi email kích hoạt
+            String activationLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                    + request.getContextPath() + "/activate-account?email=" + URLEncoder.encode(email, "UTF-8");
+
+
+            EmailSender.sendActivationEmail(email, name, activationLink);
+
+// (4) Chuyển đến trang thông báo chờ xác thực
+            request.setAttribute("message", "Vui lòng kiểm tra email để xác thực tài khoản.");
+            request.getRequestDispatcher("waiting_activation.jsp").forward(request, response);
+
+            /*// Lấy lại account từ DB để chắc chắn đúng ID
             Account savedAccount = dao.getAccountByEmail(email);
             setUserSession(request.getSession(), savedAccount);
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            response.sendRedirect(request.getContextPath() + "/index.jsp");*/
 
         } catch (SQLException e) {
             e.printStackTrace();
