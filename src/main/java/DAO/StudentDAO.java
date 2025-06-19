@@ -39,20 +39,43 @@ public class StudentDAO {
         }
     }
 
+    public boolean insertggSt(Student student) throws SQLException {
+        String sql = "INSERT INTO student (id, name, account_id) VALUES (?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            System.out.println("Student ID: " + student.getId());
+            System.out.println("Student Name: " + student.getName());
+
+            if (student.getAccount() == null) {
+                System.out.println("Account is null! Không thể thực hiện insert.");
+                return false;
+            }
+
+            System.out.println("Account ID: " + student.getAccount().getId());
+            ps.setString(1, student.getId());
+            ps.setString(2, student.getName());
+            ps.setString(3, student.getAccount().getId());
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public Student getStudentByAccountId(String accountId) throws SQLException {
         String sql = "SELECT s.id, s.name, s.birth, s.description, a.email " +
                 "FROM student s JOIN account a ON s.account_id = a.id " +
                 "WHERE s.account_id = ?";
-
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, accountId);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 String id = rs.getString("id");
                 String name = rs.getString("name");
-                LocalDate birth = rs.getDate("birth").toLocalDate();
+                Date birthDate = rs.getDate("birth");
+                LocalDate birth = (birthDate != null) ? birthDate.toLocalDate() : null;
                 String description = rs.getString("description");
                 String email = rs.getString("email");
 

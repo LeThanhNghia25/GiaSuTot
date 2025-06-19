@@ -330,3 +330,17 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
 ('course010', 'st005', 'scheduled', '2025-06-15 10:00:00'),
 ('course010', 'st005', 'scheduled', '2025-06-17 10:00:00'),
 ('course010', 'st005', 'scheduled', '2025-06-19 10:00:00');
+
+
+(các cột birth, description có thể null)
+ALTER TABLE student
+MODIFY birth DATE NULL;
+ALTER TABLE student
+MODIFY COLUMN description TEXT NULL;
+
+(cài đặt lại chế độ tiếng việt cho name)
+ALTER TABLE student
+    MODIFY COLUMN name VARCHAR(100)
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci
+    NOT NULL;
