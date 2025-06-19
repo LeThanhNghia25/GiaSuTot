@@ -70,4 +70,35 @@ public class AccountDAO {
         }
         return null;
     }
+    public boolean updatePassword(String email, String newPassword) {
+        String sql = "UPDATE account SET password = ? WHERE email = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newPassword);  // hoặc mã hóa nếu cần
+            ps.setString(2, email);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean activateAccount(String email) throws SQLException {
+        String sql = "UPDATE account SET status = 'active' WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu cập nhật thành công
+        }
+    }
+
+
+
+
 }
