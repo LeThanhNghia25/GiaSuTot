@@ -145,48 +145,48 @@ INSERT INTO account (id, email, password, role, status) VALUES
 
 -- Chèn dữ liệu vào bảng student
 INSERT INTO student (id, name, birth, description, account_id) VALUES
-                                                                   ('st001', 'Nguyen Van Nghia', '2005-01-01', 'Yeu thich Toan', 'acc001'),
-                                                                   ('st002', 'Le Thi Lien', '2006-03-15', 'Hoc sinh gioi Van', 'acc002'),
-                                                                   ('st003', 'Tran Van Nho', '2004-07-21', 'Thich hoc nhom', 'acc003'),
-                                                                   ('st004', 'Pham Thi Dung', '2005-10-05', 'Nang dong, tu tin', 'acc010'),
-                                                                   ('st005', 'Nguyen Trung Nhan', '2005-01-01', 'Yeu thich Toan', 'acc011'),
-                                                                   ('st006', 'Truong Thi Mai', '2006-03-15', 'Hoc sinh gioi Van', 'acc012'),
-                                                                   ('st007', 'Tran Dan', '2004-07-21', 'Thich hoc nhom', 'acc013'),
-                                                                   ('st008', 'Le Trung Dung', '2005-10-05', 'Nang dong, tu tin', 'acc014');
+                                                                   ('st001', 'Nguyễn Văn Nghĩa', '2005-01-01', 'Yêu thích Toán', 'acc001'),
+                                                                   ('st002', 'Lê Thị Liên', '2006-03-15', 'Học sinh giỏi Văn', 'acc002'),
+                                                                   ('st003', 'Trần Văn Nhỏ', '2004-07-21', 'Thích học nhóm', 'acc003'),
+                                                                   ('st004', 'Phạm Thị Dung', '2005-10-05', 'Năng động, tự tin', 'acc010'),
+                                                                   ('st005', 'Nguyễn Trung Nhân', '2005-01-01', 'Yêu thích Toán', 'acc011'),
+                                                                   ('st006', 'Trương Thị Mai', '2006-03-15', 'Học sinh giỏi Văn', 'acc012'),
+                                                                   ('st007', 'Trần Đan', '2004-07-21', 'Thích học nhóm', 'acc013'),
+                                                                   ('st008', 'Lê Trung Dũng', '2005-10-05', 'Năng động, tự tin', 'acc014');
 
 -- Chèn dữ liệu vào bảng tutor
 INSERT INTO tutor (id, name, email, birth, phone, address, specialization, description, id_card_number, bank_account_number, bank_name, account_id, evaluate) VALUES
-                                                                                                                                                                  ('tut001', 'Nguyen Tuan Canh', 'tut1@example.com', '1990-01-01', '0901000001', 'Ha Noi', 'Toan', '10 nam kinh nghiem day Toan', 123456789012, 123456789012345, 'bidv', 'acc004', 5),
-                                                                                                                                                                  ('tut002', 'Tran Thi Mai', 'tut2@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 123456789013, 123456789012346, 'sacombank', 'acc005', 4),
-                                                                                                                                                                  ('tut003', 'Le Hoang Minh', 'tut3@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 123456789014, 123456789012347, 'techcombank', 'acc006', 3),
-                                                                                                                                                                  ('tut004', 'Pham Minh Huong', 'tut4@example.com', '1991-09-20', '0901000004', 'Hue', 'Toan', 'Nhiet huyet, vui ve', 123456789015, 123456789012348, 'mb', 'acc009', 4),
-                                                                                                                                                                  ('tut005', 'Nguyen Thu', 'tut5@example.com', '1990-01-01', '0901000001', 'Ha Noi', 'Toan', '10 nam kinh nghiem day Toan', 123456789016, 123456789012349, 'tp bank', 'acc015', 5),
-                                                                                                                                                                  ('tut006', 'Truong Cao Dat', 'tut6@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 123456789017, 123456789012350, 'agribank', 'acc016', 4),
-                                                                                                                                                                  ('tut007', 'Dinh Thi Ngoc', 'tut7@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 123456789018, 123456789012351, 'bidv', 'acc017', 3),
-                                                                                                                                                                  ('tut008', 'Le Nghia', 'tut8@example.com', '1991-09-20', '0901000004', 'Hue', 'Toan', 'Nhiet huyet, vui ve', 123456789019, '123456789012352', 'mb', 'acc018', 4),
-                                                                                                                                                                  ('tut009', 'Tran Nguyen Ven', 'tut9@example.com', '1988-05-12', '0901000002', 'HCM', 'Tieng Anh', 'Chuyen luyen giao tiep', 123456789020, 123456789012353, 'sacombank', 'acc019', 4),
-                                                                                                                                                                  ('tut010', 'Mai Hanh Phuc', 'tut10@example.com', '1992-07-07', '0901000003', 'Da Nang', 'Hoa hoc', 'GV truong chuyen', 123456789021, 123456789012354, 'tp bank', 'acc020', 3);
+                                                                                                                                                                  ('tut001', 'Nguyễn Tuấn Cảnh', 'tut1@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 123456789012, 123456789012345, 'bidv', 'acc004', 5),
+                                                                                                                                                                  ('tut002', 'Trần Thị Mai', 'tut2@example.com', '1988-05-12', '0901000002', 'TP.HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 123456789013, 123456789012346, 'sacombank', 'acc005', 4),
+                                                                                                                                                                  ('tut003', 'Lê Hoàng Minh', 'tut3@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'Giáo viên trường chuyên', 123456789014, 123456789012347, 'techcombank', 'acc006', 3),
+                                                                                                                                                                  ('tut004', 'Phạm Minh Hương', 'tut4@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 123456789015, 123456789012348, 'mb', 'acc009', 4),
+                                                                                                                                                                  ('tut005', 'Nguyễn Thu', 'tut5@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 123456789016, 123456789012349, 'tp bank', 'acc015', 5),
+                                                                                                                                                                  ('tut006', 'Trương Cao Đạt', 'tut6@example.com', '1988-05-12', '0901000002', 'TP.HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 123456789017, 123456789012350, 'agribank', 'acc016', 4),
+                                                                                                                                                                  ('tut007', 'Đinh Thị Ngọc', 'tut7@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'Giáo viên trường chuyên', 123456789018, 123456789012351, 'bidv', 'acc017', 3),
+                                                                                                                                                                  ('tut008', 'Lê Nghĩa', 'tut8@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 123456789019, '123456789012352', 'mb', 'acc018', 4),
+                                                                                                                                                                  ('tut009', 'Trần Nguyễn Vẹn', 'tut9@example.com', '1988-05-12', '0901000002', 'TP.HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 123456789020, 123456789012353, 'sacombank', 'acc019', 4),
+                                                                                                                                                                  ('tut010', 'Mai Hạnh Phúc', 'tut10@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'Giáo viên trường chuyên', 123456789021, 123456789012354, 'tp bank', 'acc020', 3);
 
 -- Chèn dữ liệu vào bảng subject
 INSERT INTO subject (id, name, level, description, fee, status) VALUES
-                                                                    ('sub001', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 2000000, 'active'),
-                                                                    ('sub002', 'Tieng Anh', 'Giao tiep', 'Tieng Anh giao tiep co ban', 1800000, 'active'),
-                                                                    ('sub003', 'Hoa hoc', 'Lop 10', 'Hoc Hoa hoc co ban lop 10', 1900000, 'inactive'),
-                                                                    ('sub004', 'Vat ly', 'Lop 12', 'Hoc Vat ly nang cao lop 12', 2000000, 'active'),
-                                                                    ('sub005', 'Ngu van', 'Lop 11', 'Hoc Ngu van nang cao lop 11', 2000000, 'active'),
-                                                                    ('sub006', 'Sinh hoc', 'Lop 10', 'Hoc Sinh hoc co ban lop 10', 1900000, 'inactive'),
-                                                                    ('sub007', 'Toan', 'Lop 5', 'Hoc Toan nang cao lop 5', 2000000, 'active'),
-                                                                    ('sub008', 'Tieng Anh', 'Lop 5', 'Tieng Anh giao tiep nang cao lop 5', 1800000, 'active'),
-                                                                    ('sub009', 'Toan', 'Lop 6', 'Hoc Toan co ban lop 6', 1900000, 'inactive'),
-                                                                    ('sub010', 'Vat ly', 'Lop 11', 'Hoc Vat ly nang cao lop 11', 2000000, 'active'),
-                                                                    ('sub011', 'Hoa hoc', 'Lop 9', 'Hoc Hoa hoc co ban lop 9', 1800000, 'active'),
-                                                                    ('sub012', 'Sinh hoc', 'Lop 8', 'Hoc Sinh hoc co ban lop 8', 1900000, 'inactive'),
-                                                                    ('sub013', 'Toan', 'Lop 10', 'Hoc Toan nang cao lop 10', 2000000, 'active'),
-                                                                    ('sub014', 'Tieng Anh', 'Lop 10', 'Tieng Anh co ban lop 10', 1800000, 'active'),
-                                                                    ('sub015', 'Hoa hoc', 'Lop 7', 'Hoc Hoa hoc co ban lop 7', 1900000, 'inactive'),
-                                                                    ('sub016', 'Dia ly', 'Lop 10', 'Hoc Dia ly co ban lop 10', 1800000, 'active'),
-                                                                    ('sub017', 'Giao duc cong dan', 'Lop 12', 'Hoc Giao duc cong dan lop 12', 1700000, 'active'),
-                                                                    ('sub018', 'Lich su', 'Lop 8', 'Hoc Lich su co ban lop 8', 1600000, 'active');
+                                                                    ('sub001', 'Toán', 'Lớp 10', 'Học Toán nâng cao lớp 10', 2000000, 'active'),
+                                                                    ('sub002', 'Tiếng Anh', 'Giao tiếp', 'Tiếng Anh giao tiếp cơ bản', 1800000, 'active'),
+                                                                    ('sub003', 'Hóa học', 'Lớp 10', 'Học Hóa học cơ bản lớp 10', 1900000, 'inactive'),
+                                                                    ('sub004', 'Vật lý', 'Lớp 12', 'Học Vật lý nâng cao lớp 12', 2000000, 'active'),
+                                                                    ('sub005', 'Ngữ văn', 'Lớp 11', 'Học Ngữ văn nâng cao lớp 11', 2000000, 'active'),
+                                                                    ('sub006', 'Sinh học', 'Lớp 10', 'Học Sinh học cơ bản lớp 10', 1900000, 'inactive'),
+                                                                    ('sub007', 'Toán', 'Lớp 5', 'Học Toán nâng cao lớp 5', 2000000, 'active'),
+                                                                    ('sub008', 'Tiếng Anh', 'Lớp 5', 'Tiếng Anh giao tiếp nâng cao lớp 5', 1800000, 'active'),
+                                                                    ('sub009', 'Toán', 'Lớp 6', 'Học Toán cơ bản lớp 6', 1900000, 'inactive'),
+                                                                    ('sub010', 'Vật lý', 'Lớp 11', 'Học Vật lý nâng cao lớp 11', 2000000, 'active'),
+                                                                    ('sub011', 'Hóa học', 'Lớp 9', 'Học Hóa học cơ bản lớp 9', 1800000, 'active'),
+                                                                    ('sub012', 'Sinh học', 'Lớp 8', 'Học Sinh học cơ bản lớp 8', 1900000, 'inactive'),
+                                                                    ('sub013', 'Toán', 'Lớp 10', 'Học Toán nâng cao lớp 10', 2000000, 'active'),
+                                                                    ('sub014', 'Tiếng Anh', 'Lớp 10', 'Tiếng Anh cơ bản lớp 10', 1800000, 'active'),
+                                                                    ('sub015', 'Hóa học', 'Lớp 7', 'Học Hóa học cơ bản lớp 7', 1900000, 'inactive'),
+                                                                    ('sub016', 'Địa lý', 'Lớp 10', 'Học Địa lý cơ bản lớp 10', 1800000, 'active'),
+                                                                    ('sub017', 'Giáo dục công dân', 'Lớp 12', 'Học Giáo dục công dân lớp 12', 1700000, 'active'),
+                                                                    ('sub018', 'Lịch sử', 'Lớp 8', 'Học Lịch sử cơ bản lớp 8', 1600000, 'active');
 
 -- Chèn dữ liệu vào bảng course (20 khóa học)
 INSERT INTO course (id, subject_id, tutor_id, time) VALUES
@@ -195,7 +195,7 @@ INSERT INTO course (id, subject_id, tutor_id, time) VALUES
                                                         ('course003', 'sub003', 'tut003', '2025-05-03 10:00:00'),
                                                         ('course004', 'sub004', 'tut004', '2025-01-10 08:00:00'),
                                                         ('course005', 'sub005', 'tut005', '2025-02-15 09:00:00'),
-                                                        ('course006', 'sub001', 'tut001', '2025-03-01 08:00:00'),
+                                                        ('course006', 'sub006', 'tut001', '2025-03-01 08:00:00'),
                                                         ('course007', 'sub002', 'tut006', '2025-04-05 09:00:00'),
                                                         ('course008', 'sub011', 'tut007', '2025-04-10 10:00:00'),
                                                         ('course009', 'sub014', 'tut009', '2025-05-12 09:00:00'),

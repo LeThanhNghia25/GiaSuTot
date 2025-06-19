@@ -40,29 +40,8 @@
 %>
 
 <!-- Header -->
-<header class="gradient-bg text-white shadow-lg">
-    <div class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-chalkboard-teacher text-3xl"></i>
-                <h1 class="text-2xl font-bold">GIASUTOT</h1>
-            </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="index.jsp" class="hover:text-blue-200 transition">Trang chủ</a>
-                <a href="schedule.jsp" class="hover:text-blue-200 transition">Lịch dạy</a>
-                <a href="#" class="hover:text-blue-200 transition">Học viên</a>
-                <a href="#" class="hover:text-blue-200 transition"><%= tutor.getName() %></a>
-            </nav>
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <i class="fas fa-bell text-xl cursor-pointer hover:text-blue-200"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold cursor-pointer">GT</div>
-            </div>
-        </div>
-    </div>
-</header>
+<%@ include file="header.jsp" %>
+<!-- Header End -->
 
 <!-- Main Content -->
 <main class="container mx-auto px-4 py-8">
