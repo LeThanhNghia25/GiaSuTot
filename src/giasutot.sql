@@ -117,6 +117,22 @@ CREATE TABLE payment (
                          FOREIGN KEY (student_id) REFERENCES student(id)
 );
 
+CREATE TABLE tutor_requests (
+                                id INT AUTO_INCREMENT PRIMARY KEY,
+                                account_id CHAR(20) NOT NULL,
+                                name VARCHAR(100) NOT NULL,
+                                birth VARCHAR(10) NOT NULL, -- Lưu định dạng yyyy-MM-dd
+                                email VARCHAR(100) NOT NULL,
+                                phone VARCHAR(20) NOT NULL,
+                                id_card_number BIGINT(12) NOT NULL,
+                                bank_account_number BIGINT(15) NOT NULL,
+                                bank_name VARCHAR(255) NOT NULL,
+                                address VARCHAR(255) NOT NULL,
+                                specialization VARCHAR(255) NOT NULL,
+                                description VARCHAR(255) NOT NULL,
+                                created_at DATETIME NOT NULL,
+                                FOREIGN KEY (account_id) REFERENCES account(id)
+);
 -- Bật lại kiểm tra khóa ngoại
 SET FOREIGN_KEY_CHECKS = 1;
 
