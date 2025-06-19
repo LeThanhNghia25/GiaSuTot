@@ -1,10 +1,7 @@
 package DAO;
 
 import Utils.DBConnection;
-import model.Course;
-import model.RegisteredSubjects;
-import model.Student;
-import model.Tutor;
+import model.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 public class LessonDAO {
+
     public LessonDAO() {}
 
     public List<Course> getListCourseByTutor(Tutor tutor) throws SQLException {
@@ -45,17 +43,34 @@ public class LessonDAO {
         return new ArrayList<>(studentIds);
     }
 
-    public static void main(String[] args) throws SQLException {
-        TutorDAO tutorDAO = new TutorDAO();
-        Tutor tutor = tutorDAO.getTutorById("tut001");
-        LessonDAO lessonDAO = new LessonDAO();
-        List<Course> courses = lessonDAO.getListCourseByTutor(tutor);
-        for (Course course : courses) {
-            System.out.println(course);
+    public List<Lesson> getListLessonByTutor(Tutor tutor) throws SQLException {
+        List<Course> courses = getListCourseByTutor(tutor);
+        if (courses.isEmpty()) return new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM LESSON WHERE course_id IN (");
+        for (int i = 0; i < courses.size(); i++) {
+            sql.append("?");
+            if (i < courses.size() - 1) sql.append(",");
         }
-        List<String> studentIds = lessonDAO.getListStudentIdByTutor(tutor);
-        for (String studentId : studentIds) {
-            System.out.println(studentId);
+        sql.append(") AND status = 'scheduled'");
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < courses.size(); i++) {
+                ps.setString(i + 1, courses.get(i).getId());
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Lesson> lessons = new ArrayList<>();
+                while (rs.next()) {
+                    Lesson lesson = new Lesson();
+                    lesson.setCourse_id(rs.getString("course_id"));
+                    lesson.setStudent_id(rs.getString("student_id"));
+                    lesson.setStatus(rs.getString("status"));
+                    lesson.setTime(rs.getTimestamp("time"));
+                    lessons.add(lesson);
+                }
+                return lessons;
+            }
         }
     }
 }

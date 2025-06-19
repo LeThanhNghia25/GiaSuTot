@@ -1,164 +1,179 @@
 package Controller;
 
-import DAO.PaymentDAO;
-import DAO.TutorDAO;
-import model.Notification;
-import model.Payment;
-import model.Tutor;
-
+import DAO.CourseDAO;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import com.google.gson.Gson;
+import java.util.UUID;
 
-@WebServlet("/admin/payment")
+@WebServlet("/payment")
 public class PaymentController extends HttpServlet {
-    private PaymentDAO paymentDAO;
-    private TutorDAO tutorDAO;
+    private CourseDAO courseDAO;
+    private static final String PARTNER_CODE = "MOMO_PARTNER_CODE"; // Thay bằng mã đối tác từ MoMo
+    private static final String ACCESS_KEY = "MOMO_ACCESS_KEY"; // Thay bằng Access Key
+    private static final String SECRET_KEY = "MOMO_SECRET_KEY"; // Thay bằng Secret Key
+    private static final String ENDPOINT = "https://test-payment.momo.vn/v2/gateway/api/create";
+    private static final String RETURN_URL = "http://localhost:8080/GiaSuTot/payment-return"; // URL trả về
+    private static final String NOTIFY_URL = "http://localhost:8080/GiaSuTot/payment-notify"; // URL thông báo
 
     @Override
     public void init() {
-        paymentDAO = new PaymentDAO();
-        tutorDAO = new TutorDAO();
+        courseDAO = new CourseDAO();
+        System.out.println("PaymentController initialized.");
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            request.setAttribute("completedCourses", paymentDAO.getCompletedCourses());
-            request.getRequestDispatcher("/admin/payment.jsp").forward(request, response);
-        } catch (SQLException e) {
-            request.setAttribute("error", "Lỗi khi tải danh sách khóa học: " + e.getMessage());
-            request.getRequestDispatcher("/admin/payment.jsp").forward(request, response);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("account") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
         }
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
         String courseId = request.getParameter("courseId");
-        String tutorId = request.getParameter("tutorId");
-        String studentId = request.getParameter("studentId");
-        double amount = 0;
+        String studentId = (String) session.getAttribute("studentId");
+        if (courseId == null || studentId == null) {
+            response.sendRedirect(request.getContextPath() + "/courses?message=Dữ liệu không hợp lệ");
+            return;
+        }
 
-        System.out.println("Received action: " + action);
-        System.out.println("courseId: " + courseId + ", tutorId: " + tutorId + ", studentId: " + studentId + ", amount: " + request.getParameter("amount"));
-
+        // Lấy thông tin khóa học
         try {
-            amount = Double.parseDouble(request.getParameter("amount"));
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Số tiền không hợp lệ: " + e.getMessage());
+            request.setAttribute("courseId", courseId);
+            request.setAttribute("studentId", studentId);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/payment.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            response.sendRedirect(request.getContextPath() + "/courses?message=Lỗi khi tải trang thanh toán");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("account") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        if ("showModal".equals(action)) {
-            try {
-                if (tutorId == null || courseId == null) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu thông tin tutorId hoặc courseId");
-                    return;
-                }
-                Tutor tutor = tutorDAO.getTutorById(tutorId);
-                if (tutor == null) {
-                    System.out.println("Tutor not found for id: " + tutorId);
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy gia sư với ID: " + tutorId);
-                    return;
-                }
-                System.out.println("Tutor found: " + tutor.getName());
-
-                Map<String, Object> tutorData = new HashMap<>();
-                tutorData.put("id", tutor.getId());
-                tutorData.put("bankName", tutor.getBankName());
-                tutorData.put("bankAccountNumber", tutor.getBankAccountNumber());
-
-                Map<String, Object> responseData = new HashMap<>();
-                responseData.put("tutor", tutorData);
-                responseData.put("courseId", courseId);
-                responseData.put("studentId", studentId);
-                responseData.put("amount", amount);
-
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                PrintWriter out = response.getWriter();
-                out.print(new Gson().toJson(responseData));
-                out.flush();
-            } catch (Exception e) {
-                System.err.println("Unexpected Exception: " + e.getMessage());
-                e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi không xác định: " + e.getMessage());
-            }
-            return;
-        }
-
-        if ("confirmPayment".equals(action)) {
-            try {
-                if (courseId == null || tutorId == null || studentId == null) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu thông tin cần thiết");
-                    return;
-                }
-                String paymentId = "pay" + String.format("%03d", paymentDAO.getPaymentCount() + 1);
-                Payment payment = new Payment(paymentId, courseId, tutorId, studentId, amount, LocalDateTime.now(), "completed");
-                paymentDAO.addPayment(payment);
-
-                Tutor tutor = tutorDAO.getTutorById(tutorId);
-                if (tutor != null && tutor.getAccount() != null) {
-                    String message = "Bạn đã nhận được thanh toán " + amount + " VND cho khóa học " + courseId + " vào " + LocalDateTime.now();
-                    Notification notification = new Notification(
-                            java.util.UUID.randomUUID().toString(),
-                            tutor.getAccount().getId(),
-                            message,
-                            LocalDateTime.now(),
-                            "pending"
-                    );
-                    paymentDAO.addNotification(notification);
-                }
-
-                Map<String, Object> responseData = new HashMap<>();
-                responseData.put("status", "success");
-                responseData.put("message", "Thanh toán thành công cho gia sư với khóa học " + courseId);
-                responseData.put("courseId", courseId);
-                responseData.put("tutorId", tutorId);
-
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                PrintWriter out = response.getWriter();
-                out.print(new Gson().toJson(responseData));
-                out.flush();
-            } catch (SQLException e) {
-                request.setAttribute("error", "Lỗi khi thực hiện thanh toán: " + e.getMessage());
-                request.getRequestDispatcher("/admin/payment.jsp").forward(request, response);
-            }
-            return;
-        }
-
-        if ("deferPayment".equals(action)) {
-            Map<String, Object> responseData = new HashMap<>();
-            responseData.put("status", "success");
-            responseData.put("message", "Thanh toán đã được tạm hoãn");
-            responseData.put("courseId", courseId);
-            responseData.put("tutorId", tutorId);
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter out = response.getWriter();
-            out.print(new Gson().toJson(responseData));
-            out.flush();
+        String courseId = request.getParameter("courseId");
+        String studentId = (String) session.getAttribute("studentId");
+        if (courseId == null || studentId == null) {
+            response.sendRedirect(request.getContextPath() + "/courses?message=Dữ liệu không hợp lệ");
             return;
         }
 
         try {
-            request.setAttribute("completedCourses", paymentDAO.getCompletedCourses());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            // Tạo đơn hàng MoMo
+            Map<String, String> params = createMoMoPaymentRequest(courseId, studentId);
+            String paymentUrl = sendPaymentRequest(params);
+            if (paymentUrl != null) {
+                response.sendRedirect(paymentUrl); // Chuyển hướng đến MoMo
+            } else {
+                response.sendRedirect(request.getContextPath() + "/courses?message=Lỗi khi tạo yêu cầu thanh toán");
+            }
+        } catch (Exception e) {
+            System.err.println("Error in payment: " + e.getMessage());
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/courses?message=Lỗi khi xử lý thanh toán");
         }
-        request.getRequestDispatcher("/admin/payment.jsp").forward(request, response);
+    }
+
+    private Map<String, String> createMoMoPaymentRequest(String courseId, String studentId) throws SQLException {
+        Map<String, String> params = new HashMap<>();
+        params.put("partnerCode", PARTNER_CODE);
+        params.put("accessKey", ACCESS_KEY);
+        params.put("requestId", UUID.randomUUID().toString());
+        params.put("amount", String.valueOf(courseDAO.getCourseById(courseId).getSubject().getFee()));
+        params.put("orderId", "ORDER_" + System.currentTimeMillis());
+        params.put("orderInfo", "Thanh toan khoa hoc " + courseId);
+        params.put("returnUrl", RETURN_URL);
+        params.put("notifyUrl", NOTIFY_URL);
+        params.put("extraData", "studentId=" + studentId + "&courseId=" + courseId);
+        params.put("requestType", "captureMoMoWallet");
+        params.put("signature", createSignature(params));
+
+        return params;
+    }
+
+    private String createSignature(Map<String, String> params) {
+        String data = "partnerCode=" + PARTNER_CODE +
+                "&accessKey=" + ACCESS_KEY +
+                "&requestId=" + params.get("requestId") +
+                "&amount=" + params.get("amount") +
+                "&orderId=" + params.get("orderId") +
+                "&orderInfo=" + params.get("orderInfo") +
+                "&returnUrl=" + params.get("returnUrl") +
+                "&notifyUrl=" + params.get("notifyUrl") +
+                "&extraData=" + params.get("extraData");
+        return hashSHA256(data + SECRET_KEY);
+    }
+
+    private String hashSHA256(String data) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(data.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Error hashing signature", e);
+        }
+    }
+
+    private String sendPaymentRequest(Map<String, String> params) throws IOException {
+        URL url = new URL(ENDPOINT);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setDoOutput(true);
+
+        StringBuilder postData = new StringBuilder();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            postData.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+        }
+        postData.setLength(postData.length() - 1); // Remove last &
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = postData.toString().getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    response.append(line.trim());
+                }
+                // Parse JSON response (cần thư viện như Gson)
+                // Giả sử response chứa payUrl
+                return new com.google.gson.JsonParser().parse(response.toString())
+                        .getAsJsonObject().get("payUrl").getAsString();
+            }
+        } else {
+            System.err.println("MoMo API Error: " + responseCode);
+            return null;
+        }
     }
 }

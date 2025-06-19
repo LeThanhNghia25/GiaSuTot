@@ -32,6 +32,8 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- Toast CSS -->
     <style>
         .course-grid {
             display: grid;
@@ -131,12 +133,39 @@
             color: white;
             border-color: #007bff;
         }
+        /* Message Styles */
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: ${not empty message ? 'block' : 'none'};
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
 <!-- Header Start -->
 <%@ include file="header.jsp" %>
 <!-- Header End -->
+
+<!-- Message Display -->
+<c:if test="${not empty message}">
+    <div class="container">
+        <div class="message ${message.contains('thành công') ? 'success' : 'error'}">
+                ${message}
+        </div>
+    </div>
+</c:if>
 
 <!-- Courses Start -->
 <div class="container-xxl py-5">
@@ -184,16 +213,13 @@
                                 </div>
                             </div>
                             <div class="course-actions">
-                                <form action="${pageContext.request.contextPath}/courses" method="post" style="margin: 0;">
+                                <form action="${pageContext.request.contextPath}/courses" method="post">
                                     <input type="hidden" name="courseId" value="${course.id}">
                                     <input type="hidden" name="action" value="register">
+                                    <input type="hidden" name="page" value="${currentPage}">
                                     <button type="submit" class="btn btn-primary btn-sm">Đăng ký</button>
                                 </form>
-                                <form action="${pageContext.request.contextPath}/courses" method="post" style="margin: 0;">
-                                    <input type="hidden" name="courseId" value="${course.id}">
-                                    <input type="hidden" name="action" value="trial">
-                                    <button type="submit" class="btn btn-secondary btn-sm">Học thử</button>
-                                </form>
+                                <a href="#" class="btn btn-secondary btn-sm">Học thử</a>
                             </div>
                         </div>
                     </c:forEach>

@@ -99,6 +99,7 @@
             <artifactId>google-api-services-oauth2</artifactId>
             <version>v2-rev157-1.25.0</version>
         </dependency>
+
     </dependencies>
 
     <build>

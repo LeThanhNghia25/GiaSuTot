@@ -6,6 +6,8 @@ import model.Student;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentDAO {
     public StudentDAO() {}
@@ -145,5 +147,17 @@ public class StudentDAO {
         StudentDAO dao = new StudentDAO();
         Student student = dao.getStudentById("st001");
         System.out.println(student);
+        List<String> ids = new ArrayList<>();
+        ids.add("st001");
+        ids.add("st002");
+        ids.add("st003");
+        List<Student> students = new ArrayList<>();
+        for (String id : ids) {
+            Student student1 = dao.getStudentById(id);
+            students.add(student1);
+        }
+        for (Student student1 : students) {
+            System.out.println(student1);
+        }
     }
 }

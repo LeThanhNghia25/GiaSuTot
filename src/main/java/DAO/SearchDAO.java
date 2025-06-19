@@ -71,6 +71,31 @@ public class SearchDAO {
 
         return result;
     }
+    public List<Subject> getSujectByIdTutor(String id_tutor) throws SQLException {
+        List<Subject> subjectList = new ArrayList<>();
+        HashMap<Course, Subject> subjectMap = new SearchDAO().getAllSubjects();
+        for (Course key : subjectMap.keySet()) {
+            if(key.getTutorId().equals(id_tutor)) {
+                subjectList.add(subjectMap.get(key));
+            }
+        }
+        return subjectList;
+    }
+    public Subject FindByIdCourse(String Idcourse) throws SQLException {
+        CourseDAO courseDAO = new CourseDAO();
+        Course course = courseDAO.getCourseById(Idcourse);
+        AdminSubjectDAO adminSubjectDAO = new AdminSubjectDAO();
+        List<Subject> subjectList = adminSubjectDAO.getAllSubjects();
+        for (Subject subject : subjectList) {
+            if(subject.getId().equals(course.getSubjectId())) {
+                return subject;
+            }
+        }
+
+
+
+return null;
+    }
 
     //chuyen thanh chuoi khong dau
     public static String removeDiacritics(String input) {
