@@ -11,6 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @WebServlet(name = "StudentScheduleController", urlPatterns = {"/student-schedule"})
@@ -29,15 +32,28 @@ public class StudentScheduleController extends HttpServlet {
 
         try {
             String studentId = getStudentIdByAccountId(acc.getId());
-            List<StudentScheduleDAO.ScheduleItem> schedule = dao.getWeeklySchedule(studentId);
+
+            // ⏱️ Xử lý tuần được chọn
+            String weekParam = request.getParameter("week");
+            LocalDate monday;
+            if (weekParam != null && !weekParam.isEmpty()) {
+                // format yyyy-Www → yyyy-W25
+                monday = LocalDate.parse(weekParam + "-1", DateTimeFormatter.ofPattern("YYYY-'W'ww-e"));
+            } else {
+                monday = LocalDate.now().with(DayOfWeek.MONDAY);
+            }
+            LocalDate sunday = monday.plusDays(6);
+
+            List<StudentScheduleDAO.ScheduleItem> schedule = dao.getWeeklySchedule(studentId, monday, sunday);
             request.setAttribute("schedule", schedule);
             request.getRequestDispatcher("/student_schedule.jsp").forward(request, response);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Không thể tải lịch học.");
             request.getRequestDispatcher("/student_schedule.jsp").forward(request, response);
         }
     }
+
 
     private String getStudentIdByAccountId(String accId) throws SQLException {
         try (Connection conn = Utils.DBConnection.getConnection();

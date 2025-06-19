@@ -1,7 +1,39 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <!-- Quan trọng -->
-<fmt:setLocale value="vi_VN" /> <!-- Đặt locale tiếng Việt -->
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.time.*" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.temporal.WeekFields" %>
+
+<%
+    String weekParam = request.getParameter("week");
+    LocalDate today = LocalDate.now();
+
+    // Cách mới: Lấy thứ hai từ tuần (không parse trực tiếp ngày)
+    LocalDate monday;
+    if (weekParam != null && !weekParam.isEmpty()) {
+        // Parse thủ công yyyy-Www
+        String[] parts = weekParam.split("-W");
+        int year = Integer.parseInt(parts[0]);
+        int week = Integer.parseInt(parts[1]);
+
+        WeekFields weekFields = WeekFields.ISO;
+        monday = LocalDate.ofYearDay(year, 1)
+                .with(weekFields.weekOfWeekBasedYear(), week)
+                .with(weekFields.dayOfWeek(), 1); // Thứ 2
+    } else {
+        monday = today.with(DayOfWeek.MONDAY);
+    }
+
+    LocalDate prevMonday = monday.minusWeeks(1);
+    LocalDate nextMonday = monday.plusWeeks(1);
+
+    DateTimeFormatter weekFormatter = DateTimeFormatter.ofPattern("yyyy-'W'ww");
+    String weekStr = monday.format(weekFormatter);
+    String prevWeekStr = prevMonday.format(weekFormatter);
+    String nextWeekStr = nextMonday.format(weekFormatter);
+%>
+
 
 <html>
 <head>
@@ -10,7 +42,15 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2 class="mb-4">Lịch học trong tuần</h2>
+    <h2 class="mb-3">Lịch học trong tuần</h2>
+
+    <!-- Form chọn tuần -->
+    <form class="mb-3 d-flex gap-3 align-items-center" method="get">
+        <input type="week" name="week" class="form-control w-auto" value="<%= weekStr %>"/>
+        <button type="submit" class="btn btn-primary">Xem tuần</button>
+        <a href="?week=<%= prevWeekStr %>" class="btn btn-outline-secondary">⟵ Tuần trước</a>
+        <a href="?week=<%= nextWeekStr %>" class="btn btn-outline-secondary">Tuần sau ⟶</a>
+    </form>
 
     <!-- Thông báo lỗi -->
     <c:if test="${not empty error}">
@@ -19,42 +59,30 @@
 
     <!-- Không có lịch -->
     <c:if test="${empty schedule}">
-        <p>Bạn chưa có lịch học nào.</p>
+        <p>Không có lịch học trong tuần này.</p>
     </c:if>
 
     <!-- Có lịch -->
     <c:if test="${not empty schedule}">
-        <table class="table table-bordered" style="background-color: #fff;">
+        <table class="table table-bordered">
             <thead class="table-light">
             <tr>
                 <th>Thứ</th>
                 <th>Môn học</th>
                 <th>Gia sư</th>
-                <th>Thời gian học</th>
+                <th>Giờ học</th>
+                <th>Ngày học</th>
                 <th>Trạng thái</th>
             </tr>
             </thead>
             <tbody>
             <c:forEach var="item" items="${schedule}">
                 <tr>
-                    <!-- Thứ + ngày -->
-                    <td>
-                            ${item.dayOfWeek}
-                        (<fmt:formatDate value="${item.time}" pattern="dd/MM" />)
-                    </td>
-
-                    <!-- Môn học -->
+                    <td>${item.dayOfWeek}</td>
                     <td>${item.subjectName}</td>
-
-                    <!-- Gia sư -->
                     <td>${item.tutorName}</td>
-
-                    <!-- Giờ học -->
-                    <td>
-                        <fmt:formatDate value="${item.time}" pattern="HH:mm" />
-                    </td>
-
-                    <!-- Trạng thái -->
+                    <td>${item.hourString}</td>
+                    <td>${item.dateString}</td>
                     <td>
                         <c:choose>
                             <c:when test="${item.status == 'completed'}">
