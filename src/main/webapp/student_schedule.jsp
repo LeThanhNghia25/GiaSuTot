@@ -42,6 +42,16 @@
 </head>
 <body>
 <div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb" class="bg-white rounded-3 p-3 mb-4">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/index.jsp">Trang chủ</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Xem lịch học </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
     <h2 class="mb-3">Lịch học trong tuần</h2>
 
     <!-- Form chọn tuần -->

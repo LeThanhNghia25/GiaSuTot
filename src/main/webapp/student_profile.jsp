@@ -43,6 +43,22 @@
 %>
 <section style="background-color: #eee;">
     <div class="container py-5">
+        <!-- Thông báo thành công hoặc lỗi -->
+        <% if (session.getAttribute("success") != null) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%= session.getAttribute("success") %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <% session.removeAttribute("success"); %>
+        <% } %>
+        <% if (session.getAttribute("error") != null) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= session.getAttribute("error") %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <% session.removeAttribute("error"); %>
+        <% } %>
+
         <div class="row">
             <div class="col">
                 <nav aria-label="breadcrumb" class="bg-white rounded-3 p-3 mb-4">
@@ -53,7 +69,6 @@
                 </nav>
             </div>
         </div>
-
 
         <% if (student == null) { %>
         <div class="alert alert-danger" role="alert">
@@ -67,10 +82,11 @@
                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
                              class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3"><%= student.getName() %></h5>
+                        <% if (isStudent) { %>
                         <div class="d-flex justify-content-center mb-2">
-                            <button type="button" class="btn btn-primary">Theo dõi</button>
-                            <button type="button" class="btn btn-primary">Nhắn tin</button>
+                            <button type="button" class="btn btn-primary" onclick="toggleTutorRequestForm()">Trở thành gia sư</button>
                         </div>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -84,7 +100,6 @@
                             <% if (isStudent) { %>
                             <button type="button" class="btn btn-warning btn-sm" onclick="toggleEditForm()">Chỉnh sửa</button>
                             <% } %>
-
                         </div>
                         <hr>
                         <div class="row">
@@ -134,7 +149,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" value="<%= student.getAccount().getEmail() %>"  readonly>
+                    <input type="email" class="form-control" name="email" value="<%= student.getAccount().getEmail() %>" readonly>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mô tả</label>
@@ -144,8 +159,85 @@
                     <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>
                     <button type="button" class="btn btn-secondary" onclick="toggleEditForm()">Hủy</button>
                 </div>
-
             </form>
+        </div>
+
+        <!-- Form yêu cầu trở thành gia sư -->
+        <div id="tutorRequestForm" class="overlay-form" style="display: none;">
+            <h5 class="mb-3">Yêu cầu trở thành gia sư</h5>
+            <form action="${pageContext.request.contextPath}/tutor-request" method="post">
+                <input type="hidden" name="accountId" value="<%= acc.getId() %>">
+
+                <div class="mb-3">
+                    <label class="form-label">Họ và tên</label>
+                    <input type="text" class="form-control" name="name" value="<%= student.getName() %>" readonly required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ngày sinh</label>
+                    <input type="date" class="form-control" name="birth" value="<%= student.getBirth() %>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" value="<%= student.getAccount().getEmail() %>" readonly required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" name="phone" placeholder="Nhập số điện thoại" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Căn cước công dân (CCCD)</label>
+                    <input type="text" class="form-control" name="idCardNumber" placeholder="Nhập số CCCD (12 chữ số)" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Số tài khoản ngân hàng</label>
+                    <input type="text" class="form-control" name="bankAccountNumber" placeholder="Nhập số tài khoản" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Tên ngân hàng</label>
+                    <select class="form-select" name="bankName" required>
+                        <option value="" selected disabled>-- Chọn ngân hàng --</option>
+                        <option value="BIDV">BIDV</option>
+                        <option value="Techcombank">Techcombank</option>
+                        <option value="MB">MB</option>
+                        <option value="TPBank">TPBank</option>
+                        <option value="Sacombank">Sacombank</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" name="address" placeholder="Nhập địa chỉ" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Chuyên môn (Môn học muốn dạy)</label>
+                    <select class="form-select" name="specialization" required>
+                        <option value="" selected disabled>-- Chọn môn --</option>
+                        <option value="Toán">Toán</option>
+                        <option value="Lý">Lý</option>
+                        <option value="Hóa">Hóa</option>
+                        <option value="Anh">Anh</option>
+                        <option value="Văn">Văn</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mô tả thêm</label>
+                    <textarea class="form-control" name="description" rows="4" placeholder="Mô tả kinh nghiệm hoặc thông tin bổ sung" required></textarea>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success me-2">Gửi yêu cầu</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleTutorRequestForm()">Hủy</button>
+                </div>
+            </form>
+
         </div>
         <% } %>
         <% } %>
@@ -155,6 +247,7 @@
 <script>
     function toggleEditForm() {
         const editForm = document.getElementById("editForm");
+        const tutorRequestForm = document.getElementById("tutorRequestForm");
         const profileInfoElements = document.querySelectorAll("#profileInfo");
         const backdrop = document.getElementById("backdrop");
 
@@ -162,6 +255,24 @@
 
         editForm.style.display = isHidden ? "block" : "none";
         backdrop.style.display = isHidden ? "block" : "none";
+        tutorRequestForm.style.display = "none";
+
+        profileInfoElements.forEach(elem => {
+            elem.style.display = isHidden ? "none" : "block";
+        });
+    }
+
+    function toggleTutorRequestForm() {
+        const tutorRequestForm = document.getElementById("tutorRequestForm");
+        const editForm = document.getElementById("editForm");
+        const profileInfoElements = document.querySelectorAll("#profileInfo");
+        const backdrop = document.getElementById("backdrop");
+
+        const isHidden = tutorRequestForm.style.display === "none" || tutorRequestForm.style.display === "";
+
+        tutorRequestForm.style.display = isHidden ? "block" : "none";
+        backdrop.style.display = isHidden ? "block" : "none";
+        editForm.style.display = "none";
 
         profileInfoElements.forEach(elem => {
             elem.style.display = isHidden ? "none" : "block";
