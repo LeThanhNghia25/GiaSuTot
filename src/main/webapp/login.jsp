@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<<<<<<< HEAD
 <head>
     <meta charset="utf-8">
     <title>eLEARNING - eLearning HTML Template</title>
@@ -88,7 +87,7 @@
                     </c:if>
                 </div>
 
-                <a class="blue" href="turn-page?action=resetPass">Quên mật khẩu?</a>
+                <a class="blue" href="forgot_password.jsp">Quên mật khẩu?</a>
                 <button type="submit" id="login-button">Đăng nhập</button>
             </form>
         </div>
@@ -109,7 +108,7 @@
             </div>
         </div>
 
-        <%--<!-- Form xác thực email -->
+        <!-- Form xác thực email -->
         <div class="overlay" id="overlay"></div>
         <c:if test="${not empty verificationRequested}">
             <!-- Modal xác thực email -->
@@ -145,7 +144,7 @@
                     </form>
                 </div>
             </div>
-        </c:if>--%>
+        </c:if>
     </div>
 
 </div>
