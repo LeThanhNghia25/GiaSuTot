@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 @WebServlet("/oauth2callback")
 public class GoogleCallbackServlet extends HttpServlet {
     // a = 89847902492-afni2s5f5hb60nuqbd8h6eisrp0ipk35.apps.googleusercontent.com (Lúc làm thế a vào nhé)
-    private static final String CLIENT_ID = "a";
+    private static final String CLIENT_ID = "89847902492-afni2s5f5hb60nuqbd8h6eisrp0ipk35.apps.googleusercontent.com";
     // b = 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
-    private static final String CLIENT_SECRET = "b";
+    private static final String CLIENT_SECRET = "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";
     // http://localhost:8080/GiaSuTot_war/oauth2callback ( Thay bằng đường dẫn của mọi người, nếu khác 2 đường dẫn này thì nhắn lại để H cấp quyền)
     private static final String REDIRECT_URI = "http://localhost:8080/GiaSuTot_war_exploded/oauth2callback";
 
