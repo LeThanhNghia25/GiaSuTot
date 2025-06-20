@@ -115,31 +115,34 @@ public class CourseDAO {
     }
 
     public void registerCourse(String courseId, String studentId) throws SQLException {
-        String checkSql = "SELECT COUNT(*) FROM registered_subjects WHERE course_id = ? AND student_id = ?";
+        String checkSql = "SELECT status FROM registered_subjects WHERE course_id = ? AND student_id = ?";
         String insertSql = "INSERT INTO registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement checkStmt = conn.prepareStatement(checkSql);
              PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
 
-            // Kiểm tra xem bản ghi đã tồn tại chưa
             checkStmt.setString(1, courseId);
             checkStmt.setString(2, studentId);
             ResultSet rs = checkStmt.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) {
-                System.out.println("Registration already exists for course: " + courseId + " and student: " + studentId);
-                throw new RuntimeException("Bạn đã đăng ký khóa học này trước đó.");
+            if (rs.next()) {
+                String status = rs.getString("status");
+                if ("registered".equalsIgnoreCase(status)) {
+                    System.out.println("Registration already exists with status 'registered' for course: " + courseId + " and student: " + studentId);
+                    throw new RuntimeException("Bạn đã đăng ký và thanh toán khóa học này trước đó.");
+                }
+                System.out.println("Existing registration with status: " + status + ", allowing re-registration");
+                return;
             }
 
-            // Thêm ngày đăng ký, số buổi học và trạng thái mặc định
             insertStmt.setString(1, courseId);
             insertStmt.setString(2, studentId);
             insertStmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-            insertStmt.setInt(4, 12); // Giá trị mặc định cho number_of_lessons
-            insertStmt.setString(5, "pending_payment"); // Giá trị mặc định cho status
+            insertStmt.setInt(4, 12);
+            insertStmt.setString(5, "initial");
             int rowsAffected = insertStmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Course registered: " + courseId + " for student: " + studentId);
+                System.out.println("Course registered with initial status: " + courseId + " for student: " + studentId);
             } else {
                 throw new RuntimeException("Failed to register course");
             }
@@ -193,6 +196,22 @@ public class CourseDAO {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    public void updatePaymentStatus(String courseId, String studentId, String status) throws SQLException {
+        String sql = "UPDATE registered_subjects SET status = ? WHERE course_id = ? AND student_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setString(2, courseId);
+            stmt.setString(3, studentId);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Updated status to " + status + " for course: " + courseId + ", student: " + studentId);
+            } else {
+                System.out.println("No record updated for course: " + courseId + ", student: " + studentId);
             }
         }
     }

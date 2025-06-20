@@ -12,10 +12,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class SearchDAO {
-    private Connection conn = DBConnection.getConnection();
-
-    public SearchDAO() {
-    }
 
     // Lấy tất cả khóa học kèm chủ đề
     public List<Course> getAllCoursesWithSubjects() throws SQLException {
@@ -32,7 +28,8 @@ public class SearchDAO {
                 "s.name, s.level, s.fee, s.status, s.description, " +
                 "t.name, t.specialization, t.address, t.evaluate";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Course course = new Course();

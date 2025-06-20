@@ -37,9 +37,9 @@ public class CoursesController extends HttpServlet {
         System.out.println("Received GET request for /courses");
 
         String tenMon = request.getParameter("tenMon");
-        String trinhDo = request.getParameter("trinhDo"); // Thay "lop" bằng "trinhDo"
+        String trinhDo = request.getParameter("trinhDo");
         String pageParam = request.getParameter("page");
-        String search = request.getParameter("search"); // Giữ lại cho tìm kiếm nhanh
+        String search = request.getParameter("search");
 
         long startTime = System.currentTimeMillis();
         List<Course> allCourses = new ArrayList<>();
@@ -58,7 +58,6 @@ public class CoursesController extends HttpServlet {
         long fetchTime = System.currentTimeMillis() - startTime;
         System.out.println("Time to fetch courses: " + fetchTime + "ms");
 
-        // Lọc theo tenMon và trinhDo
         List<Course> filteredCourses = allCourses.stream()
                 .filter(course -> {
                     boolean match = true;
@@ -74,7 +73,6 @@ public class CoursesController extends HttpServlet {
                 })
                 .collect(Collectors.toList());
 
-        // Phân trang
         int page = (pageParam != null && !pageParam.trim().isEmpty()) ? Integer.parseInt(pageParam) : 1;
         int pageSize = 9;
         int totalCourses = filteredCourses.size();
@@ -85,14 +83,12 @@ public class CoursesController extends HttpServlet {
         int end = Math.min(start + pageSize, totalCourses);
         List<Course> paginatedCourses = filteredCourses.subList(start, end);
 
-        // Định dạng thời gian
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         paginatedCourses.forEach(course -> {
             String formattedTime = course.getTime().format(formatter);
             request.setAttribute("formattedTime_" + course.getId(), formattedTime);
         });
 
-        // Xử lý message
         String message = (String) request.getSession().getAttribute("message");
         if (message != null) {
             request.setAttribute("message", message);
@@ -138,8 +134,8 @@ public class CoursesController extends HttpServlet {
                 if ("register".equalsIgnoreCase(action)) {
                     System.out.println("Registering course: " + courseId + " for student: " + studentId);
                     courseDAO.registerCourse(courseId, studentId);
-                    System.out.println("Course registered, redirecting to payment");
-                    response.sendRedirect(request.getContextPath() + "/payment?courseId=" + courseId);
+                    System.out.println("Course registered, redirecting to payment info");
+                    response.sendRedirect(request.getContextPath() + "/payment-info?courseId=" + courseId + "&studentId=" + studentId);
                 } else if ("trial".equalsIgnoreCase(action)) {
                     System.out.println("Registering trial for course: " + courseId + " for student: " + studentId);
                     courseDAO.registerTrial(courseId, studentId);
