@@ -1,8 +1,13 @@
 package Utils;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 public class EmailSender {
@@ -50,14 +55,12 @@ public class EmailSender {
     }
 
     public static void sendVerificationCodeEmail(String toEmail, String code) {
-        // Cấu hình SMTP
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        // Tạo session
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(FROM_EMAIL, APP_PASSWORD);
@@ -65,7 +68,6 @@ public class EmailSender {
         });
 
         try {
-            // Soạn nội dung email
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(FROM_EMAIL, FROM_NAME));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
@@ -88,4 +90,65 @@ public class EmailSender {
         }
     }
 
+    public static void sendReceiptEmail(String toEmail, String studentId, String courseId, String fileName, String filePath) throws MessagingException, UnsupportedEncodingException {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(FROM_EMAIL, APP_PASSWORD);
+            }
+        });
+
+        // Tạo message multipart
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(FROM_EMAIL, FROM_NAME));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+        message.setSubject("Biên lai thanh toán khóa học " + courseId);
+
+        // Tạo nội dung HTML với ảnh nhúng
+        String htmlContent = "<h2>Xin chào,</h2>"
+                + "<p>Đây là biên lai thanh toán từ học sinh <strong>" + studentId + "</strong> cho khóa học <strong>" + courseId + "</strong>.</p>"
+                + "<p>Thông tin chi tiết:</p>"
+                + "<ul>"
+                + "<li>Tên file: <strong>" + fileName + "</strong></li>"
+                + "<li>Đường dẫn: <strong>" + filePath + "</strong></li>"
+                + "</ul>"
+                + "<p>Hình ảnh biên lai:</p>"
+                + "<img src=\"cid:image\" alt=\"Biên lai\" style=\"max-width: 100%; height: auto;\">"
+                + "<p>Vui lòng kiểm tra và xác nhận với admin nếu cần.</p>"
+                + "<p>Trân trọng,<br/>Đội ngũ Gia Sư Tốt</p>";
+
+        // Tạo multipart message
+        Multipart multipart = new MimeMultipart();
+
+        // Phần HTML
+        BodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(htmlContent, "text/html; charset=utf-8");
+        multipart.addBodyPart(htmlPart);
+
+        // Phần đính kèm ảnh
+        File file = new File(filePath);
+        if (file.exists()) {
+            MimeBodyPart imagePart = new MimeBodyPart();
+            // Sử dụng DataSource để đính kèm file
+            DataSource source = new FileDataSource(filePath);
+            imagePart.setDataHandler(new DataHandler(source));
+            imagePart.setContentID("<image>");
+            imagePart.setDisposition(MimeBodyPart.INLINE); // Nhúng ảnh trực tiếp
+            multipart.addBodyPart(imagePart);
+        } else {
+            System.err.println("File không tồn tại: " + filePath);
+            htmlContent += "<p><strong>Lưu ý: Không thể nhúng ảnh vì file không tồn tại.</strong></p>";
+            htmlPart.setContent(htmlContent, "text/html; charset=utf-8");
+        }
+
+        message.setContent(multipart);
+
+        Transport.send(message);
+        System.out.println("✅ Đã gửi email biên lai tới: " + toEmail);
+    }
 }
