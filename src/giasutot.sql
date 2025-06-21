@@ -76,7 +76,7 @@ CREATE TABLE registered_subjects (
                                      student_id CHAR(20),
                                      registration_date DATE NOT NULL,
                                      number_of_lessons INT NOT NULL,
-                                     status VARCHAR(50) NOT NULL CHECK (status IN ('pending_approval', 'pending_payment', 'registered', 'completed', 'cancelled', 'trial')),
+                                     status VARCHAR(50) NOT NULL CHECK (status IN ('pending_payment', 'pending_approval', 'registered', 'cancelled', 'completed', 'trial')),
                                      PRIMARY KEY (course_id, student_id),
                                      FOREIGN KEY (course_id) REFERENCES course(id),
                                      FOREIGN KEY (student_id) REFERENCES student(id)
@@ -111,6 +111,8 @@ CREATE TABLE payment (
                          student_id CHAR(20) NOT NULL,
                          amount DECIMAL(12) NOT NULL,
                          payment_date DATETIME NOT NULL,
+                         file_name VARCHAR(255) NULL,
+                         file_path VARCHAR(255) NULL;
                          status VARCHAR(50) NOT NULL CHECK (status IN ('completed', 'pending', 'failed')),
                          FOREIGN KEY (course_id) REFERENCES course(id),
                          FOREIGN KEY (tutor_id) REFERENCES tutor(id),

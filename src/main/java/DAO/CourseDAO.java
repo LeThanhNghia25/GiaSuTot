@@ -139,10 +139,10 @@ public class CourseDAO {
             insertStmt.setString(2, studentId);
             insertStmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
             insertStmt.setInt(4, 12);
-            insertStmt.setString(5, "initial");
+            insertStmt.setString(5, "pending_payment");
             int rowsAffected = insertStmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Course registered with initial status: " + courseId + " for student: " + studentId);
+                System.out.println("Course registered with status: " + courseId + " for student: " + studentId);
             } else {
                 throw new RuntimeException("Failed to register course");
             }

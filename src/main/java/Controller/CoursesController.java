@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.CourseDAO;
 import DAO.SearchDAO;
+import DAO.StudentDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Account;
 import model.Course;
+import model.Student;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,11 +25,13 @@ import java.util.stream.Collectors;
 public class CoursesController extends HttpServlet {
     private CourseDAO courseDAO;
     private SearchDAO searchDAO;
+    private StudentDAO studentDAO;
 
     @Override
     public void init() {
         courseDAO = new CourseDAO();
         searchDAO = new SearchDAO();
+        studentDAO = new StudentDAO();
         System.out.println("CoursesController initialized.");
     }
 
@@ -128,7 +132,30 @@ public class CoursesController extends HttpServlet {
         }
 
         String studentId = (String) session.getAttribute("studentId");
-        System.out.println("StudentId: " + studentId);
+        System.out.println("StudentId from session: " + studentId);
+        if (studentId == null) {
+            // Nếu studentId chưa có, thử lấy lại từ accountId
+            StudentDAO studentDAO = new StudentDAO();
+            try {
+                Student student = studentDAO.getStudentByAccountId(account.getId());
+                if (student != null) {
+                    studentId = student.getId();
+                    session.setAttribute("studentId", studentId);
+                    System.out.println("Recovered studentId: " + studentId);
+                } else {
+                    System.out.println("No student record found for account: " + account.getId());
+                    session.setAttribute("message", "Dữ liệu học sinh không hợp lệ, vui lòng liên hệ admin");
+                    response.sendRedirect(request.getContextPath() + "/courses");
+                    return;
+                }
+            } catch (SQLException e) {
+                System.err.println("Error fetching student: " + e.getMessage());
+                session.setAttribute("message", "Lỗi khi lấy thông tin học sinh");
+                response.sendRedirect(request.getContextPath() + "/courses");
+                return;
+            }
+        }
+
         if (courseId != null && studentId != null) {
             try {
                 if ("register".equalsIgnoreCase(action)) {
