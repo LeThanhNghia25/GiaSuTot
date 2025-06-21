@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminPaymentDAO {
+    // Phần admin chuyển tiền cho gia sư tutor
     public List<Course> getCompletedCourses() throws SQLException {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT c.*, s.*, t.*, rs.student_id, rs.registration_date, st.name AS student_name, " +
@@ -116,5 +117,85 @@ public class AdminPaymentDAO {
             stmt.setString(5, notification.getStatus());
             stmt.executeUpdate();
         }
+    }
+
+    // Lấy danh sách biên lai chờ xác nhận
+    public List<Payment> getPendingPayments() throws SQLException {
+        List<Payment> payments = new ArrayList<>();
+        String sql = "SELECT rs.course_id, rs.student_id, p.file_name, p.file_path " +
+                "FROM registered_subjects rs " +
+                "LEFT JOIN payment p ON rs.course_id = p.course_id AND rs.student_id = p.student_id " +
+                "WHERE rs.status = 'pending_payment'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Payment payment = new Payment();
+                payment.setCourseId(rs.getString("course_id"));
+                payment.setStudentId(rs.getString("student_id"));
+                payment.setFileName(rs.getString("file_name")); // Không cần alias, dùng tên cột thực
+                payment.setFilePath(rs.getString("file_path")); // Không cần alias, dùng tên cột thực
+                payments.add(payment);
+            }
+            System.out.println("Total pending payments retrieved: " + payments.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error in getPendingPayments: " + e.getMessage());
+            throw e; // Ném lại ngoại lệ để controller xử lý
+        }
+        return payments;
+    }
+
+    // Cập nhật trạng thái biên lai
+    public void updatePaymentStatus(String courseId, String studentId, String status) throws SQLException {
+        String sql = "UPDATE registered_subjects SET status = ? WHERE course_id = ? AND student_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setString(2, courseId);
+            stmt.setString(3, studentId);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Updated status to " + status + " for course " + courseId + " and student " + studentId);
+            }
+        }
+    }
+
+    // Lấy email của học sinh dựa trên studentId
+    public String getStudentEmail(String studentId) throws SQLException {
+        String email = null;
+        String sql = "SELECT a.email FROM account a JOIN student s ON a.id = s.account_id WHERE s.id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, studentId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    email = rs.getString("email");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching student email: " + e.getMessage());
+            throw e;
+        }
+        return email;
+    }
+
+    // Lấy email của giáo viên dựa trên courseId
+    public String getTutorEmailByCourseId(String courseId) throws SQLException {
+        String email = null;
+        String sql = "SELECT a.email FROM account a JOIN tutor t ON a.id = t.account_id " +
+                "JOIN course c ON t.id = c.tutor_id WHERE c.id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, courseId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    email = rs.getString("email");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching tutor email: " + e.getMessage());
+            throw e;
+        }
+        return email;
     }
 }

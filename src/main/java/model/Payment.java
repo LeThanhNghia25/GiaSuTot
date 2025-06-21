@@ -10,6 +10,12 @@ public class Payment {
     private double amount;
     private LocalDateTime paymentDate;
     private String status;
+    private String fileName; // Thêm trường fileName
+    private String filePath; // Thêm trường filePath
+
+    public Payment() {
+        // Constructor mặc định
+    }
 
     public Payment(String id, String courseId, String tutorId, String studentId, double amount, LocalDateTime paymentDate, String status) {
         this.id = id;
@@ -77,6 +83,22 @@ public class Payment {
         this.status = status;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     @Override
     public String toString() {
         return "Payment{" +
@@ -87,6 +109,8 @@ public class Payment {
                 ", amount=" + amount +
                 ", paymentDate=" + paymentDate +
                 ", status='" + status + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", filePath='" + filePath + '\'' +
                 '}';
     }
 }
