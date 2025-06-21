@@ -4,18 +4,35 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Header -->
-<%@ include file="header.jsp" %>
-<!-- Header End -->
+<head>
+    <meta charset="utf-8">
+    <title>eLEARNING - eLearning HTML Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/login-signup.css" rel="stylesheet">
+    <link href="css/modal.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+
+</head>
 <body>
-
-
+<%@ include file="header.jsp" %>
 <!-- Content-->
 <div class="content">
     <div class="container" id="container">
         <div class="form-container sign-up">
-            <form id="register-form" action="${pageContext.request.contextPath}/account" method="post">
+            <form id="register-form" action="${pageContext.request.contextPath}/signup-user" method="post">
                 <input type="hidden" name="action" value="register">
                 <h1>Tạo tài khoản</h1>
                 <div class="social-icons">
@@ -25,20 +42,16 @@
                 <span>Hoặc sử dụng email để đăng kí tài khoản</span>
 
                 <!-- Nhập Email -->
-                <input type="email" name="email" id="register-email" placeholder="Email" value="${email}" required>
+                <input type="text" name="email" id="register-email" placeholder="Email" value="${email}" >
                 <div id="email-error" style="color: red; font-size: 10px;"></div>
 
-                <!-- Sửa id và placeholder để tránh nhầm lẫn với username -->
-                <input type="text" name="name" id="register-name" placeholder="Họ và tên" required>
-                <div id="name-error" style="color: red; font-size: 10px;"></div>
+                <input type="text" name="name" id="register-username" placeholder="Tên đăng nhập" >
+                <div id="username-error" style="color: red; font-size: 10px;"></div>
 
-                <input type="date" name="birth" id="register-birth" required>
+                <input type="date" name="birth" id="register-birth" >
                 <div id="birth-error" style="color: red; font-size: 10px;"></div>
 
-                <input type="text" name="description" id="register-description" placeholder="Mô tả"> <!-- Đổi từ describe -->
-                <div id="description-error" style="color: red; font-size: 10px;"></div> <!-- Đổi từ describeSt-error -->
-
-                <input type="password" name="password" id="register-password" placeholder="Mật khẩu" required>
+                <input type="password" name="password" id="register-password" placeholder="Mật khẩu" >
                 <div id="password-error" style="color: red; font-size: 10px;"></div>
 
                 <div id="error-server" style="color: red; font-size: 10px;">
@@ -52,35 +65,29 @@
         </div>
 
         <div class="form-container">
-            <form id="login-form" action="${pageContext.request.contextPath}/account" method="post">
+            <form id="login-form" action="${pageContext.request.contextPath}/signup-user" method="post">
                 <input type="hidden" name="action" value="login" />
                 <h1>Đăng nhập</h1>
                 <div class="social-icons">
-                    <a href="#" class="icon-logo"><i class="fab fa-google g"></i></a>
-                    <a href="#" class="icon-logo"><i class="fab fa-facebook-f f"></i></a>
+                    <!-- Đăng nhập bằng Google -->
+                    <a href="${pageContext.request.contextPath}/login-google" class="icon-logo"><i class="fab fa-google g"></i>
+                    </a>
+                    <!-- Đăng nhập bằng Facebook -->
+                    <a href="${pageContext.request.contextPath}/facebook-login" class="icon-logo"><i class="fab fa-facebook-f f"></i>
+                    </a>
                 </div>
                 <span>Hoặc sử dụng tài khoản đã đăng kí</span>
-                <!-- Thay username thành email -->
-                <input type="email" name="email" id="login-email" placeholder="Email" required>
-                <span id="email-errorlog" style="color: red; font-size: 10px;" class="error-message"></span>
-
-                <input type="password" name="password" id="login-password" placeholder="Mật khẩu" required>
-                <span id="password-errorlog" style="color: red; font-size: 10px;" class="error-message"></span>
-
+                <input type="text" name="email" id="login-email" placeholder="Email" required>
+                <span id="email-errorlog" style="color: red; font-size: 10px;" class="error-message"></span> <!-- Thông báo lỗi email -->
+                <input type="password" name="password" id="login-password" placeholder="Password" required>
+                <span id="password-errorlog" style="color: red; font-size: 10px;" class="error-message"></span> <!-- Thông báo lỗi mật khẩu -->
                 <div id="error-login" style="color: red; font-size: 10px;">
-                    <c:if test="${not empty error}">
-                        ${error}
-                    </c:if>
-                </div>
-                <!-- Hiển thị thông báo thành công -->
-                <div id="success-message" style="color: green; font-size: 10px;">
-                    <c:if test="${not empty sessionScope.success}">
-                        ${sessionScope.success}
-                        <c:remove var="success" scope="session" />
+                    <c:if test="${not empty error_login}">
+                        ${error_login}
                     </c:if>
                 </div>
 
-                <a class="blue" href="turn-page?action=resetPass">Quên mật khẩu?</a>
+                <a class="blue" href="forgot_password.jsp">Quên mật khẩu?</a>
                 <button type="submit" id="login-button">Đăng nhập</button>
             </form>
         </div>
@@ -100,7 +107,46 @@
                 </div>
             </div>
         </div>
+
+        <!-- Form xác thực email -->
+        <div class="overlay" id="overlay"></div>
+        <c:if test="${not empty verificationRequested}">
+            <!-- Modal xác thực email -->
+            <div id="verification-modal" class="modal">
+                <div class="modal-content">
+                    <button title="close" type="button" class="close-button" id="close-button">
+                        <i class="fas fa-times"></i> <!-- Font Awesome icon for "X" -->
+                    </button>
+
+                    <h1>Xác thực email</h1>
+
+                    <!-- Form xác thực email -->
+                    <form id="verification-form" action="verify-email" method="post">
+                        <div class="verification-code-inputs " style="display: flex; gap: 10px;">
+                            <input class="verification-code" type="text" name="code1" maxlength="1">
+                            <input class="verification-code" type="text" name="code2" maxlength="1">
+                            <input class="verification-code" type="text" name="code3" maxlength="1">
+                            <input class="verification-code" type="text" name="code4" maxlength="1">
+
+                        </div>
+                        <!-- Thông báo lỗi -->
+                        <div id="error-message" class="error-message">
+                            <c:if test="${not empty error_code}">
+                                ${error_code}
+                            </c:if>
+                        </div>
+                        <button type="submit" id="verify-button">Xác thực</button>
+                    </form>
+
+                    <!-- Form gửi lại mã -->
+                    <form id="reset-password-form" action="reset-code" method="post">
+                        <button type="submit" class="reset">Gửi lại</button>
+                    </form>
+                </div>
+            </div>
+        </c:if>
     </div>
+
 </div>
 
 <%@ include file="footer.jsp" %>
@@ -124,8 +170,9 @@
         container.classList.remove('active'); // chuyển sang form đăng nhập
     }
 </script>
-
 <script src="${pageContext.request.contextPath}/js/login-signup.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
 </body>
+
 </html>

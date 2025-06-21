@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Account;
-import model.Lession;
+import model.Lesson;
 import model.Tutor;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class LessonScheduleController extends HttpServlet {
         Tutor tutor = null;
         tutor = tutorDAO.getTutorByAccountId(accountId);
         LessonDAO lessonDAO = new LessonDAO();
-        List<Lession> lessons = new ArrayList<>();
+        List<Lesson> lessons = new ArrayList<>();
         try {
            lessons = lessonDAO.getListLessonByTutor(tutor);
         } catch (SQLException | ParseException e) {
@@ -37,7 +37,7 @@ public class LessonScheduleController extends HttpServlet {
         request.setAttribute("lessons",lessons );
         request.setAttribute("tutor", tutor);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("lessonSchedule.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_created_lesson.jsp");
         dispatcher.forward(request, response);
     }
 }

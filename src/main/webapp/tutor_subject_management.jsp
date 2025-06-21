@@ -40,29 +40,8 @@
 %>
 
 <!-- Header -->
-<header class="gradient-bg text-white shadow-lg">
-    <div class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-chalkboard-teacher text-3xl"></i>
-                <h1 class="text-2xl font-bold">GIASUTOT</h1>
-            </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="index.jsp" class="hover:text-blue-200 transition">Trang chủ</a>
-                <a href="schedule.jsp" class="hover:text-blue-200 transition">Lịch dạy</a>
-                <a href="#" class="hover:text-blue-200 transition">Học viên</a>
-                <a href="#" class="hover:text-blue-200 transition"><%= tutor.getName() %></a>
-            </nav>
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <i class="fas fa-bell text-xl cursor-pointer hover:text-blue-200"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold cursor-pointer">GT</div>
-            </div>
-        </div>
-    </div>
-</header>
+<%@ include file="header.jsp" %>
+<!-- Header End -->
 
 <!-- Main Content -->
 <main class="container mx-auto px-4 py-8">
@@ -73,13 +52,13 @@
                 <h2 class="text-lg font-semibold text-gray-700 mb-4">Menu</h2>
                 <ul class="space-y-2">
                     <li>
-                        <a href="index.jsp" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
+                        <a href="${pageContext.request.contextPath}/lesson" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
                             <i class="fas fa-plus-circle"></i>
                             <span>Tạo buổi học</span>
                         </a>
                     </li>
                     <li>
-                        <a href="schedule" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                        <a href="tutor_created_lesson.js" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Lịch dạy</span>
                         </a>
@@ -268,31 +247,26 @@
     </div>
 </div>
 
-<!-- JavaScript for handling student selection -->
+<!-- JavaScript -->
 <script>
+    // 1. Xử lý chọn học viên
     document.getElementById('idStudent').addEventListener('change', function () {
         const studentId = this.value;
         if (studentId) {
-            // Gửi yêu cầu AJAX POST đến LessonController
-            console.log('Sending AJAX request for studentId: ' + studentId); // Debug
+            console.log('Sending AJAX request for studentId: ' + studentId);
             fetch('${pageContext.request.contextPath}/lesson', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'studentId=' + encodeURIComponent(studentId)
             })
                 .then(response => {
-                    console.log('Response status: ' + response.status); // Debug
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
+                    console.log('Response status: ' + response.status);
+                    if (!response.ok) throw new Error('Network response was not ok: ' + response.statusText);
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Received data: ', data); // Debug
+                    console.log('Received data: ', data);
                     if (data.status === 'success') {
-                        // Cập nhật các ô thông tin
                         document.getElementById('studentName').value = data.studentName || '';
                         document.getElementById('subject').value = data.subject || '';
                     } else {
@@ -308,33 +282,28 @@
                     document.getElementById('subject').value = '';
                 });
         } else {
-            // Reset các ô nếu không chọn học viên
             document.getElementById('studentName').value = '';
             document.getElementById('subject').value = '';
         }
     });
 
+    // 2. Xử lý chọn khóa học
     document.getElementById('course_id').addEventListener('change', function () {
         const course_id = this.value;
         if (course_id) {
-            // Gửi yêu cầu AJAX POST đến LessonController
-            console.log('Sending AJAX request for course: ' + course_id); // Debug
+            console.log('Sending AJAX request for course: ' + course_id);
             fetch('${pageContext.request.contextPath}/lesson2', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'course_id=' + encodeURIComponent(course_id)
             })
                 .then(response => {
-                    console.log('Response status: ' + response.status); // Debug
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
+                    console.log('Response status: ' + response.status);
+                    if (!response.ok) throw new Error('Network response was not ok: ' + response.statusText);
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Received data: ', data); // Debug
+                    console.log('Received data: ', data);
                     if (data.status === 'success') {
                         document.getElementById('subject').value = data.subject || '';
                     } else {
@@ -344,7 +313,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching course info:', error);
-                    alert('Đã xảy ra lỗi khi lấy thông tin khóa học ' + error.message);
+                    alert('Đã xảy ra lỗi khi lấy thông tin khóa học: ' + error.message);
                     document.getElementById('subject').value = '';
                 });
         } else {
@@ -352,24 +321,18 @@
         }
     });
 
-    // Lấy ngày và giờ hiện tại (theo múi giờ +07:00)
+    // 3. Xử lý ngày và giờ hiện tại
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset() + 7 * 60); // Điều chỉnh múi giờ +07:00
-
-    // Định dạng ngày hiện tại thành YYYY-MM-DD
     const today = now.toISOString().split('T')[0];
-
-    // Định dạng giờ hiện tại thành HH:mm
     const currentTime = now.toISOString().split('T')[1].substring(0, 5);
 
-    // Đặt giá trị min cho trường date
     document.getElementById('date').setAttribute('min', today);
 
-    // Kiểm tra ngày và giờ khi người dùng thay đổi
+    // 4. Kiểm tra ngày
     document.getElementById('date').addEventListener('change', function () {
         const selectedDate = new Date(this.value);
         const todayDate = new Date(today);
-
         if (selectedDate < todayDate) {
             alert('Không thể chọn ngày trong quá khứ!');
             this.value = today;
@@ -382,10 +345,10 @@
         }
     });
 
+    // 5. Kiểm tra giờ
     document.getElementById('time').addEventListener('change', function () {
         const selectedDate = new Date(document.getElementById('date').value);
         const todayDate = new Date(today);
-
         if (selectedDate.toDateString() === todayDate.toDateString()) {
             const selectedTime = this.value;
             if (selectedTime < currentTime) {
@@ -393,6 +356,46 @@
                 this.value = currentTime;
             }
         }
+    });
+
+    // 6. Xử lý submit form
+    document.getElementById('sessionForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const datetimeStr = formData.get('date') + ' ' + formData.get('time') + ':00';
+
+        fetch('${pageContext.request.contextPath}/addLesson', {
+            method: 'POST',
+            body: new URLSearchParams(formData).toString(),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data: ', data);
+                if (data.status === 'success') {
+                    document.getElementById('modalMessage').textContent = data.message;
+                    document.getElementById('successModal').classList.remove('hidden');
+                    setTimeout(() => {
+                        document.getElementById('successModal').classList.add('hidden');
+                        this.reset();
+                        window.location.href = 'schedule';
+                    }, 2000);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Đã xảy ra lỗi khi tạo buổi học: ' + error.message);
+            });
+    });
+
+    // 7. Đóng modal
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('successModal').classList.add('hidden');
     });
 </script>
 </body>

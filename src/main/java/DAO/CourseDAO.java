@@ -6,6 +6,7 @@ import model.Subject;
 import Utils.DBConnection;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,6 @@ public class CourseDAO {
                 tutor.setSpecialization(rs.getString("specialization"));
                 tutor.setEvaluate(rs.getInt("evaluate"));
                 course.setTutor(tutor);
-                // Lấy số học viên từ truy vấn chính
                 course.setStudentCount(rs.getInt("student_count"));
                 courses.add(course);
             }
@@ -57,7 +57,7 @@ public class CourseDAO {
         } catch (SQLException e) {
             System.err.println("SQL Error in getAllAvailableCourses: " + e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException("Failed to fetch courses", e); // Ném lại exception để debug dễ hơn
+            throw new RuntimeException("Failed to fetch courses", e);
         }
         return courses;
     }
@@ -101,7 +101,6 @@ public class CourseDAO {
                 tutor.setSpecialization(rs.getString("specialization"));
                 tutor.setEvaluate(rs.getInt("evaluate"));
                 course.setTutor(tutor);
-                // Lấy số học viên từ truy vấn chính
                 course.setStudentCount(rs.getInt("student_count"));
                 System.out.println("Course found: " + course.getId() + ", subject: " + subject.getName());
                 return course;
@@ -111,24 +110,42 @@ public class CourseDAO {
         } catch (SQLException e) {
             System.err.println("SQL Error in getCourseById: " + e.getMessage());
             e.printStackTrace();
-            throw e; // Ném lại để debug
+            throw e;
         }
     }
 
-    public void registerCourse(String courseId, String studentId) {
-        System.out.println("Registering course " + courseId + " for student " + studentId);
-        String sql = "INSERT INTO registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) " +
-                "VALUES (?, ?, CURDATE(), 10, 'pending_approval')";
+    public void registerCourse(String courseId, String studentId) throws SQLException {
+        String checkSql = "SELECT status FROM registered_subjects WHERE course_id = ? AND student_id = ?";
+        String insertSql = "INSERT INTO registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) VALUES (?, ?, ?, ?, ?)";
+
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, courseId);
-            stmt.setString(2, studentId);
-            stmt.executeUpdate();
-            System.out.println("Course registered.");
-        } catch (SQLException e) {
-            System.err.println("SQL Error in registerCourse: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Failed to register course", e);
+             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
+             PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+
+            checkStmt.setString(1, courseId);
+            checkStmt.setString(2, studentId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next()) {
+                String status = rs.getString("status");
+                if ("registered".equalsIgnoreCase(status)) {
+                    System.out.println("Registration already exists with status 'registered' for course: " + courseId + " and student: " + studentId);
+                    throw new RuntimeException("Bạn đã đăng ký và thanh toán khóa học này trước đó.");
+                }
+                System.out.println("Existing registration with status: " + status + ", allowing re-registration");
+                return;
+            }
+
+            insertStmt.setString(1, courseId);
+            insertStmt.setString(2, studentId);
+            insertStmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            insertStmt.setInt(4, 12);
+            insertStmt.setString(5, "initial");
+            int rowsAffected = insertStmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Course registered with initial status: " + courseId + " for student: " + studentId);
+            } else {
+                throw new RuntimeException("Failed to register course");
+            }
         }
     }
 
@@ -179,6 +196,22 @@ public class CourseDAO {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    public void updatePaymentStatus(String courseId, String studentId, String status) throws SQLException {
+        String sql = "UPDATE registered_subjects SET status = ? WHERE course_id = ? AND student_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setString(2, courseId);
+            stmt.setString(3, studentId);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Updated status to " + status + " for course: " + courseId + ", student: " + studentId);
+            } else {
+                System.out.println("No record updated for course: " + courseId + ", student: " + studentId);
             }
         }
     }

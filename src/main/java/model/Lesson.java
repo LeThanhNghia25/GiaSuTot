@@ -1,14 +1,13 @@
 package model;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Lession {
+public class Lesson {
     String course_id;
     String student_id;
     String status;
-    Date time  ;
-    public Lession(){}
+    Date time;
+    public Lesson(){}
 
     public String getStudent_id() {
         return student_id;
@@ -29,10 +28,7 @@ public class Lession {
     public Date getTime() {
         return time;
     }
-    public String getFormattedTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(time);
-    }
+
     public void setTime(Date time) {
         this.time = time;
     }
@@ -51,7 +47,7 @@ public class Lession {
                 "course_id='" + course_id + '\'' +
                 ", student_id='" + student_id + '\'' +
                 ", status='" + status + '\'' +
-                ", time='" + time +
+                ", time='" + time + '\'' +
                 '}';
     }
 }

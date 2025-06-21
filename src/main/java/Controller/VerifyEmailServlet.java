@@ -10,43 +10,27 @@ import java.io.IOException;
 
 @WebServlet("/verify-email")
 public class VerifyEmailServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    // Đây là ví dụ mã xác thực, thực tế bạn lấy từ DB hoặc session khi gửi mail
-    private static final String EXPECTED_CODE = "1234";
+        // Ghép 4 ô mã người dùng nhập
+        String code = request.getParameter("code1")
+                + request.getParameter("code2")
+                + request.getParameter("code3")
+                + request.getParameter("code4");
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Lấy 4 phần của mã nhập từ form
-        String code1 = request.getParameter("code1");
-        String code2 = request.getParameter("code2");
-        String code3 = request.getParameter("code3");
-        String code4 = request.getParameter("code4");
-
-        String enteredCode = (code1 == null ? "" : code1)
-                + (code2 == null ? "" : code2)
-                + (code3 == null ? "" : code3)
-                + (code4 == null ? "" : code4);
-
-        // Lấy session để truyền dữ liệu và kiểm tra
+        // Lấy mã từ session đã lưu khi gửi mail
         HttpSession session = request.getSession();
+        String expectedCode = (String) session.getAttribute("verificationCode");
 
-        if (EXPECTED_CODE.equals(enteredCode)) {
-            // Xác thực thành công
-            session.setAttribute("emailVerified", true);
-            // Xóa các biến liên quan nếu cần
-            session.removeAttribute("verificationRequested");
-            session.removeAttribute("error_code");
-
-            // Chuyển hướng đến trang thành công hoặc trang tiếp theo
-            response.sendRedirect("verification-success.jsp");
+        if (expectedCode != null && expectedCode.equals(code)) {
+            // Mã đúng → chuyển tới trang đổi mật khẩu
+            request.getRequestDispatcher("reset_password.jsp").forward(request, response);
         } else {
-            // Sai mã xác thực, trả lại lỗi để hiển thị trên modal
-            session.setAttribute("verificationRequested", true); // để modal hiện lại
-            session.setAttribute("error_code", "Mã xác thực không đúng. Vui lòng thử lại.");
-
-            // Quay lại trang trước (ví dụ trang đăng ký hoặc trang đang chứa modal)
-            response.sendRedirect("register.jsp");
+            // Mã sai → thông báo lỗi và cho nhập lại
+            request.setAttribute("error_code", "Mã xác thực không đúng!");
+            request.setAttribute("verificationRequested", true); // để hiện lại modal
+            request.getRequestDispatcher("forgot_password.jsp").forward(request, response);
         }
     }
 }

@@ -33,6 +33,24 @@ public class AccountDAO {
         }
     }
 
+    public boolean insertgg(Account account) {
+        String sql = "INSERT INTO account (id, email, password, role, status) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, account.getId());
+            ps.setString(2, account.getEmail());
+            ps.setString(3, account.getPassword());
+            ps.setInt(4, account.getRole());
+            ps.setString(5, account.getStatus());
+
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public Account getAccountByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM account WHERE email = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -52,4 +70,35 @@ public class AccountDAO {
         }
         return null;
     }
+    public boolean updatePassword(String email, String newPassword) {
+        String sql = "UPDATE account SET password = ? WHERE email = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newPassword);  // hoặc mã hóa nếu cần
+            ps.setString(2, email);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean activateAccount(String email) throws SQLException {
+        String sql = "UPDATE account SET status = 'active' WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu cập nhật thành công
+        }
+    }
+
+
+
+
 }

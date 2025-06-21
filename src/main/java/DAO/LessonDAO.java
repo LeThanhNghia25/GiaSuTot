@@ -3,14 +3,17 @@ package DAO;
 import Utils.DBConnection;
 import model.*;
 
-import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Date;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class LessonDAO {
-    private Connection conn = DBConnection.getConnection();
+
     public LessonDAO() {}
 
     public List<Course> getListCourseByTutor(Tutor tutor) throws SQLException {
@@ -24,7 +27,6 @@ public class LessonDAO {
         }
         return filteredCourses;
     }
-
 
     public List<String> getListStudentIdByTutor(Tutor tutor) throws SQLException {
         Set<String> studentIds = new HashSet<>();
@@ -40,118 +42,35 @@ public class LessonDAO {
         }
         return new ArrayList<>(studentIds);
     }
-    public List<Lession> getListLessonByTutor(Tutor tutor) throws SQLException, ParseException {
+
+    public List<Lesson> getListLessonByTutor(Tutor tutor) throws SQLException {
         List<Course> courses = getListCourseByTutor(tutor);
-        String sql = "SELECT * FROM LESSON WHERE course_id = ? AND status = 'scheduled'";
-        List<Lession> lessions = new ArrayList<>();
-        conn = DBConnection.getConnection();
-        for (Course course : courses) {
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, course.getId());
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Lession lession = new Lession();
-            lession.setCourse_id(rs.getString("course_id"));
-            lession.setStudent_id(rs.getString("student_id"));
-            lession.setStatus(rs.getString("status"));
-            String dateStr = String.valueOf(rs.getDate("time"));
-            String timeStr = String.valueOf(rs.getTime("time"));
-            String datetimeStr = dateStr + " " + timeStr;
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = formatter.parse(datetimeStr);
-            lession.setTime(date);
-            lessions.add(lession);
+        if (courses.isEmpty()) return new ArrayList<>();
 
+        StringBuilder sql = new StringBuilder("SELECT * FROM LESSON WHERE course_id IN (");
+        for (int i = 0; i < courses.size(); i++) {
+            sql.append("?");
+            if (i < courses.size() - 1) sql.append(",");
         }
+        sql.append(") AND status = 'scheduled'");
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < courses.size(); i++) {
+                ps.setString(i + 1, courses.get(i).getId());
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Lesson> lessons = new ArrayList<>();
+                while (rs.next()) {
+                    Lesson lesson = new Lesson();
+                    lesson.setCourse_id(rs.getString("course_id"));
+                    lesson.setStudent_id(rs.getString("student_id"));
+                    lesson.setStatus(rs.getString("status"));
+                    lesson.setTime(rs.getTimestamp("time"));
+                    lessons.add(lesson);
+                }
+                return lessons;
+            }
         }
-        return lessions;
-    }
-    public Lession getLessionById(String courseId,String st, String time) throws SQLException {
-        String sql = "SELECT * FROM LESSON WHERE course_id = ? AND student_id = ? AND time = ?";
-        conn = DBConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, courseId);
-        ps.setString(2, st);
-        ps.setString(3, time);
-        ResultSet rs = ps.executeQuery();
-        Lession lession = new Lession();
-        if (rs.next()) {
-
-            lession.setCourse_id(rs.getString("course_id"));
-            lession.setStudent_id(rs.getString("student_id"));
-            lession.setStatus(rs.getString("status"));
-            String date = rs.getString("time");
-            Timestamp timeStamp = Timestamp.valueOf(date);
-            lession.setTime(timeStamp);
-
-
-        }
-        return lession;
-    }
-    public void updateLesson(String idCourse, String idStudent, String timeStr) throws SQLException {
-        String sql = "UPDATE LESSON SET status = ?" +
-                "WHERE course_id = ? AND student_id = ? AND time = ?";
-
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1,"absent");
-        ps.setString(2, idCourse);
-        ps.setString(3, idStudent);
-        ps.setString(4, timeStr);
-        int rs = ps.executeUpdate();
-        System.out.println("UPDATE where course_id = " + idCourse +
-                ", student_id = " + idStudent +
-                ", time = " + timeStr);
-        System.out.println(getLessionById(idCourse,idStudent,timeStr));
-
-
-
-    }
-    public void updateLessonCompleted(String idCourse, String idStudent, String timeStr) throws SQLException {
-        String sql = "UPDATE LESSON SET status = ?" +
-                "WHERE course_id = ? AND student_id = ? AND time = ?";
-
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1,"completed");
-        ps.setString(2, idCourse);
-        ps.setString(3, idStudent);
-        ps.setString(4, timeStr);
-        int rs = ps.executeUpdate();
-        System.out.println("UPDATE where course_id = " + idCourse +
-                ", student_id = " + idStudent +
-                ", time = " + timeStr);
-        System.out.println(getLessionById(idCourse,idStudent,timeStr));
-
-
-
-    }
-    public static void main(String[] args) throws SQLException {
-        TutorDAO tutorDAO = new TutorDAO();
-        Tutor tutor = tutorDAO.getTutorById("tut004");
-        LessonDAO lessonDAO = new LessonDAO();
-//        List<Course> courses = lessonDAO.getListCourseByTutor(tutor);
-//        for (Course course : courses) {
-//            System.out.println(course);
-//        }
-        String idStudent = "st005";
-        String idCourse = "course004";
-        String timeStr = "2025-06-09 10:00:00";
-//        Timestamp time= Timestamp.valueOf(timeStr);
-
-
-       lessonDAO.updateLesson(idCourse,idStudent,timeStr);
-        Lession lession= lessonDAO.getLessionById( idCourse,idStudent, timeStr);
-        System.out.println(lession);
-        System.out.println("Time from DB: " + lession.getTime());
-        //lessonDAO.updateLesson(idStudent, idCourse, time);
-
-//        List<Lession> lessons = lessonDAO.getListLessonByTutor(tutor);
-//        for (Lession lesson : lessons) {
-//            System.out.println(lesson);
-//        }
-//        List<String> studentIds = lessonDAO.getListStudentIdByTutor(tutor);
-//        for (String studentId : studentIds) {
-//            System.out.println(studentId);
-//        }
-
     }
 }

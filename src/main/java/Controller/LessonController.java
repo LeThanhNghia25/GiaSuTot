@@ -77,7 +77,7 @@ public class LessonController extends HttpServlet {
         request.setAttribute("StIDList", idStudentList);
         request.setAttribute("tutor", tutor);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("TutorSubjectManagement.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_subject_management.jsp");
         dispatcher.forward(request, response);
     }
 

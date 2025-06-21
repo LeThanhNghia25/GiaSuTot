@@ -1,6 +1,6 @@
 package Controller;
 
-import DAO.PaymentDAO;
+import DAO.AdminPaymentDAO;
 import DAO.TutorDAO;
 import model.Notification;
 import model.Payment;
@@ -21,20 +21,20 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 @WebServlet("/admin/payment")
-public class PaymentController extends HttpServlet {
-    private PaymentDAO paymentDAO;
+public class AdminPaymentForTutorController extends HttpServlet {
+    private AdminPaymentDAO adminPaymentDAO;
     private TutorDAO tutorDAO;
 
     @Override
     public void init() {
-        paymentDAO = new PaymentDAO();
+        adminPaymentDAO = new AdminPaymentDAO();
         tutorDAO = new TutorDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            request.setAttribute("completedCourses", paymentDAO.getCompletedCourses());
+            request.setAttribute("completedCourses", adminPaymentDAO.getCompletedCourses());
             request.getRequestDispatcher("/admin/payment.jsp").forward(request, response);
         } catch (SQLException e) {
             request.setAttribute("error", "Lỗi khi tải danh sách khóa học: " + e.getMessage());
@@ -104,9 +104,9 @@ public class PaymentController extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu thông tin cần thiết");
                     return;
                 }
-                String paymentId = "pay" + String.format("%03d", paymentDAO.getPaymentCount() + 1);
+                String paymentId = "pay" + String.format("%03d", adminPaymentDAO.getPaymentCount() + 1);
                 Payment payment = new Payment(paymentId, courseId, tutorId, studentId, amount, LocalDateTime.now(), "completed");
-                paymentDAO.addPayment(payment);
+                adminPaymentDAO.addPayment(payment);
 
                 Tutor tutor = tutorDAO.getTutorById(tutorId);
                 if (tutor != null && tutor.getAccount() != null) {
@@ -118,7 +118,7 @@ public class PaymentController extends HttpServlet {
                             LocalDateTime.now(),
                             "pending"
                     );
-                    paymentDAO.addNotification(notification);
+                    adminPaymentDAO.addNotification(notification);
                 }
 
                 Map<String, Object> responseData = new HashMap<>();
@@ -155,7 +155,7 @@ public class PaymentController extends HttpServlet {
         }
 
         try {
-            request.setAttribute("completedCourses", paymentDAO.getCompletedCourses());
+            request.setAttribute("completedCourses", adminPaymentDAO.getCompletedCourses());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
