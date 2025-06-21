@@ -14,6 +14,7 @@ import model.Tutor;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class LessonScheduleController extends HttpServlet {
         List<Lession> lessons = new ArrayList<>();
         try {
            lessons = lessonDAO.getListLessonByTutor(tutor);
-        } catch (SQLException e) {
+        } catch (SQLException | ParseException e) {
             throw new RuntimeException(e);
         }
 
