@@ -1,19 +1,16 @@
 package DAO;
 
-import Utils.DBConnection;
+import  Utils.DBConnection;
 import model.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class LessonDAO {
-
+   ;
     public LessonDAO() {}
 
     public List<Course> getListCourseByTutor(Tutor tutor) throws SQLException {
@@ -73,4 +70,59 @@ public class LessonDAO {
             }
         }
     }
-}
+    public Lesson getLessionById(String courseId,String st, String time) throws SQLException {
+        String sql = "SELECT * FROM LESSON WHERE course_id = ? AND student_id = ? AND time = ?";
+        Connection conn = DBConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, courseId);
+        ps.setString(2, st);
+        ps.setString(3, time);
+        ResultSet rs = ps.executeQuery();
+        Lesson lesson = new Lesson();
+        if (rs.next()) {
+
+            lesson.setCourse_id(rs.getString("course_id"));
+            lesson.setStudent_id(rs.getString("student_id"));
+            lesson.setStatus(rs.getString("status"));
+            String date = rs.getString("time");
+            Timestamp timeStamp = Timestamp.valueOf(date);
+            lesson.setTime(timeStamp);
+
+
+        }
+        return lesson;
+    }
+    public void updateLesson(String idCourse, String idStudent, String timeStr) throws SQLException {
+        String sql = "UPDATE LESSON SET status = ?" +
+                "WHERE course_id = ? AND student_id = ? AND time = ?";
+        Connection conn = DBConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1,"absent");
+        ps.setString(2, idCourse);
+        ps.setString(3, idStudent);
+        ps.setString(4, timeStr);
+        int rs = ps.executeUpdate();
+        System.out.println("UPDATE where course_id = " + idCourse +
+                ", student_id = " + idStudent +
+                ", time = " + timeStr);
+        System.out.println(getLessionById(idCourse,idStudent,timeStr));
+
+
+
+    }
+
+    public void updateLessonCompleted(String idCourse, String idStudent, String timeStr) throws SQLException {
+        String sql = "UPDATE LESSON SET status = ?" +
+                "WHERE course_id = ? AND student_id = ? AND time = ?";
+        Connection conn = DBConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1,"completed");
+        ps.setString(2, idCourse);
+        ps.setString(3, idStudent);
+        ps.setString(4, timeStr);
+        int rs = ps.executeUpdate();
+        System.out.println("UPDATE where course_id = " + idCourse +
+                ", student_id = " + idStudent +
+                ", time = " + timeStr);
+        System.out.println(getLessionById(idCourse,idStudent,timeStr));
+}}

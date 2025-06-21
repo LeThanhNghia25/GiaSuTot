@@ -1,5 +1,5 @@
 package Controller;
-import DAO.AddLessionDao;
+
 import DAO.LessonDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,7 +23,6 @@ public class CancelLessonController extends HttpServlet {
         String timeLesson = request.getParameter("time");
 
         LessonDAO lessonDao = new LessonDAO();
-
 
         try {
             lessonDao.updateLesson(idCourse, idStudent, timeLesson);

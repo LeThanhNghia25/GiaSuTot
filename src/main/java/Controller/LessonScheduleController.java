@@ -30,7 +30,7 @@ public class LessonScheduleController extends HttpServlet {
         List<Lesson> lessons = new ArrayList<>();
         try {
            lessons = lessonDAO.getListLessonByTutor(tutor);
-        } catch (SQLException | ParseException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 

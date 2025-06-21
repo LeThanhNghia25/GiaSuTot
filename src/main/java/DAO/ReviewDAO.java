@@ -12,15 +12,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class ReviewDAO {
-    private Connection conn = DBConnection.getConnection();
-    public ReviewDAO() {};
+
+    public ReviewDAO() {
+
+    }
 
     public void InsertReview(String tutorId,String courseId,String studentId,String reviewText) throws SQLException {
         String sql = "insert into reviews values(?,?,?,?,?)";
 
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        conn = DBConnection.getConnection();
+        Connection conn = DBConnection.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, tutorId);
         ps.setString(2, courseId);
