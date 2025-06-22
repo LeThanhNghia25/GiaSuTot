@@ -5,6 +5,8 @@ import model.Account;
 import Utils.DBConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TutorDAO {
     public Tutor getTutorById(String id) {
@@ -122,6 +124,27 @@ public class TutorDAO {
             System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    public List<Tutor> getAllTutors() {
+        List<Tutor> tutors = new ArrayList<>();
+        String sql = "SELECT * FROM tutor";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Tutor tutor = new Tutor();
+                tutor.setId(rs.getString("id"));
+                tutor.setName(rs.getString("name"));
+                tutor.setSpecialization(rs.getString("specialization"));
+                // Bổ sung các trường khác nếu cần
+                tutors.add(tutor);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tutors;
     }
 
     public static void main(String[] args) {
