@@ -58,7 +58,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="tutor_created_lesson.js" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                        <a href="tutor_created_lesson.jsp" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Lịch dạy</span>
                         </a>

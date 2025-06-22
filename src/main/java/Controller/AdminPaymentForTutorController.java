@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
@@ -105,17 +105,17 @@ public class AdminPaymentForTutorController extends HttpServlet {
                     return;
                 }
                 String paymentId = "pay" + String.format("%03d", adminPaymentDAO.getPaymentCount() + 1);
-                Payment payment = new Payment(paymentId, courseId, tutorId, studentId, amount, LocalDateTime.now(), "completed");
+                Payment payment = new Payment(paymentId, courseId, tutorId, studentId, amount, new Date()); // Sử dụng Date
                 adminPaymentDAO.addPayment(payment);
 
                 Tutor tutor = tutorDAO.getTutorById(tutorId);
                 if (tutor != null && tutor.getAccount() != null) {
-                    String message = "Bạn đã nhận được thanh toán " + amount + " VND cho khóa học " + courseId + " vào " + LocalDateTime.now();
+                    String message = "Bạn đã nhận được thanh toán " + amount + " VND cho khóa học " + courseId + " vào " + new Date();
                     Notification notification = new Notification(
                             java.util.UUID.randomUUID().toString(),
                             tutor.getAccount().getId(),
                             message,
-                            LocalDateTime.now(),
+                            new Date(), // Sử dụng Date
                             "pending"
                     );
                     adminPaymentDAO.addNotification(notification);
