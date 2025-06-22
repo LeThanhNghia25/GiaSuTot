@@ -92,7 +92,7 @@ public class AdminPaymentDAO {
     }
 
     public void addPayment(Payment payment) throws SQLException {
-        String sql = "INSERT INTO payment (id, course_id, tutor_id, student_id, amount, payment_date, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO payment (id, course_id, tutor_id, student_id, amount, payment_date) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, payment.getId());
@@ -100,8 +100,7 @@ public class AdminPaymentDAO {
             stmt.setString(3, payment.getTutorId());
             stmt.setString(4, payment.getStudentId());
             stmt.setDouble(5, payment.getAmount());
-            stmt.setTimestamp(6, Timestamp.valueOf(payment.getPaymentDate()));
-            stmt.setString(7, payment.getStatus());
+            stmt.setTimestamp(6, payment.getPaymentDate() != null ? new java.sql.Timestamp(payment.getPaymentDate().getTime()) : null);
             stmt.executeUpdate();
         }
     }
@@ -122,7 +121,7 @@ public class AdminPaymentDAO {
     // Lấy danh sách biên lai chờ xác nhận
     public List<Payment> getPendingPayments() throws SQLException {
         List<Payment> payments = new ArrayList<>();
-        String sql = "SELECT rs.course_id, rs.student_id, p.file_name, p.file_path " +
+        String sql = "SELECT rs.course_id, rs.student_id, p.file_name, p.file_path, p.payment_date " +
                 "FROM registered_subjects rs " +
                 "LEFT JOIN payment p ON rs.course_id = p.course_id AND rs.student_id = p.student_id " +
                 "WHERE rs.status = 'pending_payment'";
@@ -133,14 +132,15 @@ public class AdminPaymentDAO {
                 Payment payment = new Payment();
                 payment.setCourseId(rs.getString("course_id"));
                 payment.setStudentId(rs.getString("student_id"));
-                payment.setFileName(rs.getString("file_name")); // Không cần alias, dùng tên cột thực
-                payment.setFilePath(rs.getString("file_path")); // Không cần alias, dùng tên cột thực
+                payment.setFileName(rs.getString("file_name"));
+                payment.setFilePath(rs.getString("file_path"));
+                payment.setPaymentDate(rs.getTimestamp("payment_date")); // Trả về Date trực tiếp
                 payments.add(payment);
             }
             System.out.println("Total pending payments retrieved: " + payments.size());
         } catch (SQLException e) {
             System.err.println("SQL Error in getPendingPayments: " + e.getMessage());
-            throw e; // Ném lại ngoại lệ để controller xử lý
+            throw e;
         }
         return payments;
     }
@@ -197,5 +197,19 @@ public class AdminPaymentDAO {
             throw e;
         }
         return email;
+    }
+
+    public java.sql.Timestamp getPaymentDate(String courseId, String studentId) throws SQLException {
+        String sql = "SELECT payment_date FROM payment WHERE course_id = ? AND student_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, courseId);
+            stmt.setString(2, studentId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getTimestamp("payment_date");
+            }
+            return null;
+        }
     }
 }

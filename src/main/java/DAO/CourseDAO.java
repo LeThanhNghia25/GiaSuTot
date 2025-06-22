@@ -9,6 +9,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CourseDAO {
     public List<Course> getAllAvailableCourses() {
@@ -196,22 +197,6 @@ public class CourseDAO {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            }
-        }
-    }
-
-    public void updatePaymentStatus(String courseId, String studentId, String status) throws SQLException {
-        String sql = "UPDATE registered_subjects SET status = ? WHERE course_id = ? AND student_id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, status);
-            stmt.setString(2, courseId);
-            stmt.setString(3, studentId);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Updated status to " + status + " for course: " + courseId + ", student: " + studentId);
-            } else {
-                System.out.println("No record updated for course: " + courseId + ", student: " + studentId);
             }
         }
     }

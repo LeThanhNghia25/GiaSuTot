@@ -112,8 +112,7 @@ CREATE TABLE payment (
                          amount DECIMAL(12) NOT NULL,
                          payment_date DATETIME NOT NULL,
                          file_name VARCHAR(255) NULL,
-                         file_path VARCHAR(255) NULL;
-                         status VARCHAR(50) NOT NULL CHECK (status IN ('completed', 'pending', 'failed')),
+                         file_path VARCHAR(255) NULL,
                          FOREIGN KEY (course_id) REFERENCES course(id),
                          FOREIGN KEY (tutor_id) REFERENCES tutor(id),
                          FOREIGN KEY (student_id) REFERENCES student(id)
