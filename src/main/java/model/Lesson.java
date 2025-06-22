@@ -1,5 +1,6 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Lesson {
@@ -40,7 +41,10 @@ public class Lesson {
     public void setStatus(String status) {
         this.status = status;
     }
-
+    public String getFormattedTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(time);
+    }
     @Override
     public String toString() {
         return "Lession{" +
