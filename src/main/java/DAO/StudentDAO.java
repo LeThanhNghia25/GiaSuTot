@@ -101,22 +101,6 @@ public class StudentDAO {
         }
     }
 
-    public Account getAccountByEmail(String email) throws SQLException {
-        String sql = "SELECT id FROM account WHERE email = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Account acc = new Account();
-                acc.setId(rs.getString("id"));
-                acc.setEmail(email);
-                return acc;
-            }
-        }
-        return null;
-    }
-
     public Student getStudentById(String id) throws SQLException {
         String sql = "SELECT s.*, a.email " +
                 "FROM student s JOIN account a ON s.account_id = a.id " +
@@ -143,21 +127,4 @@ public class StudentDAO {
         return null;
     }
 
-    public static void main(String[] args) throws SQLException {
-        StudentDAO dao = new StudentDAO();
-        Student student = dao.getStudentById("st001");
-        System.out.println(student);
-        List<String> ids = new ArrayList<>();
-        ids.add("st001");
-        ids.add("st002");
-        ids.add("st003");
-        List<Student> students = new ArrayList<>();
-        for (String id : ids) {
-            Student student1 = dao.getStudentById(id);
-            students.add(student1);
-        }
-        for (Student student1 : students) {
-            System.out.println(student1);
-        }
-    }
 }

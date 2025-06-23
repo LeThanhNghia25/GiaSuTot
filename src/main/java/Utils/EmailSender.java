@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class EmailSender {
 
-    private static final String BASE_URL = "http://localhost:8080/GiaSuTot_war";
+    private static final String BASE_URL = "http://localhost:8080/GiaSuTot_war_exploded";
     private static final String FROM_EMAIL = "hanh2803riri@gmail.com";
     private static final String FROM_NAME = "GiaSuTot";
     private static final String APP_PASSWORD = "tdjb mgck fqvt hsse"; // Thay bằng App Password Gmail
