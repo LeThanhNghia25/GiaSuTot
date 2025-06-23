@@ -33,44 +33,6 @@ public class AdminSubjectDAO {
         return list;
     }
 
-    public List<Subject> searchSubjects(String tenMonHoc, String lop) throws SQLException {
-        List<Subject> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM subject WHERE 1=1");
-
-        if (tenMonHoc != null && !tenMonHoc.trim().isEmpty()) {
-            sql.append(" AND name LIKE ?");
-        }
-        if (lop != null && !lop.trim().isEmpty()) {
-            sql.append(" AND level LIKE ?");
-        }
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-
-            int paramIndex = 1;
-            if (tenMonHoc != null && !tenMonHoc.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + tenMonHoc + "%");
-            }
-            if (lop != null && !lop.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + lop + "%");
-            }
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Subject sub = new Subject(
-                            rs.getString("id"),
-                            rs.getString("name"),
-                            rs.getString("level"),
-                            rs.getString("description"),
-                            rs.getDouble("fee"),
-                            rs.getString("status")
-                    );
-                    list.add(sub);
-                }
-            }
-        }
-        return list;
-    }
 
     public String generateSubjectId() throws SQLException {
         String sql = "SELECT COUNT(*) FROM subject";
