@@ -12,6 +12,7 @@ import java.util.Properties;
 
 public class EmailSender {
 
+    private static final String BASE_URL = "http://localhost:8080/GiaSuTot_war";
     private static final String FROM_EMAIL = "hanh2803riri@gmail.com";
     private static final String FROM_NAME = "GiaSuTot";
     private static final String APP_PASSWORD = "tdjb mgck fqvt hsse"; // Thay bằng App Password Gmail
@@ -181,4 +182,44 @@ public class EmailSender {
             throw e;
         }
     }
+
+    public static void sendTutorApprovedEmail(String toEmail, String userName) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(FROM_EMAIL, APP_PASSWORD);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(FROM_EMAIL, FROM_NAME));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Bạn đã trở thành Gia sư - Gia Sư Tốt");
+
+            String loginUrl = BASE_URL + "/account?action=login";
+            String htmlContent = "<div style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto;\">" +
+                    "<h2 style=\"color: #28a745;\">Chúc mừng " + userName + "!</h2>" +
+                    "<p>Bạn đã được phê duyệt trở thành gia sư trên hệ thống <strong>Gia Sư Tốt</strong>.</p>" +
+                    "<p>Bây giờ bạn có thể đăng nhập và bắt đầu nhận lớp phù hợp với chuyên môn của mình.</p>" +
+                    "<a href=\"" + loginUrl + "\" style=\"display: inline-block; padding: 12px 24px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;\">Đăng nhập ngay</a>" +
+                    "<p style=\"margin-top: 20px; font-size: 14px;\">Nếu bạn có bất kỳ câu hỏi nào, hãy liên hệ với chúng tôi qua email hoặc hotline hỗ trợ.</p>" +
+                    "<p style=\"font-style: italic;\">Trân trọng,<br/>Đội ngũ Gia Sư Tốt</p>" +
+                    "</div>";
+
+            message.setContent(htmlContent, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            System.out.println("✅ Đã gửi email xác nhận gia sư tới: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("❌ Gửi email xác nhận gia sư thất bại tới: " + toEmail);
+            e.printStackTrace();
+        }
+    }
+
 }
