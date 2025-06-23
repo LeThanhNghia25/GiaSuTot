@@ -93,46 +93,38 @@ public class GoogleCallbackServlet extends HttpServlet {
             student.setId(stDao.generateStudentId());
             student.setName(name);
             student.setAccount(account);
-
             if (!dao.insertgg(account)) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to save account");
                 return;
             }
-
             if (!stDao.insertggSt(student)) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to save student");
                 return;
             }
-
             // (3) Gửi email kích hoạt
             String activationLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                     + request.getContextPath() + "/activate-account?email=" + URLEncoder.encode(email, "UTF-8");
 
-
             EmailSender.sendActivationEmail(email, name, activationLink);
-
 // (4) Chuyển đến trang thông báo chờ xác thực
             request.setAttribute("message", "Vui lòng kiểm tra email để xác thực tài khoản.");
             request.getRequestDispatcher("waiting_activation.jsp").forward(request, response);
 
-            /*// Lấy lại account từ DB để chắc chắn đúng ID
+            // Lấy lại account từ DB để chắc chắn đúng ID
             Account savedAccount = dao.getAccountByEmail(email);
             setUserSession(request.getSession(), savedAccount);
-            response.sendRedirect(request.getContextPath() + "/index.jsp");*/
-
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error: " + e.getMessage());
         }
     }
-
     private String getAccessToken(String code) throws IOException {
         URL url = new URL("https://oauth2.googleapis.com/token");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
         String params = "code=" + code
                 + "&client_id=" + CLIENT_ID
                 + "&client_secret=" + CLIENT_SECRET
@@ -143,48 +135,40 @@ public class GoogleCallbackServlet extends HttpServlet {
             os.write(params.getBytes(StandardCharsets.UTF_8));
             os.flush();
         }
-
         int responseCode = conn.getResponseCode();
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 responseCode == HttpURLConnection.HTTP_OK ? conn.getInputStream() : conn.getErrorStream(),
                 StandardCharsets.UTF_8))) {
             String response = reader.lines().collect(Collectors.joining());
             System.out.println("Token response: " + response);
-
             JsonObject json = JsonParser.parseString(response).getAsJsonObject();
             return json.has("access_token") ? json.get("access_token").getAsString() : null;
         }
     }
-
     private JsonObject getUserInfo(String accessToken) throws IOException {
         URL urlUserInfo = new URL("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + accessToken);
         HttpURLConnection connUser = (HttpURLConnection) urlUserInfo.openConnection();
         connUser.setRequestMethod("GET");
-
         int responseCode = connUser.getResponseCode();
         if (responseCode != HttpURLConnection.HTTP_OK) {
             System.err.println("Failed to get user info. Response code: " + responseCode);
             return null;
         }
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(connUser.getInputStream(), StandardCharsets.UTF_8))) {
             String userInfo = reader.lines().collect(Collectors.joining());
             return JsonParser.parseString(userInfo).getAsJsonObject();
         }
     }
-
     private void setUserSession(HttpSession session, Account account) throws SQLException {
         session.setAttribute("account", account);
-
         StudentDAO studentDAO = new StudentDAO();
         TutorDAO tutorDAO = new TutorDAO();
-
         if (account.getRole() == 1) {
             Student student = studentDAO.getStudentByAccountId(account.getId());
             if (student != null) {
                 session.setAttribute("userName", student.getName());
                 session.setAttribute("role", "student");
+                session.setAttribute("id_st", student.getId());
             }
         } else if (account.getRole() == 2) {
             Tutor tutor = tutorDAO.getTutorByAccountId(account.getId());
