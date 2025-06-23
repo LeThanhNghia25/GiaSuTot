@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS tutor_requests;
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS account;
 
+
 -- Tạo lại bảng account
 CREATE TABLE account (
                          id CHAR(20) PRIMARY KEY,
@@ -164,62 +165,42 @@ CREATE TABLE interest (
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Chèn dữ liệu vào bảng account
-7INSERT INTO account (id, email, password, role, status) VALUES
-                                                            (''acc001'', ''student1@example.com'', ''pass1'', 1, ''active''),
-                                                            (''acc002'', ''student2@example.com'', ''pass2'', 1, ''active''),
-                                                            (''acc003'', ''student3@example.com'', ''pass3'', 1, ''inactive''),
-                                                            (''acc004'', ''tutor1@example.com'', ''pass4'', 2, ''active''),
-                                                            (''acc005'', ''tutor2@example.com'', ''pass5'', 2, ''active''),
-                                                            (''acc006'', ''tutor3@example.com'', ''pass6'', 2, ''inactive''),
-                                                            (''acc007'', ''admin1@example.com'', ''pass7'', 3, ''active''),
-                                                            (''acc008'', ''admin2@example.com'', ''pass8'', 3, ''active''),
-                                                            (''acc009'', ''tutor4@example.com'', ''pass9'', 2, ''active''),
-                                                            (''acc010'', ''student4@example.com'', ''pass10'', 1, ''inactive''),
-                                                            (''acc011'', ''student5@example.com'', ''pass11'', 1, ''active''),
-                                                            (''acc012'', ''student6@example.com'', ''pass12'', 1, ''active''),
-                                                            (''acc013'', ''student7@example.com'', ''pass13'', 1, ''active''),
-                                                            (''acc014'', ''student8@example.com'', ''pass14'', 1, ''active''),
-                                                            (''acc015'', ''tutor5@example.com'', ''pass15'', 2, ''active''),
-                                                            (''acc016'', ''tutor6@example.com'', ''pass16'', 2, ''active''),
-                                                            (''acc017'', ''tutor7@example.com'', ''pass1', 2, 'active'),
+INSERT INTO account (id, email, password, role, status) VALUES
+                                                            ('acc001', 'student1@example.com', 'pass1', 1, 'active'),
+                                                            ('acc002', 'student2@example.com', 'pass2', 1, 'active'),
+                                                            ('acc003', 'student3@example.com', 'pass3', 1, 'inactive'),
+                                                            ('acc004', 'tutor1@example.com', 'pass4', 2, 'active'),
+                                                            ('acc005', 'tutor2@example.com', 'pass5', 2, 'active'),
+                                                            ('acc006', 'tutor3@example.com', 'pass6', 2, 'inactive'),
+                                                            ('acc007', 'admin1@example.com', 'pass7', 3, 'active'),
+                                                            ('acc008', 'admin2@example.com', 'pass8', 3, 'active'),
+                                                            ('acc009', 'tutor4@example.com', 'pass9', 2, 'active'),
+                                                            ('acc010', 'student4@example.com', 'pass10', 1, 'inactive'),
+                                                            ('acc011', 'student5@example.com', 'pass11', 1, 'active'),
+                                                            ('acc012', 'student6@example.com', 'pass12', 1, 'active'),
+                                                            ('acc013', 'student7@example.com', 'pass13', 1, 'active'),
+                                                            ('acc014', 'student8@example.com', 'pass14', 1, 'active'),
+                                                            ('acc015', 'tutor5@example.com', 'pass15', 2, 'active'),
+                                                            ('acc016', 'tutor6@example.com', 'pass16', 2, 'active'),
+                                                            ('acc017', 'tutor7@example.com', 'pass17', 2, 'active'),
                                                             ('acc018', 'tutor8@example.com', 'pass18', 2, 'active'),
                                                             ('acc019', 'tutor9@example.com', 'pass19', 2, 'active'),
                                                             ('acc020', 'tutor10@example.com', 'pass20', 2, 'active');
 
 -- Chèn dữ liệu vào bảng student
 INSERT INTO student (id, name, birth, description, account_id) VALUES
-                                                                   ('st001', 'Nguyễn Văn Nghĩa', '
-2005-01-01
-', 'Yêu thích Toán', 'acc001'),
-                                                                   ('st002', 'Lê Thị Liên', '
-2006-03-15
-', 'Học sinh giỏi Văn', 'acc002'),
-                                                                   ('st003', 'Trần Văn Nhỏ', '
-2004-07-21
-', 'Thích học nhóm', 'acc003'),
-                                                                   ('st004', 'Phạm Thị Dung', '
-2005-10-05
-', 'Năng động, tự tin', 'acc010'),
-                                                                   ('st005', 'Nguyễn Trung Nhân', '
-2005-01-01
-', 'Yêu thích Toán', 'acc011'),
-                                                                   ('st006', 'Trương Thị Mai', '
-2006-03-15
-', 'Học sinh giỏi Văn', 'acc012'),
-                                                                   ('st007', 'Trần Đan', '
-2004-07-21
-', 'Thích học nhóm', 'acc013'),
-                                                                   ('st008', 'Lê Trung Dũng', '
-2005-10-05
-', 'Năng động, tự tin', 'acc014');
+                                                                   ('st001', 'Nguyễn Văn Nghĩa', '2005-01-01', 'Yêu thích Toán', 'acc001'),
+                                                                   ('st002', 'Lê Thị Liên', '2006-03-15', 'Học sinh giỏi Văn', 'acc002'),
+                                                                   ('st003', 'Trần Văn Nhỏ', '2004-07-21', 'Thích học nhóm', 'acc003'),
+                                                                   ('st004', 'Phạm Thị Dung', '2005-10-05', 'Năng động, tự tin', 'acc010'),
+                                                                   ('st005', 'Nguyễn Trung Nhân', '2005-01-01', 'Yêu thích Toán', 'acc011'),
+                                                                   ('st006', 'Trương Thị Mai', '2006-03-15', 'Học sinh giỏi Văn', 'acc012'),
+                                                                   ('st007', 'Trần Đan', '2004-07-21', 'Thích học nhóm', 'acc013'),
+                                                                   ('st008', 'Lê Trung Dũng', '2005-10-05', 'Năng động, tự tin', 'acc014');
 
 -- Chèn dữ liệu vào bảng tutor
 INSERT INTO tutor (id, name, email, birth, phone, address, specialization, description, id_card_number, bank_account_number, bank_name, account_id, evaluate) VALUES
-                                                                                                                                                                  ('tut001', 'Nguyễn Tuấn Cảnh', 'tut1@example.com', '
-1990-01-01
-', '0901000001
-', 'Hà Nội', 'Toán', '
-10 năm kinh nghiệm dạy Toán', 123456789012, 123456789012345, 'bidv', 'acc004', 5),
+                                                                                                                                                                  ('tut001', 'Nguyễn Tuấn Cảnh', 'tut1@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 123456789012, 123456789012345, 'bidv', 'acc004', 5),
                                                                                                                                                                   ('tut002', 'Trần Thị Mai', 'tut2@example.com', '1988-05-12', '0901000002', 'TP.HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 123456789013, 123456789012346, 'sacombank', 'acc005', 4),
                                                                                                                                                                   ('tut003', 'Lê Hoàng Minh', 'tut3@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'Giáo viên trường chuyên', 123456789014, 123456789012347, 'techcombank', 'acc006', 3),
                                                                                                                                                                   ('tut004', 'Phạm Minh Hương', 'tut4@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 123456789015, 123456789012348, 'mb', 'acc009', 4),
