@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.Tutor" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
@@ -42,10 +41,22 @@
       background-color: rgba(0,0,0,0.5);
       z-index: 1040;
     }
+
+    /* Ẩn div thông báo nếu không có nội dung */
+    .alert:empty {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
+<!-- Hiển thị thông báo với kiểm tra chặt chẽ -->
+<c:if test="${not empty message and not empty message.trim()}">
+  <div class="alert alert-success" role="alert">${message}</div>
+</c:if>
+<c:if test="${not empty error and not empty error.trim()}">
+  <div class="alert alert-danger" role="alert">${error}</div>
+</c:if>
 
 <section style="background-color: #eee;">
   <div class="container py-5">
@@ -76,11 +87,11 @@
             <p class="text-muted mb-4"><%= tutor.getAddress() %></p>
             <div class="d-flex justify-content-center mb-2">
               <% if (!editable) { %>
-                <div class="mt-2">
-                  <button class="btn btn-outline-primary btn-sm btn-like" data-tutor-id="<%= tutor.getId() %>">
-                    <i class="fas fa-heart">Quan tâm</i>
-                  </button>
-                </div>
+              <div class="mt-2">
+                <button class="btn btn-outline-primary btn-sm btn-like" data-tutor-id="<%= tutor.getId() %>">
+                  <i class="fas fa-heart">Quan tâm</i>
+                </button>
+              </div>
               <% } else { %>
               <% } %>
             </div>
@@ -264,20 +275,15 @@
                 .then(res => res.text())
                 .then(data => {
                   if (data === 'liked') {
-                    // Đã quan tâm
                     btn.classList.remove("btn-outline-primary");
                     btn.classList.add("btn-primary");
                     btn.innerHTML = '<i class="fas fa-heart"></i> Hủy quan tâm';
-
                   } else if (data === 'unliked') {
-                    // Hủy quan tâm
                     btn.classList.remove("btn-primary");
                     btn.classList.add("btn-outline-primary");
                     btn.innerHTML = '<i class="fas fa-heart"></i> Quan tâm';
-
                   } else if (data === 'not_logged_in') {
                     alert("Vui lòng đăng nhập để sử dụng chức năng này.");
-
                   } else {
                     alert("Có lỗi xảy ra khi lưu quan tâm.");
                   }
@@ -286,7 +292,6 @@
     });
   });
 </script>
-
 <script>
   let currentVisible = 0;
   const batchSize = 4;
@@ -299,12 +304,12 @@
       shown++;
       currentVisible++;
     }
-    if (currentVisible >= cards.length) {
-      document.getElementById('showMoreBtn').style.display = 'none';
+    const showMoreBtn = document.getElementById('showMoreBtn');
+    if (showMoreBtn && currentVisible >= cards.length) {
+      showMoreBtn.style.display = 'none';
     }
   }
 
-  // Gọi tự động khi load xong
   document.addEventListener('DOMContentLoaded', () => {
     showMoreTutors();
   });

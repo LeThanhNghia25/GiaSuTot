@@ -30,7 +30,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Danh sách học sinh đang học</h6>
           </div>
           <div class="card-body">
-            <p>Có học sinh đang học môn học này. Nếu bạn ẩn môn học, các đăng ký sẽ bị hủy và học sinh sẽ được hoàn tiền. Bạn có muốn tiếp tục ẩn không?</p>
+            <p>Có học sinh đang học khóa học này, bạn không thể ẩn khóa học </p>
             <c:if test="${not empty enrolledStudents}">
               <table class="table table-bordered">
                 <thead>
@@ -56,7 +56,6 @@
             <form method="post" action="${pageContext.request.contextPath}/admin/subject">
               <input type="hidden" name="action" value="confirmHide">
               <input type="hidden" name="id" value="${subjectId}">
-              <button type="submit" class="btn btn-danger">Xác nhận ẩn môn học</button>
               <a href="${pageContext.request.contextPath}/admin/subject" class="btn btn-secondary">Hủy</a>
             </form>
           </div>

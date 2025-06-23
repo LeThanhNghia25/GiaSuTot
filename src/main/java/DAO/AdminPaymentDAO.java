@@ -1,7 +1,6 @@
 package DAO;
 
 import model.Course;
-import model.Notification;
 import model.Payment;
 import model.Subject;
 import model.Tutor;
@@ -101,19 +100,6 @@ public class AdminPaymentDAO {
             stmt.setString(4, payment.getStudentId());
             stmt.setDouble(5, payment.getAmount());
             stmt.setTimestamp(6, payment.getPaymentDate() != null ? new java.sql.Timestamp(payment.getPaymentDate().getTime()) : null);
-            stmt.executeUpdate();
-        }
-    }
-
-    public void addNotification(Notification notification) throws SQLException {
-        String sql = "INSERT INTO notifications (id, account_id, message, created_at, status) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, notification.getId());
-            stmt.setString(2, notification.getAccountId());
-            stmt.setString(3, notification.getMessage());
-            stmt.setTimestamp(4, Timestamp.valueOf(notification.getCreatedAt()));
-            stmt.setString(5, notification.getStatus());
             stmt.executeUpdate();
         }
     }
