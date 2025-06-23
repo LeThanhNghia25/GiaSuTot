@@ -6,15 +6,14 @@ DROP TABLE IF EXISTS lesson;
 DROP TABLE IF EXISTS registered_subjects;
 DROP TABLE IF EXISTS payment;
 DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS interest;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS tutor;
 DROP TABLE IF EXISTS student;
-DROP TABLE IF EXISTS subject;
-DROP TABLE IF EXISTS interest;
 DROP TABLE IF EXISTS tutor_requests;
-DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS subject;
 DROP TABLE IF EXISTS account;
-
 
 -- Tạo lại bảng account
 CREATE TABLE account (
@@ -278,7 +277,6 @@ INSERT INTO registered_subjects (course_id, student_id, registration_date, numbe
 
 -- Chèn dữ liệu vào bảng lesson
 INSERT INTO lesson (course_id, student_id, status, time) VALUES
-                                                             -- course001, st001: 10 buổi
                                                              ('course001', 'st001', 'completed', '2025-05-01 08:00:00'),
                                                              ('course001', 'st001', 'completed', '2025-05-03 08:00:00'),
                                                              ('course001', 'st001', 'completed', '2025-05-05 08:00:00'),
@@ -289,7 +287,6 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course001', 'st001', 'completed', '2025-05-15 08:00:00'),
                                                              ('course001', 'st001', 'completed', '2025-05-17 08:00:00'),
                                                              ('course001', 'st001', 'completed', '2025-05-19 08:00:00'),
-                                                             -- course002, st002: 8 buổi
                                                              ('course002', 'st002', 'completed', '2025-05-02 09:00:00'),
                                                              ('course002', 'st002', 'completed', '2025-05-04 09:00:00'),
                                                              ('course002', 'st002', 'completed', '2025-05-06 09:00:00'),
@@ -298,7 +295,6 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course002', 'st002', 'completed', '2025-05-12 09:00:00'),
                                                              ('course002', 'st002', 'completed', '2025-05-14 09:00:00'),
                                                              ('course002', 'st002', 'absent', '2025-05-16 09:00:00'),
-                                                             -- course001, st004: 12 buổi
                                                              ('course001', 'st004', 'completed', '2025-01-16 08:00:00'),
                                                              ('course001', 'st004', 'completed', '2025-01-18 08:00:00'),
                                                              ('course001', 'st004', 'completed', '2025-01-20 08:00:00'),
@@ -311,7 +307,6 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course001', 'st004', 'completed', '2025-02-03 08:00:00'),
                                                              ('course001', 'st004', 'completed', '2025-02-05 08:00:00'),
                                                              ('course001', 'st004', 'completed', '2025-02-07 08:00:00'),
-                                                             -- course005, st006: 8 buổi
                                                              ('course005', 'st006', 'completed', '2025-02-11 09:00:00'),
                                                              ('course005', 'st006', 'completed', '2025-02-13 09:00:00'),
                                                              ('course005', 'st006', 'completed', '2025-02-15 09:00:00'),
@@ -320,7 +315,6 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course005', 'st006', 'completed', '2025-02-21 09:00:00'),
                                                              ('course005', 'st006', 'completed', '2025-02-23 09:00:00'),
                                                              ('course005', 'st006', 'completed', '2025-02-25 09:00:00'),
-                                                             -- course006, st007: 15 buổi
                                                              ('course006', 'st007', 'completed', '2025-03-06 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-03-08 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-03-10 08:00:00'),
@@ -336,14 +330,12 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course006', 'st007', 'completed', '2025-03-30 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-04-01 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-04-03 08:00:00'),
-                                                             -- course008, st001: 6 buổi
                                                              ('course008', 'st001', 'completed', '2025-04-16 10:00:00'),
                                                              ('course008', 'st001', 'completed', '2025-04-18 10:00:00'),
                                                              ('course008', 'st001', 'completed', '2025-04-20 10:00:00'),
                                                              ('course008', 'st001', 'completed', '2025-04-22 10:00:00'),
                                                              ('course008', 'st001', 'completed', '2025-04-24 10:00:00'),
                                                              ('course008', 'st001', 'completed', '2025-04-26 10:00:00'),
-                                                             -- course009, st002: 8 buổi
                                                              ('course009', 'st002', 'completed', '2025-05-02 09:00:00'),
                                                              ('course009', 'st002', 'completed', '2025-05-04 09:00:00'),
                                                              ('course009', 'st002', 'completed', '2025-05-06 09:00:00'),
@@ -352,7 +344,6 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course009', 'st002', 'completed', '2025-05-12 09:00:00'),
                                                              ('course009', 'st002', 'completed', '2025-05-14 09:00:00'),
                                                              ('course009', 'st002', 'completed', '2025-05-16 09:00:00'),
-                                                             -- course004, st003: 10 buổi
                                                              ('course004', 'st003', 'completed', '2025-01-26 08:00:00'),
                                                              ('course004', 'st003', 'completed', '2025-01-28 08:00:00'),
                                                              ('course004', 'st003', 'completed', '2025-01-30 08:00:00'),
@@ -363,7 +354,6 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course004', 'st003', 'completed', '2025-02-09 08:00:00'),
                                                              ('course004', 'st003', 'completed', '2025-02-11 08:00:00'),
                                                              ('course004', 'st003', 'completed', '2025-02-13 08:00:00'),
-                                                             -- course010, st005: 10 buổi
                                                              ('course010', 'st005', 'scheduled', '2025-06-01 10:00:00'),
                                                              ('course010', 'st005', 'scheduled', '2025-06-03 10:00:00'),
                                                              ('course010', 'st005', 'scheduled', '2025-06-05 10:00:00'),

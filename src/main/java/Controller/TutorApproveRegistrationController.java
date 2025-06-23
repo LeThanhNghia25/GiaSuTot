@@ -61,7 +61,7 @@ public class TutorApproveRegistrationController extends HttpServlet {
             List<RegisteredSubjectsDAO.PendingRequest> pendingRequests = registeredSubjectsDAO.getPendingRequests(tutorId);
             System.out.println("Number of pending requests for tutorId " + tutorId + ": " + pendingRequests.size());
             request.setAttribute("pendingRequests", pendingRequests);
-            request.getRequestDispatcher("/approve-registrations.jsp").forward(request, response);
+            request.getRequestDispatcher("/approve_registrations.jsp").forward(request, response);
         } catch (SQLException e) {
             System.err.println("Error fetching pending requests: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/approve-registrations?message=" +
