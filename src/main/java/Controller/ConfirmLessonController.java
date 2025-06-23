@@ -25,7 +25,7 @@ public class ConfirmLessonController extends HttpServlet {
         String idStudent = request.getParameter("lessonId");
         String idCourse = request.getParameter("courseId");
         String timeLesson = request.getParameter("time");
-        String comments = request.getParameter("comments");
+        String comments = request.getParameter("comment");
         Account account = (Account) request.getSession().getAttribute("account");
         String accountId = account.getId();
         TutorDAO tutorDAO = new TutorDAO();
