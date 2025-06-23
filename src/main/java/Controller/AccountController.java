@@ -80,6 +80,10 @@ public class AccountController extends HttpServlet {
                         if (tutor != null) {
                             session.setAttribute("userName", tutor.getName());
                             session.setAttribute("role", "tutor");
+                            session.setAttribute("tutor", tutor); // Thêm dòng này để set tutor vào session
+                            System.out.println("Tutor set in session: " + tutor.getId());
+                        } else {
+                            System.err.println("No tutor found for account ID: " + acc.getId());
                         }
                     }
 

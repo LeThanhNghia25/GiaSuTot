@@ -72,7 +72,7 @@
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor-subjects">Quản lý môn học</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/lesson" methods="get">Tạo buổi học</a> </li>
+                <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/lesson" methods="get">Các chức năng khác</a> </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>  <a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a>
                 </li>
