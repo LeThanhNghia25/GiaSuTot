@@ -84,9 +84,11 @@
                         <h5 class="my-3"><%= student.getName() %></h5>
                         <% if (isStudent) { %>
                         <div class="d-flex justify-content-center mb-2">
-                            <button type="button" class="btn btn-primary" onclick="toggleTutorRequestForm()">Trở thành gia sư</button>
+                            <button type="button" class="btn btn-primary me-2" onclick="toggleTutorRequestForm()">Trở thành gia sư</button>
+                            <button type="button" class="btn btn-danger" onclick="toggleChangePasswordForm()">Đổi mật khẩu</button>
                         </div>
                         <% } %>
+
                     </div>
                 </div>
             </div>
@@ -161,6 +163,39 @@
                 </div>
             </form>
         </div>
+
+
+        <!-- Form đổi mật khẩu -->
+        <div id="changePasswordForm" class="overlay-form" style="display: none;">
+            <h5 class="mb-3">Đổi mật khẩu</h5>
+            <form action="reset-password" method="post">
+                <input type="hidden" name="source" value="profile"> <!-- Dòng này rất quan trọng -->
+                <input type="hidden" name="email" value="<%= acc.getEmail() %>">
+
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu hiện tại</label>
+                    <input type="password" class="form-control" name="old-password" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Xác nhận mật khẩu mới</label>
+                    <input type="password" class="form-control" name="confirm-password" required>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success me-2">Xác nhận</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleChangePasswordForm()">Hủy</button>
+                </div>
+            </form>
+
+        </div>
+
+
 
         <!-- Form yêu cầu trở thành gia sư -->
         <div id="tutorRequestForm" class="overlay-form" style="display: none;">
@@ -278,6 +313,29 @@
             elem.style.display = isHidden ? "none" : "block";
         });
     }
+
+    function toggleChangePasswordForm() {
+        const changePasswordForm = document.getElementById("changePasswordForm");
+        const editForm = document.getElementById("editForm");
+        const tutorRequestForm = document.getElementById("tutorRequestForm");
+        const profileInfoElements = document.querySelectorAll("#profileInfo");
+        const backdrop = document.getElementById("backdrop");
+
+        const isHidden = changePasswordForm.style.display === "none" || changePasswordForm.style.display === "";
+
+        changePasswordForm.style.display = isHidden ? "block" : "none";
+        backdrop.style.display = isHidden ? "block" : "none";
+
+        // Ẩn các form khác nếu đang mở
+        editForm.style.display = "none";
+        tutorRequestForm.style.display = "none";
+
+        profileInfoElements.forEach(elem => {
+            elem.style.display = isHidden ? "none" : "block";
+        });
+    }
+
+
 </script>
 
 </body>
