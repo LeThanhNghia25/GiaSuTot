@@ -11,12 +11,8 @@ import model.Account;
 import model.Tutor;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import com.google.gson.Gson;
 
 @WebServlet("/tutor")
 public class TutorController extends HttpServlet {
@@ -39,13 +35,11 @@ public class TutorController extends HttpServlet {
             if (tutor != null) {
                 request.setAttribute("tutor", tutor);
                 request.setAttribute("editable", false); // chỉ xem
-
             } else {
                 request.setAttribute("error", "Không tìm thấy thông tin gia sư.");
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_profile.jsp");
             dispatcher.forward(request, response);
-
         } else {
             Account account = (Account) request.getSession().getAttribute("account");
             if (account == null) {
@@ -70,7 +64,6 @@ public class TutorController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_profile.jsp");
             dispatcher.forward(request, response);
         }
-
     }
 
     @Override
@@ -102,7 +95,8 @@ public class TutorController extends HttpServlet {
                 idCardNumber = Long.parseLong(request.getParameter("id_card_number"));
                 bankAccountNumber = Long.parseLong(request.getParameter("bank_account_number"));
             } catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Số CMND/CCCD hoặc số tài khoản không hợp lệ: " + e.getMessage());
+                request.setAttribute("error", "Số CMND/CCCD hoặc số tài khoản không hợp lệ: " + e.getMessage());
+                request.getRequestDispatcher("tutor_profile.jsp").forward(request, response);
                 return;
             }
             String bankName = request.getParameter("bank_name");
@@ -118,23 +112,19 @@ public class TutorController extends HttpServlet {
             );
             tutorDAO.updateTutor(updatedTutor);
 
+            // Lấy lại tutor để làm mới dữ liệu
             Tutor refreshedTutor = tutorDAO.getTutorById(existingTutor.getId());
             request.setAttribute("tutor", refreshedTutor);
+            request.setAttribute("editable", true);
+            request.setAttribute("message", "Cập nhật thông tin thành công");
 
-            // Phản hồi JSON thành công
-            Map<String, Object> responseData = new HashMap<>();
-            responseData.put("status", "success");
-            responseData.put("message", "Cập nhật thông tin thành công");
-            responseData.put("tutor", refreshedTutor);
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter out = response.getWriter();
-            out.print(new Gson().toJson(responseData));
-            out.flush();
+            RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_profile.jsp");
+            dispatcher.forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi khi cập nhật thông tin: " + e.getMessage());
+            request.setAttribute("error", "Lỗi khi cập nhật thông tin: " + e.getMessage());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_profile.jsp");
+            dispatcher.forward(request, response);
         }
     }
 }
