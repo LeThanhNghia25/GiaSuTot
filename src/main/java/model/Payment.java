@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Payment {
     private String id;
@@ -8,17 +8,21 @@ public class Payment {
     private String tutorId;
     private String studentId;
     private double amount;
-    private LocalDateTime paymentDate;
-    private String status;
+    private Date paymentDate;
+    private String fileName; // Thêm trường fileName
+    private String filePath; // Thêm trường filePath
 
-    public Payment(String id, String courseId, String tutorId, String studentId, double amount, LocalDateTime paymentDate, String status) {
+    public Payment() {
+        // Constructor mặc định
+    }
+
+    public Payment(String id, String courseId, String tutorId, String studentId, double amount, Date paymentDate) {
         this.id = id;
         this.courseId = courseId;
         this.tutorId = tutorId;
         this.studentId = studentId;
         this.amount = amount;
         this.paymentDate = paymentDate;
-        this.status = status;
     }
 
     public String getId() {
@@ -61,20 +65,28 @@ public class Payment {
         this.amount = amount;
     }
 
-    public LocalDateTime getPaymentDate() {
+    public Date getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(LocalDateTime paymentDate) {
+    public void setPaymentDate(Date paymentDate) {
         this.paymentDate = paymentDate;
     }
 
-    public String getStatus() {
-        return status;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     @Override
@@ -86,7 +98,8 @@ public class Payment {
                 ", studentId='" + studentId + '\'' +
                 ", amount=" + amount +
                 ", paymentDate=" + paymentDate +
-                ", status='" + status + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", filePath='" + filePath + '\'' +
                 '}';
     }
 }

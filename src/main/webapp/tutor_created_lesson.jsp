@@ -37,35 +37,10 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-<%
-    Tutor tutor = (Tutor) request.getAttribute("tutor");
-    // Giả định danh sách lịch dạy được lấy từ request attribute
 
-%>
 <!-- Header -->
-<header class="gradient-bg text-white shadow-lg">
-    <div class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-chalkboard-teacher text-3xl"></i>
-                <h1 class="text-2xl font-bold">GIASUTOT</h1>
-            </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="index.jsp" class="hover:text-blue-200 transition">Trang chủ</a>
-                <a href="lesson_schedule.jsp" class="hover:text-blue-200 transition">Lịch dạy</a>
-                <a href="#" class="hover:text-blue-200 transition">Học viên</a>
-                <a href="#" class="hover:text-blue-200 transition"><%= tutor.getName() %></a>
-            </nav>
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <i class="fas fa-bell text-xl cursor-pointer hover:text-blue-200"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold cursor-pointer">GT</div>
-            </div>
-        </div>
-    </div>
-</header>
+<%@ include file="header.jsp" %>
+<!-- Header End -->
 
 <!-- Main Content -->
 <main class="container mx-auto px-4 py-8">
@@ -76,13 +51,13 @@
                 <h2 class="text-lg font-semibold text-gray-700 mb-4">Menu</h2>
                 <ul class="space-y-2">
                     <li>
-                        <a href="index.jsp" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                        <a href="${pageContext.request.contextPath}/lesson" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
                             <i class="fas fa-plus-circle"></i>
                             <span>Tạo buổi học</span>
                         </a>
                     </li>
                     <li>
-                        <a href="lesson_schedule.jsp" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
+                        <a href="tutor_created_lesson.jsp" class="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Lịch dạy</span>
                         </a>
@@ -94,7 +69,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                        <a href="${pageContext.request.contextPath}/tutor-revenue" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
                             <i class="fas fa-chart-line"></i>
                             <span>Thống kê</span>
                         </a>
@@ -125,6 +100,7 @@
         </aside>
 
         <!-- Main Panel -->
+        <!-- Main Panel -->
         <div class="flex-1">
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <!-- Panel Header -->
@@ -137,64 +113,72 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <c:forEach var="lesson" items="${lessons}">
                             <div class="session-card bg-white p-4 rounded-lg shadow-md fade-in">
-                                <p><strong>Ngày giờ:</strong> ${lesson.getTime()}</p>
+                                <p><strong>Ngày giờ:</strong> ${lesson.getFormattedTime()}</p>
                                 <p><strong>Môn dạy:</strong> ${lesson.getCourse_id()}</p>
                                 <p><strong>Học sinh:</strong> ${lesson.getStudent_id()}</p>
                                 <div class="flex space-x-2 mt-4">
-                                    <form action="confirmLesson" method="post">
-                                        <input type="hidden" name="lessonId" value="${lesson.getStudent_id()}">
-                                        <button type="submit" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">Xác nhận hoàn thành</button>
-                                    </form>
+                                    <button type="button" onclick="openReviewModal('${lesson.getStudent_id()}', '${lesson.getCourse_id()}', '${lesson.getFormattedTime()}')"
+                                            class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">Xác nhận hoàn thành</button>
                                     <form action="cancelLesson" method="post">
-                                        <input type="hidden" name="lessonId" value="${lesson.getStudent_id()}">
+                                        <input type="hidden" name="studentId" value="${lesson.getStudent_id()}">
+                                        <input type="hidden" name="courseId" value="${lesson.getCourse_id()}">
+                                        <input type="hidden" name="time" value="${lesson.getFormattedTime()}">
                                         <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Hủy</button>
                                     </form>
                                 </div>
                             </div>
                         </c:forEach>
-                        <!-- Dữ liệu mẫu nếu lessonSchedule rỗng -->
-                        <c:if test="${empty lessonSchedule}">
-                            <div class="session-card bg-white p-4 rounded-lg shadow-md fade-in">
-                                <p>Không có lịch dạy nào.</p>
-                            </div>
-                        </c:if>
                     </div>
-                </div>
-            </div>
-
-            <!-- Recent Sessions (Ẩn đi vì không phù hợp với trang lịch dạy) -->
-            <div class="mt-8 hidden">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-history mr-2 text-blue-500"></i>
-                    Buổi học gần đây
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="recentSessions">
-                    <!-- Sessions will be added here by JavaScript -->
                 </div>
             </div>
         </div>
     </div>
 </main>
 
-<!-- Floating Action Button (Ẩn đi vì không cần thiết trên trang lịch dạy) -->
-<button id="quickAddBtn" class="fixed bottom-8 right-8 w-14 h-14 rounded-full gradient-bg text-white flex items-center justify-center floating-btn shadow-lg transition hover:scale-110 hidden">
-    <i class="fas fa-plus text-xl"></i>
-</button>
-
-<!-- Modal (Ẩn đi vì không cần thiết trên trang lịch dạy) -->
-<div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+<!-- Review Modal -->
+<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all fade-in">
         <div class="text-center">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-check text-green-600 text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Thành công!</h3>
-            <p class="text-gray-600 mb-6" id="modalMessage">Buổi học đã được tạo thành công.</p>
-            <button id="closeModal" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                Đóng
-            </button>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Đánh giá buổi học</h3>
+            <form id="reviewForm" action="confirmLesson" method="post">
+                <input type="hidden" name="lessonId" id="reviewLessonId">
+                <input type="hidden" name="courseId" id="reviewCourseId">
+                <input type="hidden" name="time" id="reviewTime">
+                <div class="mb-4 text-left">
+                    <label for="rating" class="block text-sm font-medium text-gray-700">Điểm đánh giá (1-5):</label>
+                    <select id="rating" name="rating" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="mb-4 text-left">
+                    <label for="comment" class="block text-sm font-medium text-gray-700">Nhận xét:</label>
+                    <textarea id="comment" name="comment" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" placeholder="Nhập nhận xét của bạn"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeReviewModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Hủy</button>
+                    <button type="submit" href="confirmLesson"  class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Gửi đánh giá</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<!-- JavaScript for Modal -->
+<script>
+    function openReviewModal(lessonId, courseId, time) {
+        document.getElementById('reviewLessonId').value = lessonId;
+        document.getElementById('reviewCourseId').value = courseId;
+        document.getElementById('reviewTime').value = time;
+        document.getElementById('reviewModal').classList.remove('hidden');
+    }
+
+    function closeReviewModal() {
+        document.getElementById('reviewModal').classList.add('hidden');
+        document.getElementById('reviewForm').reset();
+    }
+</script>
 </body>
-</html>

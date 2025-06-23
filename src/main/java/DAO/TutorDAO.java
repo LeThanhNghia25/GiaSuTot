@@ -19,7 +19,6 @@ public class TutorDAO {
             }
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, id);
-                System.out.println("Executing query for tutor id: " + id);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         Account account = new Account();
@@ -41,17 +40,11 @@ public class TutorDAO {
                                 account,
                                 rs.getInt("evaluate")
                         );
-                        System.out.println("Tutor found: " + tutor.getName());
-                    } else {
-                        System.out.println("No tutor found with id: " + id);
                     }
                 }
             }
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
             e.printStackTrace();
         }
         return tutor;
@@ -147,28 +140,31 @@ public class TutorDAO {
         return tutors;
     }
 
-    public static void main(String[] args) {
-        TutorDAO tutorDAO = new TutorDAO();
-        String testId = "tut001";
-        System.out.println("Testing getTutorById with id: " + testId);
-        Tutor tutor = tutorDAO.getTutorById(testId);
+    public void addTutor(String id, String accountId, String name, String birth, String email, String phone,
+                         String idCardNumber, String bankAccountNumber, String bankName, String address,
+                         String specialization, String description, int evaluate) throws SQLException {
+        String sql = """
+            INSERT INTO tutor (id, account_id, name, birth, email, phone, id_card_number, bank_account_number, 
+                              bank_name, address, specialization, description, evaluate)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
 
-        if (tutor != null) {
-            System.out.println("Tutor Details:");
-            System.out.println("ID: " + tutor.getId());
-            System.out.println("Name: " + tutor.getName());
-            System.out.println("Email: " + tutor.getEmail());
-            System.out.println("Birth: " + tutor.getBirth());
-            System.out.println("Phone: " + tutor.getPhone());
-            System.out.println("Address: " + tutor.getAddress());
-            System.out.println("Specialization: " + tutor.getSpecialization());
-            System.out.println("Description: " + tutor.getDescription());
-            System.out.println("ID Card Number: " + tutor.getIdCardNumber());
-            System.out.println("Bank Account Number: " + tutor.getBankAccountNumber());
-            System.out.println("Bank Name: " + tutor.getBankName());
-            System.out.println("Account ID: " + (tutor.getAccount() != null ? tutor.getAccount().getId() : "null"));
-        } else {
-            System.out.println("Failed to retrieve tutor with id: " + testId);
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, id);
+            ps.setString(2, accountId);
+            ps.setString(3, name);
+            ps.setDate(4, birth != null ? java.sql.Date.valueOf(birth) : null);
+            ps.setString(5, email);
+            ps.setString(6, phone);
+            ps.setLong(7, Long.parseLong(idCardNumber));
+            ps.setLong(8, Long.parseLong(bankAccountNumber));
+            ps.setString(9, bankName);
+            ps.setString(10, address);
+            ps.setString(11, specialization);
+            ps.setString(12, description);
+            ps.setInt(13, evaluate);
+            ps.executeUpdate();
         }
     }
 }

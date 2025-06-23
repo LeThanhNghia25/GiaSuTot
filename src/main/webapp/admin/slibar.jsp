@@ -88,6 +88,20 @@
       <span>Thanh toán</span>
     </a>
   </li>
+  <!-- Danh sách yêu cầu gia sư -->
+  <li class="nav-item">
+    <a class="nav-link" href="${pageContext.request.contextPath}/admin/tutor-requests">
+      <i class="fas fa-fw fa-chart-area"></i>
+      <span>Danh sách yêu cầu gia sư</span>
+    </a>
+  </li>
+  <!-- Xác nhận Biên lai -->
+  <li class="nav-item">
+    <a class="nav-link" href="${pageContext.request.contextPath}/admin/payment-list">
+      <i class="fas fa-fw fa-check"></i>
+      <span>Xác nhận Biên lai</span>
+    </a>
+  </li>
   <hr class="sidebar-divider d-none d-md-block">
   <!-- Nút thu gọn sidebar -->
   <div class="text-center d-none d-md-inline">

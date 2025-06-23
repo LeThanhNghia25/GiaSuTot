@@ -1,6 +1,8 @@
 package Controller;
 
 import DAO.CourseDAO;
+import DAO.SearchDAO;
+import DAO.StudentDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,8 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Account;
 import model.Course;
+import model.Student;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +24,15 @@ import java.util.stream.Collectors;
 @WebServlet("/courses")
 public class CoursesController extends HttpServlet {
     private CourseDAO courseDAO;
+    private SearchDAO searchDAO;
+    private StudentDAO studentDAO;
 
     @Override
     public void init() {
         courseDAO = new CourseDAO();
-        System.out.println("CourseListController initialized.");
+        searchDAO = new SearchDAO();
+        studentDAO = new StudentDAO();
+        System.out.println("CoursesController initialized.");
     }
 
     @Override
@@ -33,15 +41,20 @@ public class CoursesController extends HttpServlet {
         System.out.println("Received GET request for /courses");
 
         String tenMon = request.getParameter("tenMon");
-        String lop = request.getParameter("lop");
-        String tinh = request.getParameter("tinh");
-        System.out.println("Filter parameters - tenMon: " + tenMon + ", lop: " + lop + ", tinh: " + tinh);
+        String tutorName = request.getParameter("tutorName");
+        String trinhDo = request.getParameter("trinhDo");
+        String pageParam = request.getParameter("page");
+        String search = request.getParameter("search");
 
         long startTime = System.currentTimeMillis();
-        List<Course> allCourses = null;
+        List<Course> allCourses = new ArrayList<>();
         try {
-            allCourses = courseDAO.getAllAvailableCourses();
-        } catch (Exception e) {
+            if (search != null && !search.trim().isEmpty()) {
+                allCourses = searchDAO.findBySubjectName(search);
+            } else {
+                allCourses = courseDAO.getAllAvailableCourses();
+            }
+        } catch (SQLException e) {
             System.err.println("Error fetching courses: " + e.getMessage());
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error fetching courses");
@@ -50,60 +63,45 @@ public class CoursesController extends HttpServlet {
         long fetchTime = System.currentTimeMillis() - startTime;
         System.out.println("Time to fetch courses: " + fetchTime + "ms");
 
-        if (allCourses != null) {
-            List<Course> filteredCourses = allCourses.stream()
-                    .filter(course -> {
-                        boolean match = true;
-                        if (tenMon != null && !tenMon.trim().isEmpty()) {
-                            match = match && course.getSubject().getName().toLowerCase().contains(tenMon.toLowerCase());
-                        }
-                        if (lop != null && !lop.trim().isEmpty()) {
-                            match = match && course.getSubject().getLevel().equalsIgnoreCase("Lớp " + lop);
-                        }
-                        if (tinh != null && !tinh.trim().isEmpty()) {
-                            match = match && course.getTutor().getAddress().toLowerCase().contains(tinh.toLowerCase());
-                        }
-                        return match;
-                    })
-                    .collect(Collectors.toList());
+        List<Course> filteredCourses = allCourses.stream()
+                .filter(course -> {
+                    boolean match = true;
+                    if (tenMon != null && !tenMon.trim().isEmpty()) {
+                        match = match && SearchDAO.removeDiacritics(course.getSubject().getName().toLowerCase())
+                                .contains(SearchDAO.removeDiacritics(tenMon.toLowerCase()));
+                    }
+                    if (tutorName != null && !tutorName.trim().isEmpty()) {
+                        match = match && SearchDAO.removeDiacritics(course.getTutor().getName().toLowerCase())
+                                .contains(SearchDAO.removeDiacritics(tutorName.toLowerCase()));
+                    }
+                    if (trinhDo != null && !trinhDo.trim().isEmpty()) {
+                        match = match && SearchDAO.removeDiacritics(course.getSubject().getLevel().toLowerCase())
+                                .contains(SearchDAO.removeDiacritics(trinhDo.toLowerCase()));
+                    }
+                    return match;
+                })
+                .collect(Collectors.toList());
 
-            allCourses = filteredCourses;
-        }
-
-        System.out.println("Number of available courses after filtering: " + (allCourses != null ? allCourses.size() : "null"));
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        if (allCourses != null) {
-            allCourses.forEach(course -> {
-                String formattedTime = course.getTime().format(formatter);
-                request.setAttribute("formattedTime_" + course.getId(), formattedTime);
-            });
-        }
-
-        int page = 1;
-        String pageParam = request.getParameter("page");
-        if (pageParam != null && !pageParam.trim().isEmpty()) {
-            try {
-                page = Integer.parseInt(pageParam);
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid page parameter: " + pageParam);
-                page = 1;
-            }
-        }
-
+        int page = (pageParam != null && !pageParam.trim().isEmpty()) ? Integer.parseInt(pageParam) : 1;
         int pageSize = 9;
-        int totalCourses = allCourses != null ? allCourses.size() : 0;
+        int totalCourses = filteredCourses.size();
         int totalPages = (int) Math.ceil((double) totalCourses / pageSize);
+        page = Math.max(1, Math.min(page, totalPages));
 
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, totalCourses);
-        List<Course> paginatedCourses = allCourses != null && !allCourses.isEmpty() ? allCourses.subList(start, end) : new ArrayList<>();
+        List<Course> paginatedCourses = filteredCourses.subList(start, end);
 
-        // Lấy thông báo từ session nếu có
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        paginatedCourses.forEach(course -> {
+            String formattedTime = course.getTime().format(formatter);
+            request.setAttribute("formattedTime_" + course.getId(), formattedTime);
+        });
+
         String message = (String) request.getSession().getAttribute("message");
         if (message != null) {
             request.setAttribute("message", message);
-            request.getSession().removeAttribute("message"); // Xóa sau khi sử dụng
+            request.getSession().removeAttribute("message");
         }
 
         request.setAttribute("allCourses", paginatedCourses);
@@ -111,14 +109,8 @@ public class CoursesController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
 
         System.out.println("Forwarding to courses.jsp");
-        try {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/courses.jsp");
-            dispatcher.forward(request, response);
-        } catch (Exception e) {
-            System.err.println("Error forwarding to courses.jsp: " + e.getMessage());
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error rendering page");
-        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/courses.jsp");
+        dispatcher.forward(request, response);
     }
 
     @Override
@@ -145,14 +137,42 @@ public class CoursesController extends HttpServlet {
         }
 
         String studentId = (String) session.getAttribute("studentId");
-        System.out.println("StudentId: " + studentId);
+        System.out.println("StudentId from session: " + studentId);
+        if (studentId == null) {
+            // Nếu studentId chưa có, thử lấy lại từ accountId
+            StudentDAO studentDAO = new StudentDAO();
+            try {
+                Student student = studentDAO.getStudentByAccountId(account.getId());
+                if (student != null) {
+                    studentId = student.getId();
+                    session.setAttribute("studentId", studentId);
+                    System.out.println("Recovered studentId: " + studentId);
+                } else {
+                    System.out.println("No student record found for account: " + account.getId());
+                    session.setAttribute("message", "Dữ liệu học sinh không hợp lệ, vui lòng liên hệ admin");
+                    response.sendRedirect(request.getContextPath() + "/courses");
+                    return;
+                }
+            } catch (SQLException e) {
+                System.err.println("Error fetching student: " + e.getMessage());
+                session.setAttribute("message", "Lỗi khi lấy thông tin học sinh");
+                response.sendRedirect(request.getContextPath() + "/courses");
+                return;
+            }
+        }
+
         if (courseId != null && studentId != null) {
             try {
                 if ("register".equalsIgnoreCase(action)) {
                     System.out.println("Registering course: " + courseId + " for student: " + studentId);
                     courseDAO.registerCourse(courseId, studentId);
-                    System.out.println("Course registered, redirecting to payment");
-                    response.sendRedirect(request.getContextPath() + "/payment?courseId=" + courseId);
+                    System.out.println("Course registered, redirecting to payment info");
+                    response.sendRedirect(request.getContextPath() + "/payment-info?courseId=" + courseId + "&studentId=" + studentId);
+                } else if ("trial".equalsIgnoreCase(action)) {
+                    System.out.println("Registering trial for course: " + courseId + " for student: " + studentId);
+                    courseDAO.registerTrial(courseId, studentId);
+                    session.setAttribute("message", "Đăng ký học thử thành công!");
+                    response.sendRedirect(request.getContextPath() + "/courses");
                 }
             } catch (RuntimeException e) {
                 System.err.println("Error processing POST request: " + e.getMessage());

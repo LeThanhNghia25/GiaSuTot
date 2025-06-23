@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Notification {
     private String id;
@@ -17,6 +18,9 @@ public class Notification {
         this.message = message;
         this.createdAt = createdAt;
         this.status = status;
+    }
+
+    public Notification(String string, String id, String message, Date date, String pending) {
     }
 
     public String getId() {

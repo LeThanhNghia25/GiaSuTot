@@ -64,6 +64,7 @@ public class AccountController extends HttpServlet {
                 if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatus())) {
                     HttpSession session = request.getSession();
                     session.setAttribute("account", acc);
+                    session.setAttribute("accountId", acc.getId()); // Thêm dòng này để set accountId
 
                     // Thiết lập userName và studentId/role dựa trên vai trò
                     if (acc.getRole() == 1) { // Student
@@ -79,10 +80,14 @@ public class AccountController extends HttpServlet {
                         if (tutor != null) {
                             session.setAttribute("userName", tutor.getName());
                             session.setAttribute("role", "tutor");
+                            session.setAttribute("tutor", tutor); // Thêm dòng này để set tutor vào session
+                            System.out.println("Tutor set in session: " + tutor.getId());
+                        } else {
+                            System.err.println("No tutor found for account ID: " + acc.getId());
                         }
                     }
 
-                    System.out.println("Login successful. Account ID: " + acc.getId() + ", StudentId: " + session.getAttribute("studentId"));
+                    System.out.println("Login successful. Account ID: " + acc.getId() + ", role: " + session.getAttribute("role") + ", StudentId: " + session.getAttribute("studentId"));
                     response.sendRedirect(request.getContextPath() + "/index.jsp");
                 } else {
                     request.setAttribute("error", "Email hoặc mật khẩu không đúng, hoặc tài khoản chưa kích hoạt.");

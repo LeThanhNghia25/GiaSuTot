@@ -21,7 +21,6 @@
     z-index: 99;
 }
 
-
 /*** Spinner ***/
 #spinner {
     opacity: 0;
@@ -36,7 +35,6 @@
     opacity: 1;
 }
 
-
 /*** Button ***/
 .btn {
     font-family: 'Nunito', sans-serif;
@@ -44,8 +42,8 @@
     transition: .5s;
 }
 .btn-short {
-    padding: 0.25rem 1rem !important; /* Giảm padding */
-    font-size: 0.8rem !important; /* Giảm kích thước chữ */
+    padding: 0.25rem 1rem !important;
+    font-size: 0.8rem !important;
 }
 .btn.btn-primary,
 .btn.btn-secondary {
@@ -78,7 +76,6 @@
     border-radius: 0px;
 }
 
-
 /*** Navbar ***/
 .navbar .dropdown-toggle::after {
     border: none;
@@ -104,7 +101,7 @@
 }
 
 @media (max-width: 991.98px) {
-    .navbar-light .navbar-nav .nav-link  {
+    .navbar-light .navbar-nav .nav-link {
         margin-right: 0;
         padding: 10px 0;
     }
@@ -153,14 +150,13 @@
     }
 }
 
-
 /*** Header carousel ***/
 @media (max-width: 768px) {
     .header-carousel .owl-carousel-item {
         position: relative;
         min-height: 500px;
     }
-    
+
     .header-carousel .owl-carousel-item img {
         position: absolute;
         width: 100%;
@@ -214,7 +210,6 @@
     color: var(--light);
 }
 
-
 /*** Section Title ***/
 .section-title {
     position: relative;
@@ -254,7 +249,6 @@
     left: 0;
 }
 
-
 /*** Service ***/
 .service-item {
     background: var(--light);
@@ -274,7 +268,6 @@
     color: var(--light) !important;
 }
 
-
 /*** Categories & Courses ***/
 .category img,
 .course-item img {
@@ -286,7 +279,6 @@
     transform: scale(1.1);
 }
 
-
 /*** Team ***/
 .team-item img {
     transition: .5s;
@@ -295,7 +287,6 @@
 .team-item:hover img {
     transform: scale(1.1);
 }
-
 
 /*** Testimonial ***/
 .testimonial-carousel::before {
@@ -368,7 +359,6 @@
     background: var(--primary);
     border-color: var(--primary);
 }
-
 
 /*** Footer ***/
 .footer .btn.btn-social {

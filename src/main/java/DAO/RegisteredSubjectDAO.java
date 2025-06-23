@@ -41,4 +41,51 @@ public class RegisteredSubjectDAO {
         }
         return registeredSubjects;
     }
+    public List<RegisteredSubjects> getRegisteredSubjectByID(String id) throws SQLException {
+        String sql = "SELECT * FROM registered_subjects WHERE student_id= ?";
+        List<RegisteredSubjects> registeredSubjects = new ArrayList<>();
+
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            ps.setString(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                RegisteredSubjects registeredSubject = new RegisteredSubjects();
+                registeredSubject.setCourse_id(rs.getString("course_id"));
+                registeredSubject.setStudent_id(rs.getString("student_id"));
+                registeredSubject.setRegistration_date(rs.getDate("registration_date").toLocalDate());
+                registeredSubject.setNumber_of_lessons(rs.getInt("number_of_lessons"));
+                registeredSubject.setStatus(rs.getString("status"));
+                registeredSubjects.add(registeredSubject);
+
+                System.out.println("Registered Subject ID: " + registeredSubject.getCourse_id()+ "student ID: " + registeredSubject.getStudent_id());
+            }
+        }
+        return registeredSubjects;
+
+    }
+    public int course_Progress(String stID, String courseId) throws SQLException {
+        int progress = 0;
+        String sql = "SELECT COUNT(lesson.course_id) as 'count' " +
+                "FROM registered_subjects " +
+                "INNER JOIN lesson ON registered_subjects.course_id = lesson.course_id " +
+                "AND registered_subjects.student_id = lesson.student_id " +
+                "WHERE registered_subjects.student_id = ? " +
+                "AND lesson.status = 'completed' " +
+                "AND lesson.course_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, stID);
+            ps.setString(2, courseId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                progress = rs.getInt("count");
+            }
+        }
+        return progress;
+    }
 }

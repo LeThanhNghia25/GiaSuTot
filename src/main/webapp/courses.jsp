@@ -1,39 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ page import="model.Course" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <meta charset="utf-8">
-    <title>eLEARNING - eLearning HTML Template</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="libs/animate/animate.min.css" rel="stylesheet">
-    <link href="libs/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
-
-    <!-- Toast CSS -->
+    <title>Courses</title>
     <style>
         .course-grid {
             display: grid;
@@ -133,13 +104,11 @@
             color: white;
             border-color: #007bff;
         }
-        /* Message Styles */
         .message {
             margin: 10px 0;
             padding: 10px;
             border-radius: 5px;
             text-align: center;
-            display: ${not empty message ? 'block' : 'none'};
         }
         .message.success {
             background-color: #d4edda;
@@ -151,6 +120,29 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .filter-section .form-label {
+            font-weight: 600;
+            color: #333;
+        }
+        .filter-section .form-control,
+        .filter-section .form-select {
+            border-radius: 5px;
+        }
+        .filter-section .btn-primary {
+            padding: 10px;
+            font-size: 1rem;
+        }
+        @media (max-width: 767.98px) {
+            .filter-section .col-md-6 {
+                margin-bottom: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -158,22 +150,111 @@
 <%@ include file="header.jsp" %>
 <!-- Header End -->
 
-<!-- Message Display -->
-<c:if test="${not empty message}">
+<!-- Categories Start -->
+<div class="container-xxl py-5 category">
     <div class="container">
-        <div class="message ${message.contains('thành công') ? 'success' : 'error'}">
-                ${message}
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center text-primary px-3">Danh mục</h6>
+            <h1 class="mb-5">Danh mục khóa học</h1>
+        </div>
+        <div class="row g-3">
+            <div class="col-lg-7 col-md-6">
+                <div class="row g-3">
+                    <div class="col-lg-12 col-md-12 wow zoomIn" data-wow-delay="0.1s">
+                        <a class="position-relative d-block overflow-hidden" href="#">
+                            <img class="img-fluid" src="img/cat-1.jpg" alt="">
+                            <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
+                                <h5 class="m-0">Toán học</h5>
+                                <small class="text-primary">50 Khóa học</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.3s">
+                        <a class="position-relative d-block overflow-hidden" href="#">
+                            <img class="img-fluid" src="img/cat-2.jpg" alt="">
+                            <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
+                                <h5 class="m-0">Vật lý</h5>
+                                <small class="text-primary">30 Khóa học</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.5s">
+                        <a class="position-relative d-block overflow-hidden" href="#">
+                            <img class="img-fluid" src="img/cat-3.jpg" alt="">
+                            <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
+                                <h5 class="m-0">Hóa học</h5>
+                                <small class="text-primary">25 Khóa học</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-6 wow zoomIn" data-wow-delay="0.7s" style="min-height: 350px;">
+                <a class="position-relative d-block h-100 overflow-hidden" href="#">
+                    <img class="img-fluid position-absolute w-100 h-100" src="img/cat-4.jpg" alt="" style="object-fit: cover;">
+                    <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
+                        <h5 class="m-0">Tiếng Anh</h5>
+                        <small class="text-primary">40 Khóa học</small>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
-</c:if>
+</div>
+<!-- Categories End -->
 
 <!-- Courses Start -->
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">Khóa Học</h6>
-            <h1 class="mb-5">Tất Cả Khóa Học Có Sẵn</h1>
+            <h6 class="section-title bg-white text-center text-primary px-3">Khóa học</h6>
+            <c:choose>
+                <c:when test="${not empty param.search or not empty param.tenMon or not empty param.lop or not empty param.tinh or not empty param.tutorName}">
+                    <h1 class="mb-5">Kết quả tìm kiếm</h1>
+                </c:when>
+                <c:otherwise>
+                    <h1 class="mb-5">Tất cả khóa học có sẵn</h1>
+                </c:otherwise>
+            </c:choose>
         </div>
+
+        <!-- Bộ lọc trực tiếp -->
+        <div class="filter-section mb-5">
+            <form method="GET" action="${pageContext.request.contextPath}/courses" class="row g-3 justify-content-center">
+                <!-- Tên môn học -->
+                <div class="col-lg-3 col-md-6">
+                    <label for="tenMonHoc" class="form-label">Tên môn học</label>
+                    <input type="text" class="form-control" id="tenMonHoc" name="tenMon" placeholder="Nhập tên môn học"
+                           value="${param.tenMon != null ? param.tenMon : ''}">
+                </div>
+                <!-- Tên gia sư -->
+                <div class="col-lg-3 col-md-6">
+                    <label for="tutorName" class="form-label">Tên gia sư</label>
+                    <input type="text" class="form-control" id="tutorName" name="tutorName" placeholder="Nhập tên gia sư"
+                           value="${param.tutorName != null ? param.tutorName : ''}">
+                </div>
+                <!-- Trình Độ -->
+                <div class="col-lg-2 col-md-6">
+                    <label for="trinhDo" class="form-label">Trình Độ</label>
+                    <input type="text" class="form-control" id="trinhDo" name="trinhDo" placeholder="Nhập trình độ"
+                           value="${param.trinhDo != null ? param.trinhDo : ''}">
+                </div>
+                <!-- Nút áp dụng -->
+                <div class="col-lg-2 col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Lọc</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Message Display -->
+        <c:if test="${not empty message}">
+            <div class="container">
+                <div class="message ${message.contains('thành công') ? 'success' : 'error'}">
+                        ${message}
+                </div>
+            </div>
+        </c:if>
+
         <c:choose>
             <c:when test="${empty allCourses}">
                 <div class="text-center">
@@ -219,7 +300,7 @@
                                     <input type="hidden" name="page" value="${currentPage}">
                                     <button type="submit" class="btn btn-primary btn-sm">Đăng ký</button>
                                 </form>
-                                <a href="#" class="btn btn-secondary btn-sm">Học thử</a>
+                                <a href="${pageContext.request.contextPath}/courses?action=trial&courseId=${course.id}" class="btn btn-secondary btn-sm">Học thử</a>
                             </div>
                         </div>
                     </c:forEach>
@@ -228,7 +309,7 @@
                 <c:if test="${not empty allCourses and totalPages > 1}">
                     <div class="pagination">
                         <c:forEach var="i" begin="1" end="${totalPages}">
-                            <a href="${pageContext.request.contextPath}/courses?page=${i}&tenMon=${param.tenMon}&lop=${param.lop}&tinh=${param.tinh}"
+                            <a href="${pageContext.request.contextPath}/courses?page=${i}&search=${param.search}&tenMon=${param.tenMon}&tutorName=${param.tutorName}&trinhDo=${param.trinhDo}"
                                class="${i == currentPage ? 'active' : ''}">${i}</a>
                         </c:forEach>
                     </div>
@@ -245,13 +326,19 @@
 
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/libs/wow/wow.min.js"></script>
+<script>
+    try {
+        new WOW().init();
+        console.log("WOW initialized successfully");
+    } catch (e) {
+        console.error("WOW initialization failed:", e);
+    }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="libs/wow/wow.min.js"></script>
-<script src="libs/easing/easing.min.js"></script>
-<script src="libs/waypoints/waypoints.min.js"></script>
-<script src="libs/owlcarousel/owl.carousel.min.js"></script>
-
-<!-- Template Javascript -->
-<script src="js/main.js"></script>
+<script src="${pageContext.request.contextPath}/libs/easing/easing.min.js"></script>
+<script src="${pageContext.request.contextPath}/libs/waypoints/waypoints.min.js"></script>
+<script src="${pageContext.request.contextPath}/libs/owlcarousel/owl.carousel.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/main.js"></script>
 </body>
 </html>
