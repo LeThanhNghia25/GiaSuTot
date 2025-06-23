@@ -287,7 +287,11 @@
                                     <small>(${course.tutor.evaluate})</small>
                                 </div>
                                 <div class="course-info">
-                                    <small><i class="fa fa-user-tie text-primary"></i><c:out value="${course.tutor.name}"/></small>
+                                    <small>
+                                        <a href="tutor?id=${course.tutor.id}" class="text-decoration-none text-dark">
+                                            <i class="fa fa-user-tie text-primary"></i> <c:out value="${course.tutor.name}"/>
+                                        </a>
+                                    </small>
                                     <small><i class="fa fa-book text-primary"></i><c:out value="${course.tutor.specialization}"/></small>
                                     <small><i class="fa fa-clock text-primary"></i>${requestScope['formattedTime_' += course.id]}</small>
                                     <small><i class="fa fa-users text-primary"></i>${course.studentCount} học viên</small>
