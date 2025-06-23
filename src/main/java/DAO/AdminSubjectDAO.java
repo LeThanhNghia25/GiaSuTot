@@ -57,7 +57,7 @@ public class AdminSubjectDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Subject sb = new Subject(
+                    Subject sub = new Subject(
                             rs.getString("id"),
                             rs.getString("name"),
                             rs.getString("level"),
@@ -65,7 +65,7 @@ public class AdminSubjectDAO {
                             rs.getDouble("fee"),
                             rs.getString("status")
                     );
-                    list.add(sb);
+                    list.add(sub);
                 }
             }
         }
@@ -79,10 +79,10 @@ public class AdminSubjectDAO {
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 int count = rs.getInt(1) + 1;
-                return String.format("sb%03d", count);
+                return String.format("sub%03d", count);
             }
         }
-        return "sb001"; // Nếu không có môn học nào, bắt đầu từ sb001
+        return "sub001"; // Nếu không có môn học nào, bắt đầu từ sub001
     }
 
     public void addSubject(Subject subject) throws SQLException {
