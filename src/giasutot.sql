@@ -21,7 +21,17 @@ CREATE TABLE account (
                          role INT DEFAULT 1 CHECK (role IN (1, 2, 3)),
                          status VARCHAR(50) NOT NULL CHECK (status IN ('active', 'inactive'))
 );
-
+--tạo ban đánh giá
+CREATE TABLE reviews (
+                         tutor_id CHAR(10) NOT NULL,
+                         course_id CHAR(10) NOT NULL,
+                         student_id CHAR(10) NOT NULL,
+                         time DATETIME DEFAULT CURRENT_TIMESTAMP,
+                         comment TEXT,
+                         FOREIGN KEY (course_id) REFERENCES course(id),
+                         FOREIGN KEY (tutor_id) REFERENCES tutor(id),
+                         FOREIGN KEY (student_id) REFERENCES student(id)
+);
 -- Tạo lại bảng student
 CREATE TABLE student (
                          id CHAR(20) PRIMARY KEY,
