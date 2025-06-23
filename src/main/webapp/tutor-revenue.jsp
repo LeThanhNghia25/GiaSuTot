@@ -115,7 +115,7 @@
                                 <select id="yearFilter" name="year" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition" onchange="this.form.submit()">
                                     <option value="2023" ${param.year == '2023' ? 'selected' : ''}>2023</option>
                                     <option value="2024" ${param.year == '2024' ? 'selected' : ''}>2024</option>
-                                    <option value="2025" ${param.year == '2025' ? 'selected' : ''}>2025</option>
+                                    <option value="2025" ${param.year == '2025' ? 'selected' : ''} selected>2025</option>
                                 </select>
                             </form>
                         </div>

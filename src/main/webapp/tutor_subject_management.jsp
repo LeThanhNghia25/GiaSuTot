@@ -70,7 +70,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/tutor-revenue-data" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                        <a href="${pageContext.request.contextPath}/tutor-revenue" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
                             <i class="fas fa-chart-line"></i>
                             <span>Thống kê</span>
                         </a>
