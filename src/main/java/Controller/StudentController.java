@@ -154,8 +154,8 @@ public class StudentController extends HttpServlet {
             student.setBirth(birth);
             student.setDescription(description); // Đổi setDescribe thành setDescription
             student.setAccount(account); // Đổi setAccountId(acc) thành setAccountId(accountId)
-
             studentDAO.insertStudent(student);
+
             request.getSession().setAttribute("success", "Đăng ký thành công, vui lòng đăng nhập.");
             response.sendRedirect(request.getContextPath() + "/account?action=login");
 
