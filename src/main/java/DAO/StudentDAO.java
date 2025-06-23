@@ -6,8 +6,6 @@ import model.Student;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StudentDAO {
     public StudentDAO() {}
@@ -38,7 +36,6 @@ public class StudentDAO {
             return rowsAffected > 0;
         }
     }
-
     public boolean insertggSt(Student student) throws SQLException {
         String sql = "INSERT INTO student (id, name, account_id) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -67,15 +64,16 @@ public class StudentDAO {
         String sql = "SELECT s.id, s.name, s.birth, s.description, a.email " +
                 "FROM student s JOIN account a ON s.account_id = a.id " +
                 "WHERE s.account_id = ?";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, accountId);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 String id = rs.getString("id");
                 String name = rs.getString("name");
-                Date birthDate = rs.getDate("birth");
-                LocalDate birth = (birthDate != null) ? birthDate.toLocalDate() : null;
+                LocalDate birth = rs.getDate("birth").toLocalDate();
                 String description = rs.getString("description");
                 String email = rs.getString("email");
 
@@ -147,17 +145,5 @@ public class StudentDAO {
         StudentDAO dao = new StudentDAO();
         Student student = dao.getStudentById("st001");
         System.out.println(student);
-        List<String> ids = new ArrayList<>();
-        ids.add("st001");
-        ids.add("st002");
-        ids.add("st003");
-        List<Student> students = new ArrayList<>();
-        for (String id : ids) {
-            Student student1 = dao.getStudentById(id);
-            students.add(student1);
-        }
-        for (Student student1 : students) {
-            System.out.println(student1);
-        }
     }
 }

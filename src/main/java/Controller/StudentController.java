@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.AccountDAO;
 import DAO.StudentDAO;
 import jakarta.servlet.http.HttpSession;
 import model.Account;
@@ -18,10 +19,12 @@ import java.time.LocalDate;
 @WebServlet(name = "StudentController", urlPatterns = {"/student"})
 public class StudentController extends HttpServlet {
     private StudentDAO studentDAO;
+    private AccountDAO accountDAO;
 
     @Override
     public void init() {
         studentDAO = new StudentDAO();
+        accountDAO = new AccountDAO();
     }
 
     @Override
@@ -33,13 +36,13 @@ public class StudentController extends HttpServlet {
             if (studentId != null && !studentId.isEmpty()) {
                 // Nếu có id truyền trên URL, lấy thông tin theo id
                 student = studentDAO.getStudentById(studentId);
-
             } else {
                 // Nếu không có id, lấy theo account trong session
                 HttpSession session = request.getSession();
                 Account account = (Account) session.getAttribute("account");
                 if (account == null) {
                     request.setAttribute("error", "Vui lòng đăng nhập để xem thông tin cá nhân.");
+                    request.getRequestDispatcher("/account?action=login").forward(request, response);
                     return;
                 }
 
@@ -59,8 +62,6 @@ public class StudentController extends HttpServlet {
             request.setAttribute("error", "Lỗi khi lấy thông tin học viên: " + e.getMessage());
             request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
         }
-
-
     }
 
 
@@ -71,7 +72,11 @@ public class StudentController extends HttpServlet {
         if ("update".equals(action)) {
             handleUpdateStudent(request, response);
         } else {
-            handleRegisterStudent(request, response);
+            try {
+                handleRegisterStudent(request, response);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -126,13 +131,23 @@ public class StudentController extends HttpServlet {
         }
     }
 
-    private void handleRegisterStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private void handleRegisterStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         String name = (String) request.getAttribute("name");
         LocalDate birth = (LocalDate) request.getAttribute("birth");
         String description = (String) request.getAttribute("description"); // Đổi describe thành description
-        Account account = (Account) request.getAttribute("account"); // Đổi id_acc thành account_id
+        String accountId = (String) request.getAttribute("account_id");
+        //Account account = accountDAO.getAccountById(accountId); // ✅
+
 
         try {
+            // Lấy account từ database theo id
+            Account account = accountDAO.getAccountById(accountId);
+            if (account == null) {
+                request.setAttribute("error_register", "Không tìm thấy tài khoản.");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
+            }
+
             Student student = new Student();
             student.setId(studentDAO.generateStudentId());
             student.setName(name);

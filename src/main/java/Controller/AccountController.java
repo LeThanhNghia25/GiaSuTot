@@ -65,24 +65,22 @@ public class AccountController extends HttpServlet {
                     HttpSession session = request.getSession();
                     session.setAttribute("account", acc);
 
-                    // Thiết lập userName và studentId/role dựa trên vai trò
+                    // Thiết lập userName và role dựa trên vai trò
                     if (acc.getRole() == 1) { // Student
                         Student student = studentDAO.getStudentByAccountId(acc.getId());
                         if (student != null) {
                             session.setAttribute("userName", student.getName());
-                            session.setAttribute("studentId", student.getId()); // Thêm studentId
-                            session.setAttribute("role", "student");
-                            session.setAttribute("id_st", student.getId()); // ✅ gán ngay khi đăng nhập
+                            session.setAttribute("role", "student"); // Thiết lập role dạng chuỗi
                         }
                     } else if (acc.getRole() == 2) { // Tutor
                         Tutor tutor = tutorDAO.getTutorByAccountId(acc.getId());
                         if (tutor != null) {
                             session.setAttribute("userName", tutor.getName());
-                            session.setAttribute("role", "tutor");
+                            session.setAttribute("role", "tutor"); // Thiết lập role dạng chuỗi
                         }
                     }
 
-                    System.out.println("Login successful. Account ID: " + acc.getId() + ", StudentId: " + session.getAttribute("studentId"));
+                    System.out.println("Login successful. Account ID: " + acc.getId());
                     response.sendRedirect(request.getContextPath() + "/index.jsp");
                 } else {
                     request.setAttribute("error", "Email hoặc mật khẩu không đúng, hoặc tài khoản chưa kích hoạt.");
@@ -96,6 +94,7 @@ public class AccountController extends HttpServlet {
                 LocalDate birth = LocalDate.parse(birthStr);
                 String description = request.getParameter("description");
 
+                // Kiểm tra rỗng
                 if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()
                         || name == null || name.trim().isEmpty() || birth == null || birthStr.trim().isEmpty()) {
                     request.setAttribute("error_register", "Vui lòng điền đầy đủ thông tin.");
@@ -103,6 +102,7 @@ public class AccountController extends HttpServlet {
                     return;
                 }
 
+                // Kiểm tra email trùng
                 Account existing = accountDAO.getAccountByEmail(email);
                 if (existing != null) {
                     request.setAttribute("error_register", "Email đã tồn tại, vui lòng dùng email khác.");
@@ -110,17 +110,21 @@ public class AccountController extends HttpServlet {
                     return;
                 }
 
+                // Tạo tài khoản mới
                 String idAcc = accountDAO.generateAccountId();
                 Account acc = new Account(idAcc, email, password, 1, "inactive");
                 accountDAO.insertAccount(acc);
 
+                // Chuyển các thông tin sang StudentController để tạo student mới
+                request.setAttribute("account_id", idAcc); // chỉ truyền id
                 request.setAttribute("name", name);
                 request.setAttribute("birth", birth);
                 request.setAttribute("description", description);
-                request.setAttribute("account_id", idAcc);
 
+                // Forward sang StudentController
                 request.getRequestDispatcher("/student").forward(request, response);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());

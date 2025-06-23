@@ -70,6 +70,25 @@ public class AccountDAO {
         }
         return null;
     }
+    public Account getAccountById(String id) throws SQLException {
+        String sql = "SELECT * FROM account WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Account acc = new Account();
+                    acc.setId(rs.getString("id"));
+                    acc.setEmail(rs.getString("email"));
+                    acc.setPassword(rs.getString("password"));
+                    acc.setRole(rs.getInt("role"));
+                    acc.setStatus(rs.getString("status"));
+                    return acc;
+                }
+            }
+        }
+        return null;
+    }
     public boolean updatePassword(String email, String newPassword) {
         String sql = "UPDATE account SET password = ? WHERE email = ?";
 
