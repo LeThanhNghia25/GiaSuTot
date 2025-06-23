@@ -41,6 +41,7 @@ public class CoursesController extends HttpServlet {
         System.out.println("Received GET request for /courses");
 
         String tenMon = request.getParameter("tenMon");
+        String tutorName = request.getParameter("tutorName");
         String trinhDo = request.getParameter("trinhDo");
         String pageParam = request.getParameter("page");
         String search = request.getParameter("search");
@@ -68,6 +69,10 @@ public class CoursesController extends HttpServlet {
                     if (tenMon != null && !tenMon.trim().isEmpty()) {
                         match = match && SearchDAO.removeDiacritics(course.getSubject().getName().toLowerCase())
                                 .contains(SearchDAO.removeDiacritics(tenMon.toLowerCase()));
+                    }
+                    if (tutorName != null && !tutorName.trim().isEmpty()) {
+                        match = match && SearchDAO.removeDiacritics(course.getTutor().getName().toLowerCase())
+                                .contains(SearchDAO.removeDiacritics(tutorName.toLowerCase()));
                     }
                     if (trinhDo != null && !trinhDo.trim().isEmpty()) {
                         match = match && SearchDAO.removeDiacritics(course.getSubject().getLevel().toLowerCase())

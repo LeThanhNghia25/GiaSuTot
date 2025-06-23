@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS tutor_requests;
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS account;
 
+
 -- Tạo lại bảng account
 CREATE TABLE account (
                          id CHAR(20) PRIMARY KEY,

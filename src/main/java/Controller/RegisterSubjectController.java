@@ -41,7 +41,7 @@ public class RegisterSubjectController extends HttpServlet {
             return;
         }
 
-        // Kiểm tra vai trò (giả định role = 2 là gia sư)
+        // Kiểm tra vai trò (role = 2 là gia sư)
         if (account.getRole() != 2) {
             request.getSession().setAttribute("error", "Chỉ gia sư được phép đăng ký môn dạy.");
             response.sendRedirect("manager_subject.jsp");
@@ -76,7 +76,7 @@ public class RegisterSubjectController extends HttpServlet {
                 }
                 fee = Double.parseDouble(feeStr);
                 if (fee < 1200000 || fee > 3000000) {
-                    request.getSession().setAttribute("error", "Học phí phải nằm trong khoảng từ 1.200.000 đến 3.000.000 VND.");
+                    request.getSession().setAttribute("error", "Học phí phải nằm trong khoảng từ 1.200.000 đến 3.000.000 VNĐ.");
                     response.sendRedirect("manager_subject.jsp");
                     return;
                 }
@@ -104,60 +104,72 @@ public class RegisterSubjectController extends HttpServlet {
             // Lấy thông tin gia sư
             Tutor tutor = tutorDAO.getTutorByAccountId(account.getId());
             if (tutor == null) {
+                System.err.println("Không tìm thấy gia sư với account_id: " + account.getId());
                 request.getSession().setAttribute("error", "Không tìm thấy thông tin gia sư.");
                 response.sendRedirect("manager_subject.jsp");
                 return;
             }
 
-            // Lấy email của admin (giả định account_id = 'admin001')
-            String adminEmail = null;
-            String sql = "SELECT email FROM account WHERE id = ?";
-            try (Connection conn = DBConnection.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, "admin001");
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        adminEmail = rs.getString("email");
-                    }
-                }
-            }
-
-            if (adminEmail == null) {
-                request.getSession().setAttribute("error", "Không tìm thấy email của admin.");
-                response.sendRedirect("manager_subject.jsp");
-                return;
-            }
+            // Email admin cố định
+            String adminEmail = "lethanhnghia0938@gmail.com";
 
             // Gửi email thông báo cho admin
             String emailSubject = "Yêu cầu duyệt môn học mới từ gia sư " + tutor.getName();
             String emailBody = "Kính gửi Admin,\n\n" +
-                    "Gia sư " + tutor.getName() + " đã đăng ký môn học mới với thông tin sau:\n" +
-                    "- Môn học: " + name + "\n" +
+                    "Gia sư " + tutor.getName() + " đã đăng ký môn học mới với thông tin:\n" +
+                    "- Mã môn học: " + subject.getId() + "\n" +
+                    "- Tên môn học: " + name + "\n" +
                     "- Cấp độ: " + level + "\n" +
-                    "- Học phí: " + fee + " VND\n" +
+                    "- Học phí: " + fee + " VNĐ\n" +
                     "- Trạng thái: Đang chờ duyệt\n\n" +
                     "Vui lòng truy cập hệ thống để xem xét và duyệt môn học này.\n" +
                     "Đường dẫn duyệt: http://localhost:8080/GiaSuTot_war/admin/subject\n\n" +
                     "Trân trọng,\n" +
                     "Hệ thống Gia Sư Tốt";
 
-            EmailSender.sendTextEmail(adminEmail, emailSubject, emailBody);
 
-            // Gửi thông báo qua hệ thống (dùng AdminSubjectDAO.sendNotification)
+            try {
+                EmailSender.sendTextEmail(adminEmail, emailSubject, emailBody);
+                System.out.println("Đã gửi email tới: " + adminEmail);
+            } catch (Exception e) {
+                System.err.println("Lỗi gửi email tới " + adminEmail + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+
+            // Gửi thông báo qua hệ thống (kiểm tra admin account tồn tại)
+            String adminAccountId = "admin001";
             String notificationMessage = "Gia sư " + tutor.getName() + " đã đăng ký môn học: " + name + " (" + level + ") đang chờ duyệt.";
-            subjectDAO.sendNotification("admin001", notificationMessage);
+            String checkAdminSql = "SELECT id FROM account WHERE id = ?";
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(checkAdminSql)) {
+                stmt.setString(1, adminAccountId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        subjectDAO.sendNotification(adminAccountId, notificationMessage);
+                        System.out.println("Đã gửi thông báo hệ thống tới admin001.");
+                    } else {
+                        System.err.println("Tài khoản admin_id " + adminAccountId + " không tồn tại. Không gửi thông báo hệ thống.");
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Lỗi khi kiểm tra hoặc gửi thông báo hệ thống: " + e.getMessage());
+                e.printStackTrace();
+            }
 
             // Đặt thông báo thành công
             request.getSession().setAttribute("success", "Đăng ký môn dạy thành công! Đang chờ admin duyệt.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("error", "Lỗi khi đăng ký môn dạy: " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("error", "Lỗi gửi email: " + e.getMessage());
-        }
+            response.sendRedirect("manager_subject.jsp");
 
-        // Chuyển hướng về manager_subject.jsp
-        response.sendRedirect("manager_subject.jsp");
+        } catch (SQLException e) {
+            System.err.println("Lỗi SQL khi đăng ký môn học: " + e.getMessage());
+            e.printStackTrace();
+            request.getSession().setAttribute("error", "Lỗi hệ thống khi đăng ký môn học.");
+            response.sendRedirect("manager_subject.jsp");
+        } catch (Exception e) {
+            System.err.println("Lỗi không xác định: " + e.getMessage());
+            e.printStackTrace();
+            request.getSession().setAttribute("error", "Lỗi hệ thống, vui lòng thử lại.");
+            response.sendRedirect("manager_subject.jsp");
+        }
     }
 }

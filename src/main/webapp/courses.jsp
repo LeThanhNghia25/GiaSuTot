@@ -23,7 +23,6 @@
             transform: translateY(-5px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
-
         .course-content {
             padding: 20px;
         }
@@ -121,8 +120,6 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-
-        /*** Filter Section ***/
         .filter-section {
             background: #f8f9fa;
             padding: 20px;
@@ -212,7 +209,7 @@
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6 class="section-title bg-white text-center text-primary px-3">Khóa học</h6>
             <c:choose>
-                <c:when test="${not empty param.search or not empty param.tenMon or not empty param.lop or not empty param.tinh}">
+                <c:when test="${not empty param.search or not empty param.tenMon or not empty param.lop or not empty param.tinh or not empty param.tutorName}">
                     <h1 class="mb-5">Kết quả tìm kiếm</h1>
                 </c:when>
                 <c:otherwise>
@@ -225,10 +222,16 @@
         <div class="filter-section mb-5">
             <form method="GET" action="${pageContext.request.contextPath}/courses" class="row g-3 justify-content-center">
                 <!-- Tên môn học -->
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-3 col-md-6">
                     <label for="tenMonHoc" class="form-label">Tên môn học</label>
                     <input type="text" class="form-control" id="tenMonHoc" name="tenMon" placeholder="Nhập tên môn học"
                            value="${param.tenMon != null ? param.tenMon : ''}">
+                </div>
+                <!-- Tên gia sư -->
+                <div class="col-lg-3 col-md-6">
+                    <label for="tutorName" class="form-label">Tên gia sư</label>
+                    <input type="text" class="form-control" id="tutorName" name="tutorName" placeholder="Nhập tên gia sư"
+                           value="${param.tutorName != null ? param.tutorName : ''}">
                 </div>
                 <!-- Trình Độ -->
                 <div class="col-lg-2 col-md-6">
@@ -306,7 +309,7 @@
                 <c:if test="${not empty allCourses and totalPages > 1}">
                     <div class="pagination">
                         <c:forEach var="i" begin="1" end="${totalPages}">
-                            <a href="${pageContext.request.contextPath}/courses?page=${i}&search=${param.search}&tenMon=${param.tenMon}&lop=${param.lop}&tinh=${param.tinh}"
+                            <a href="${pageContext.request.contextPath}/courses?page=${i}&search=${param.search}&tenMon=${param.tenMon}&tutorName=${param.tutorName}&trinhDo=${param.trinhDo}"
                                class="${i == currentPage ? 'active' : ''}">${i}</a>
                         </c:forEach>
                     </div>
