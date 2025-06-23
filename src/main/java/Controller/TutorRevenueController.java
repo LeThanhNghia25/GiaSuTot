@@ -57,7 +57,7 @@ public class TutorRevenueController extends HttpServlet {
             String jsonRevenue = new Gson().toJson(monthlyRevenue);
             request.setAttribute("monthlyRevenue", jsonRevenue);
             request.setAttribute("selectedYear", year);
-            request.getRequestDispatcher("/tutor-revenue.jsp").forward(request, response);
+            request.getRequestDispatcher("/tutor_revenue.jsp").forward(request, response);
         } catch (SQLException e) {
             System.err.println("Database error in TutorRevenueController: " + e.getMessage());
             e.printStackTrace();
