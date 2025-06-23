@@ -61,6 +61,7 @@
                 <!-- Link tới student profile -->
                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/student">Thông tin cá nhân</a></li>
                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/student-schedule">Xem lịch học</a></li>
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/studentCourse">Xem khóa học</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a></li>
               </c:when>
