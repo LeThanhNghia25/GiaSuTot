@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TutorRequestDAO {
-    // Inner class để lưu thông tin yêu cầu
     public static class TutorRequest {
         private final int id;
         private final String accountId;
@@ -41,7 +40,6 @@ public class TutorRequestDAO {
             this.description = description;
         }
 
-        // Getters
         public int getId() { return id; }
         public String getAccountId() { return accountId; }
         public String getName() { return name; }
@@ -56,7 +54,6 @@ public class TutorRequestDAO {
         public String getDescription() { return description; }
     }
 
-    // Lưu yêu cầu trở thành gia sư vào bảng tutor_requests
     public void saveTutorRequest(String accountId, String name, String birth, String email, String phone,
                                  String idCardNumber, String bankAccountNumber, String bankName, String address,
                                  String specialization, String description) throws SQLException {
@@ -80,12 +77,9 @@ public class TutorRequestDAO {
             ps.setString(10, specialization);
             ps.setString(11, description);
             ps.executeUpdate();
-
         }
-
     }
 
-    // Lấy danh sách tất cả yêu cầu trở thành gia sư
     public List<TutorRequest> getAllTutorRequests() throws SQLException {
         List<TutorRequest> requests = new ArrayList<>();
         String sql = """
@@ -115,5 +109,14 @@ public class TutorRequestDAO {
             }
         }
         return requests;
+    }
+
+    public void rejectTutorRequest(String requestId) throws SQLException {
+        String sql = "DELETE FROM tutor_requests WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, Integer.parseInt(requestId));
+            ps.executeUpdate();
+        }
     }
 }

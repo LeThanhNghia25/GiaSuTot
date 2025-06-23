@@ -5,6 +5,7 @@ import DAO.AccountDAO;
 import Utils.DBConnection;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import Utils.EmailSender;
 
 import java.io.IOException;
 import java.sql.*;
@@ -56,6 +57,11 @@ public class TutorRequestApprovalController extends HttpServlet {
                 PreparedStatement updateRole = conn.prepareStatement("UPDATE account SET role = 2 WHERE id = ?");
                 updateRole.setString(1, accountId);
                 updateRole.executeUpdate();
+
+                String email = rs.getString("email");
+                String name = rs.getString("name");
+                EmailSender.sendTutorApprovedEmail(email, name);
+
             }
 
             // Xóa khỏi bảng yêu cầu
