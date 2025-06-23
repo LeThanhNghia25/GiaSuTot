@@ -52,7 +52,7 @@ public class TutorController extends HttpServlet {
             request.setAttribute("tutor", tutor);
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_profile.jsp");
         dispatcher.forward(request, response);
     }
 
