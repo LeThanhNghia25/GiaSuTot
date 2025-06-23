@@ -1,6 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.Student" %>
 <%@ page import="model.Account" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="model.Tutor" %>
+<%@ page import="java.util.List" %>
+
 <html>
 <head>
     <title>Profile Student</title>
@@ -41,6 +45,10 @@
     int role = (acc != null) ? acc.getRole() : -1;
     boolean isStudent = (role == 1);
 %>
+<%
+    Boolean editable = (Boolean) request.getAttribute("editable");
+    if (editable == null) editable = false;
+%>
 <section style="background-color: #eee;">
     <div class="container py-5">
         <div class="row">
@@ -68,13 +76,50 @@
                              class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3"><%= student.getName() %></h5>
                         <div class="d-flex justify-content-center mb-2">
-                            <button type="button" class="btn btn-primary">Theo dõi</button>
-                            <button type="button" class="btn btn-primary">Nhắn tin</button>
+                            <% if (!editable) { %>
+                            <div class="mt-2">
+                                <button class="btn btn-outline-primary btn-sm btn-toggle-interests">
+                                    <i class="fas fa-heart"></i> Xem danh sách quan tâm
+                                </button>
+                            </div>
+                            <% } else { %>
+                            <% } %>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div id="interestedTutorsSection" class="card mb-4 mb-lg-0" style="display: none;">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush rounded-3">
+                            <li class="list-group-item text-center">
+                                <h6>Gia sư bạn đang quan tâm</h6>
+                            </li>
+                            <%
+                                List<Tutor> interestedTutors = (List<Tutor>) request.getAttribute("interestedTutors");
+                                if (interestedTutors != null && !interestedTutors.isEmpty()) {
+                                    for (Tutor t : interestedTutors) {
+                            %>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong><%= t.getName() %></strong><br>
+                                    <small>Chuyên môn: <%= t.getSpecialization() %></small><br>
+                                    <small>Email: <%= t.getEmail() %></small>
+                                </div>
+                                <a href="tutor?id=<%= t.getId() %>" class="btn btn-sm btn-outline-primary">Xem</a>
+                            </li>
+                            <%
+                                }
+                            } else {
+                            %>
+                            <li class="list-group-item text-muted text-center">Bạn chưa quan tâm gia sư nào.</li>
+                            <%
+                                }
+                            %>
+                        </ul>
+                    </div>
+                </div>
 
+
+            </div>
             <div class="col-lg-8">
                 <!-- Thông tin cá nhân -->
                 <div class="card mb-4" id="profileInfo">
@@ -105,7 +150,7 @@
                 </div>
 
                 <!-- Mô tả thêm -->
-                <div class="card mb-4" id="profileInfo">
+                <div class="card mb-4" id="profileInfoDesc">
                     <div class="card-body">
                         <h5 class="mb-3">Mô tả thêm</h5>
                         <p class="text-muted"><%= student.getDescription() %></p>
@@ -155,7 +200,7 @@
 <script>
     function toggleEditForm() {
         const editForm = document.getElementById("editForm");
-        const profileInfoElements = document.querySelectorAll("#profileInfo");
+        const profileInfoElements = document.querySelectorAll("#profileInfo, #profileInfoDesc");
         const backdrop = document.getElementById("backdrop");
 
         const isHidden = editForm.style.display === "none" || editForm.style.display === "";
@@ -167,6 +212,20 @@
             elem.style.display = isHidden ? "none" : "block";
         });
     }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.querySelector(".btn-toggle-interests");
+        const interestSection = document.getElementById("interestedTutorsSection");
+
+        if (toggleBtn && interestSection) {
+            toggleBtn.addEventListener("click", function () {
+                // Toggle hiển thị
+                interestSection.style.display =
+                    interestSection.style.display === "none" ? "block" : "none";
+            });
+        }
+    });
 </script>
 
 </body>

@@ -64,11 +64,13 @@ public class TutorController extends HttpServlet {
             } else {
                 System.out.println("Tutor found: " + tutor.getName());
                 request.setAttribute("tutor", tutor);
+                request.setAttribute("editable", true); // ✅ BỔ SUNG DÒNG NÀY
             }
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
             dispatcher.forward(request, response);
         }
+
     }
 
     @Override

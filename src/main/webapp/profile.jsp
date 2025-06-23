@@ -10,11 +10,7 @@
   if (editable == null) editable = false;
 %>
 <%@ page import="DAO.TutorDAO, model.Tutor, java.util.List" %>
-<%
-  TutorDAO dao = new TutorDAO();
-  List<Tutor> tutors = dao.getAllTutors();
-  request.setAttribute("tutors", tutors); // gán vào request như servlet
-%>
+
 <html>
 <head>
   <title>Profile Tutor</title>
@@ -79,12 +75,14 @@
             <p class="text-muted mb-1">Gia sư <%= tutor.getSpecialization() %></p>
             <p class="text-muted mb-4"><%= tutor.getAddress() %></p>
             <div class="d-flex justify-content-center mb-2">
-              <div class="mt-2">
-                <button class="btn btn-outline-primary btn-sm btn-like" data-tutor-id="${tutor.id}">
-                  <i class="fas fa-heart"></i> Quan tâm
-                </button>
-              </div>
-
+              <% if (!editable) { %>
+                <div class="mt-2">
+                  <button class="btn btn-outline-primary btn-sm btn-like" data-tutor-id="<%= tutor.getId() %>">
+                    <i class="fas fa-heart">Quan tâm</i>
+                  </button>
+                </div>
+              <% } else { %>
+              <% } %>
             </div>
           </div>
         </div>
@@ -159,7 +157,7 @@
         </div>
 
         <!-- Mô tả thêm -->
-        <div class="card mb-4" id="profileInfo">
+        <div class="card mb-4" id="profileInfoDesc">
           <div class="card-body">
             <h5 class="mb-3">Mô tả thêm</h5>
             <p class="text-muted"><%= tutor.getDescription() %></p>
@@ -236,7 +234,7 @@
 <script>
   function toggleEditForm() {
     const editForm = document.getElementById("editForm");
-    const profileInfoElements = document.querySelectorAll("#profileInfo");
+    const profileInfoElements = document.querySelectorAll("#profileInfo, #profileInfoDesc");
     const backdrop = document.getElementById("backdrop");
 
     const isHidden = editForm.style.display === "none" || editForm.style.display === "";

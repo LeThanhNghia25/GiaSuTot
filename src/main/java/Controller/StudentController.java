@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.AccountDAO;
+import DAO.InterestDAO;
 import DAO.StudentDAO;
 import jakarta.servlet.http.HttpSession;
 import model.Account;
@@ -11,20 +12,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Tutor;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 @WebServlet(name = "StudentController", urlPatterns = {"/student"})
 public class StudentController extends HttpServlet {
     private StudentDAO studentDAO;
     private AccountDAO accountDAO;
+    private InterestDAO interestDAO;
 
     @Override
     public void init() {
         studentDAO = new StudentDAO();
         accountDAO = new AccountDAO();
+        interestDAO = new InterestDAO();
     }
 
     @Override
@@ -53,6 +58,10 @@ public class StudentController extends HttpServlet {
                 request.setAttribute("error", "Không tìm thấy thông tin học viên.");
             } else {
                 request.setAttribute("student", student);
+                List<Tutor> interestedTutors = interestDAO.getInterestedTutorsByStudentId(student.getId()); // ← bạn cần hàm này
+                request.setAttribute("student", student);
+                request.setAttribute("interestedTutors", interestedTutors);
+
             }
 
             request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
