@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
 
-@WebServlet(name = "lessonController", urlPatterns = {"/lesson"})
+@WebServlet(name = "lessonController", urlPatterns = {"/lesson", "/lesson2"})
 public class LessonController extends HttpServlet {
 
     @Override
@@ -71,95 +71,144 @@ public class LessonController extends HttpServlet {
             throw new ServletException("Error retrieving students", e);
         }
 
-
         request.setAttribute("idCourse", courseList);
         request.setAttribute("studentList", studentList);
         request.setAttribute("StIDList", idStudentList);
         request.setAttribute("tutor", tutor);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_subject_management.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_subject_management.jsp"); // Sử dụng lesson.jsp
         dispatcher.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Received POST request for /lesson"); // Debug
-        String studentId = request.getParameter("studentId");
-        Map<String, Object> responseData = new HashMap<>();
+        String servletPath = request.getServletPath();
+        System.out.println("Received POST request for: " + servletPath);
 
-        System.out.println("Received studentId in doPost: " + studentId);
+        if ("/lesson".equals(servletPath)) {
+            // Xử lý cho /lesson (lấy thông tin học viên)
+            String studentId = request.getParameter("studentId");
+            Map<String, Object> responseData = new HashMap<>();
 
-        if (studentId != null && !studentId.isEmpty()) {
-            StudentDAO studentDAO = new StudentDAO();
-            RegisteredSubjectDAO registeredSubjectDAO = new RegisteredSubjectDAO();
-            CourseDAO courseDAO = new CourseDAO();
-            try {
-                System.out.println("Fetching student with ID: " + studentId);
-                Student student = studentDAO.getStudentById(studentId);
-                if (student != null) {
-                    System.out.println("Student found: " + student.getName());
-                    System.out.println("Fetching registered subjects...");
-                    List<RegisteredSubjects> registeredSubjectsList = registeredSubjectDAO.getAllReSubject();
-                    System.out.println("Total registered subjects: " + registeredSubjectsList.size());
-                    RegisteredSubjects registeredSubject = null;
-                    for (RegisteredSubjects rs : registeredSubjectsList) {
-                        if (rs.getStudent_id().equals(studentId) && "registered".equals(rs.getStatus())) {
-                            registeredSubject = rs;
-                            System.out.println("Found registered subject for studentId: " + studentId + ", courseId: " + rs.getCourse_id());
-                            break;
+            System.out.println("Received studentId in doPost: " + studentId);
+
+            if (studentId != null && !studentId.isEmpty()) {
+                StudentDAO studentDAO = new StudentDAO();
+                RegisteredSubjectDAO registeredSubjectDAO = new RegisteredSubjectDAO();
+                CourseDAO courseDAO = new CourseDAO();
+                try {
+                    System.out.println("Fetching student with ID: " + studentId);
+                    Student student = studentDAO.getStudentById(studentId);
+                    if (student != null) {
+                        System.out.println("Student found: " + student.getName());
+                        System.out.println("Fetching registered subjects...");
+                        List<RegisteredSubjects> registeredSubjectsList = registeredSubjectDAO.getAllReSubject();
+                        System.out.println("Total registered subjects: " + registeredSubjectsList.size());
+                        RegisteredSubjects registeredSubject = null;
+                        for (RegisteredSubjects rs : registeredSubjectsList) {
+                            if (rs.getStudent_id().equals(studentId) && "registered".equals(rs.getStatus())) {
+                                registeredSubject = rs;
+                                System.out.println("Found registered subject for studentId: " + studentId + ", courseId: " + rs.getCourse_id());
+                                break;
+                            }
                         }
-                    }
-                    if (registeredSubject != null) {
-                        System.out.println("Fetching course with ID: " + registeredSubject.getCourse_id());
-                        Course course = courseDAO.getCourseById(registeredSubject.getCourse_id());
-                        if (course != null && course.getSubject() != null) {
-                            System.out.println("Course found: " + course.getId() + ", subject: " + course.getSubject().getName());
-                            responseData.put("status", "success");
-                            responseData.put("studentName", student.getName());
-                            responseData.put("subject", course.getSubject().getName());
-                           responseData.put("courseId", course.getId());
-                           // responseData.put("course_id", mapSubjectToDropdownValue(course.getId()));
+                        if (registeredSubject != null) {
+                            System.out.println("Fetching course with ID: " + registeredSubject.getCourse_id());
+                            Course course = courseDAO.getCourseById(registeredSubject.getCourse_id());
+                            if (course != null && course.getSubject() != null) {
+                                System.out.println("Course found: " + course.getId() + ", subject: " + course.getSubject().getName());
+                                responseData.put("status", "success");
+                                responseData.put("studentName", student.getName());
+                                responseData.put("subject", course.getSubject().getName());
+                                responseData.put("courseId", course.getId());
+                            } else {
+                                responseData.put("status", "error");
+                                responseData.put("message", "Không tìm thấy khóa học hoặc môn học cho course_id: " + registeredSubject.getCourse_id());
+                                System.out.println("Course or subject not found for course_id: " + registeredSubject.getCourse_id());
+                            }
                         } else {
                             responseData.put("status", "error");
-                            responseData.put("message", "Không tìm thấy khóa học hoặc môn học cho course_id: " + registeredSubject.getCourse_id());
-                            System.out.println("Course or subject not found for course_id: " + registeredSubject.getCourse_id());
+                            responseData.put("message", "Không tìm thấy khóa học registered cho học viên với studentId: " + studentId);
+                            System.out.println("No registered subject found for studentId: " + studentId);
                         }
                     } else {
                         responseData.put("status", "error");
-                        responseData.put("message", "Không tìm thấy khóa học registered cho học viên với studentId: " + studentId);
-                        System.out.println("No registered subject found for studentId: " + studentId);
+                        responseData.put("message", "Không tìm thấy học viên với mã: " + studentId);
+                        System.out.println("Student not found for studentId: " + studentId);
                     }
-                } else {
+                } catch (SQLException e) {
+                    e.printStackTrace();
                     responseData.put("status", "error");
-                    responseData.put("message", "Không tìm thấy học viên với mã: " + studentId);
-                    System.out.println("Student not found for studentId: " + studentId);
+                    responseData.put("message", "Lỗi khi truy vấn cơ sở dữ liệu: " + e.getMessage());
+                    System.out.println("SQLException in doPost: " + e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    responseData.put("status", "error");
+                    responseData.put("message", "Lỗi bất ngờ: " + e.getMessage());
+                    System.out.println("Unexpected error in doPost: " + e.getMessage());
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else {
                 responseData.put("status", "error");
-                responseData.put("message", "Lỗi khi truy vấn cơ sở dữ liệu: " + e.getMessage());
-                System.out.println("SQLException in doPost: " + e.getMessage());
-            } catch (Exception e) {
-                e.printStackTrace();
-                responseData.put("status", "error");
-                responseData.put("message", "Lỗi bất ngờ: " + e.getMessage());
-                System.out.println("Unexpected error in doPost: " + e.getMessage());
+                responseData.put("message", "Mã học viên không hợp lệ");
+                System.out.println("Invalid studentId received: " + studentId);
             }
-        } else {
-            responseData.put("status", "error");
-            responseData.put("message", "Mã học viên không hợp lệ");
-            System.out.println("Invalid studentId received: " + studentId);
-        }
 
-        // Trả về JSON
-        String jsonResponse = new Gson().toJson(responseData);
-        System.out.println("Returning response: " + jsonResponse);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(jsonResponse);
-        out.flush();
+            // Trả về JSON
+            String jsonResponse = new Gson().toJson(responseData);
+            System.out.println("Returning response for /lesson: " + jsonResponse);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out = response.getWriter();
+            out.print(jsonResponse);
+            out.flush();
+        } else if ("/lesson2".equals(servletPath)) {
+            // Xử lý cho /lesson2 (lấy thông tin khóa học)
+            String courseId = request.getParameter("course_id");
+            Map<String, Object> responseData = new HashMap<>();
+
+            System.out.println("Received courseId in doPost: " + courseId);
+
+            if (courseId != null && !courseId.isEmpty()) {
+                CourseDAO courseDAO = new CourseDAO();
+                try {
+                    System.out.println("Fetching course with ID: " + courseId);
+                    Course course = courseDAO.getCourseById(courseId);
+                    if (course != null && course.getSubject() != null) {
+                        System.out.println("Course found: " + course.getId() + ", subject: " + course.getSubject().getName());
+                        responseData.put("status", "success");
+                        responseData.put("subject", course.getSubject().getName());
+                    } else {
+                        responseData.put("status", "error");
+                        responseData.put("message", "Không tìm thấy khóa học với mã: " + courseId);
+                        System.out.println("Course not found for courseId: " + courseId);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    responseData.put("status", "error");
+                    responseData.put("message", "Lỗi khi truy vấn cơ sở dữ liệu: " + e.getMessage());
+                    System.out.println("SQLException in doPost /lesson2: " + e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    responseData.put("status", "error");
+                    responseData.put("message", "Lỗi bất ngờ: " + e.getMessage());
+                    System.out.println("Unexpected error in doPost /lesson2: " + e.getMessage());
+                }
+            } else {
+                responseData.put("status", "error");
+                responseData.put("message", "Mã khóa học không hợp lệ");
+                System.out.println("Invalid courseId received: " + courseId);
+            }
+
+            // Trả về JSON
+            String jsonResponse = new Gson().toJson(responseData);
+            System.out.println("Returning response for /lesson2: " + jsonResponse);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out = response.getWriter();
+            out.print(jsonResponse);
+            out.flush();
+        }
     }
 
     private String mapSubjectToDropdownValue(String subjectName) {
