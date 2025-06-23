@@ -68,11 +68,13 @@
                 <!-- Link tới tutor profile -->
                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor">Thông tin cá nhân</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/tutor-subjects">Quản lý môn học</a></li>
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/approve-registrations">Duyệt đăng ký</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li>
-                  <a class="dropdown-item" href="${pageContext.request.contextPath}/lesson" methods="get">Tạo buổi học</a>
-                  <a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a>
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tutor-subjects">Quản lý môn học</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/lesson" methods="get">Tạo buổi học</a> </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>  <a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/account?action=logout">Đăng xuất</a>
                 </li>
               </c:when>
             </c:choose>
