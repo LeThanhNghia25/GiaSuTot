@@ -43,7 +43,7 @@ public class TutorController extends HttpServlet {
             } else {
                 request.setAttribute("error", "Không tìm thấy thông tin gia sư.");
             }
-            RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_profile.jsp");
             dispatcher.forward(request, response);
 
         } else {
