@@ -9,8 +9,10 @@ DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS tutor;
 DROP TABLE IF EXISTS student;
--- Cuối cùng xóa bảng cha
 DROP TABLE IF EXISTS subject;
+DROP TABLE IF EXISTS interest;
+DROP TABLE IF EXISTS tutor_requests;
+DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS account;
 
 -- Tạo lại bảng account
@@ -19,15 +21,16 @@ CREATE TABLE account (
                          email VARCHAR(100) NOT NULL,
                          password VARCHAR(100) NOT NULL,
                          role INT DEFAULT 1 CHECK (role IN (1, 2, 3)),
-                         status VARCHAR(50) NOT NULL CHECK (status IN ('active', 'inactive'))
+                         status VARCHAR(50) NOT NULL CHECK (status IN ('active', 'inactive')),
+                         reset_token VARCHAR(255) NULL
 );
 
 -- Tạo lại bảng student
 CREATE TABLE student (
                          id CHAR(20) PRIMARY KEY,
-                         name VARCHAR(100) NOT NULL,
-                         birth DATE NULL, -- Cho phép NULL
-                         description TEXT NULL, -- Cho phép NULL
+                         name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                         birth DATE NULL,
+                         description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
                          account_id CHAR(20),
                          FOREIGN KEY (account_id) REFERENCES account(id)
 );
@@ -38,20 +41,20 @@ CREATE TABLE subject (
                          name VARCHAR(100) NOT NULL,
                          level VARCHAR(50) NOT NULL,
                          description TEXT,
-                         fee DECIMAL(12) NOT NULL,
+                         fee DECIMAL(12, 0) NOT NULL,
                          status VARCHAR(50) NOT NULL CHECK (status IN ('active', 'inactive'))
 );
 
 -- Tạo lại bảng tutor
 CREATE TABLE tutor (
                        id CHAR(20) PRIMARY KEY,
-                       name VARCHAR(100) NOT NULL,
+                       name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                        email VARCHAR(100) NOT NULL,
                        birth DATE NOT NULL,
                        phone VARCHAR(20) NOT NULL,
                        address VARCHAR(255) NOT NULL,
                        specialization VARCHAR(255) NOT NULL,
-                       description TEXT,
+                       description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
                        id_card_number BIGINT(12) NOT NULL,
                        bank_account_number BIGINT(15) NOT NULL,
                        bank_name VARCHAR(255) NOT NULL,
@@ -109,7 +112,7 @@ CREATE TABLE payment (
                          course_id CHAR(20) NOT NULL,
                          tutor_id CHAR(20) NOT NULL,
                          student_id CHAR(20) NOT NULL,
-                         amount DECIMAL(12) NOT NULL,
+                         amount DECIMAL(12, 0) NOT NULL,
                          payment_date DATETIME NOT NULL,
                          file_name VARCHAR(255) NULL,
                          file_path VARCHAR(255) NULL,
@@ -118,11 +121,12 @@ CREATE TABLE payment (
                          FOREIGN KEY (student_id) REFERENCES student(id)
 );
 
+-- Tạo lại bảng tutor_requests
 CREATE TABLE tutor_requests (
                                 id INT AUTO_INCREMENT PRIMARY KEY,
                                 account_id CHAR(20) NOT NULL,
-                                name VARCHAR(100) NOT NULL,
-                                birth VARCHAR(10) NOT NULL, -- Lưu định dạng yyyy-MM-dd
+                                name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                birth VARCHAR(10) NOT NULL,
                                 email VARCHAR(100) NOT NULL,
                                 phone VARCHAR(20) NOT NULL,
                                 id_card_number BIGINT(12) NOT NULL,
@@ -130,10 +134,32 @@ CREATE TABLE tutor_requests (
                                 bank_name VARCHAR(255) NOT NULL,
                                 address VARCHAR(255) NOT NULL,
                                 specialization VARCHAR(255) NOT NULL,
-                                description VARCHAR(255) NOT NULL,
+                                description VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                                 created_at DATETIME NOT NULL,
                                 FOREIGN KEY (account_id) REFERENCES account(id)
 );
+
+-- Tạo lại bảng reviews
+CREATE TABLE reviews (
+                         tutor_id CHAR(20) NOT NULL,
+                         course_id CHAR(20) NOT NULL,
+                         student_id CHAR(20) NOT NULL,
+                         time DATETIME DEFAULT CURRENT_TIMESTAMP,
+                         comment TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+                         FOREIGN KEY (course_id) REFERENCES course(id),
+                         FOREIGN KEY (tutor_id) REFERENCES tutor(id),
+                         FOREIGN KEY (student_id) REFERENCES student(id)
+);
+
+-- Tạo bảng interest
+CREATE TABLE interest (
+                          id_st CHAR(20) NOT NULL,
+                          id_tt CHAR(20) NOT NULL,
+                          PRIMARY KEY (id_st, id_tt),
+                          FOREIGN KEY (id_st) REFERENCES student(id),
+                          FOREIGN KEY (id_tt) REFERENCES tutor(id)
+);
+
 -- Bật lại kiểm tra khóa ngoại
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -180,7 +206,7 @@ INSERT INTO tutor (id, name, email, birth, phone, address, specialization, descr
                                                                                                                                                                   ('tut005', 'Nguyễn Thu', 'tut5@example.com', '1990-01-01', '0901000001', 'Hà Nội', 'Toán', '10 năm kinh nghiệm dạy Toán', 123456789016, 123456789012349, 'tp bank', 'acc015', 5),
                                                                                                                                                                   ('tut006', 'Trương Cao Đạt', 'tut6@example.com', '1988-05-12', '0901000002', 'TP.HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 123456789017, 123456789012350, 'agribank', 'acc016', 4),
                                                                                                                                                                   ('tut007', 'Đinh Thị Ngọc', 'tut7@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'Giáo viên trường chuyên', 123456789018, 123456789012351, 'bidv', 'acc017', 3),
-                                                                                                                                                                  ('tut008', 'Lê Nghĩa', 'tut8@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 123456789019, '123456789012352', 'mb', 'acc018', 4),
+                                                                                                                                                                  ('tut008', 'Lê Nghĩa', 'tut8@example.com', '1991-09-20', '0901000004', 'Huế', 'Toán', 'Nhiệt huyết, vui vẻ', 123456789019, 123456789012352, 'mb', 'acc018', 4),
                                                                                                                                                                   ('tut009', 'Trần Nguyễn Vẹn', 'tut9@example.com', '1988-05-12', '0901000002', 'TP.HCM', 'Tiếng Anh', 'Chuyên luyện giao tiếp', 123456789020, 123456789012353, 'sacombank', 'acc019', 4),
                                                                                                                                                                   ('tut010', 'Mai Hạnh Phúc', 'tut10@example.com', '1992-07-07', '0901000003', 'Đà Nẵng', 'Hóa học', 'Giáo viên trường chuyên', 123456789021, 123456789012354, 'tp bank', 'acc020', 3);
 
@@ -205,7 +231,7 @@ INSERT INTO subject (id, name, level, description, fee, status) VALUES
                                                                     ('sub017', 'Giáo dục công dân', 'Lớp 12', 'Học Giáo dục công dân lớp 12', 1700000, 'active'),
                                                                     ('sub018', 'Lịch sử', 'Lớp 8', 'Học Lịch sử cơ bản lớp 8', 1600000, 'active');
 
--- Chèn dữ liệu vào bảng course (20 khóa học)
+-- Chèn dữ liệu vào bảng course
 INSERT INTO course (id, subject_id, tutor_id, time) VALUES
                                                         ('course001', 'sub001', 'tut001', '2025-05-01 08:00:00'),
                                                         ('course002', 'sub002', 'tut002', '2025-05-02 09:00:00'),
@@ -299,7 +325,7 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course006', 'st007', 'completed', '2025-03-10 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-03-12 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-03-14 08:00:00'),
-                                                             ('course006', 'st007', 'completed', '2025-03-15 08:00:00'),
+                                                             ('course006', 'st007', 'completed', '2025-03-16 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-03-18 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-03-20 08:00:00'),
                                                              ('course006', 'st007', 'completed', '2025-03-22 08:00:00'),
@@ -347,11 +373,3 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
                                                              ('course010', 'st005', 'scheduled', '2025-06-15 10:00:00'),
                                                              ('course010', 'st005', 'scheduled', '2025-06-17 10:00:00'),
                                                              ('course010', 'st005', 'scheduled', '2025-06-19 10:00:00');
-
--- Cài đặt lại chế độ tiếng Việt cho cột name trong bảng student
-ALTER TABLE student
-    MODIFY COLUMN name VARCHAR(100)
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci
-    NOT NULL;
-

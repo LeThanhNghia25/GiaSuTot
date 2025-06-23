@@ -33,13 +33,13 @@ public class StudentController extends HttpServlet {
             if (studentId != null && !studentId.isEmpty()) {
                 // Nếu có id truyền trên URL, lấy thông tin theo id
                 student = studentDAO.getStudentById(studentId);
+
             } else {
                 // Nếu không có id, lấy theo account trong session
                 HttpSession session = request.getSession();
                 Account account = (Account) session.getAttribute("account");
                 if (account == null) {
                     request.setAttribute("error", "Vui lòng đăng nhập để xem thông tin cá nhân.");
-                    request.getRequestDispatcher("/account?action=login").forward(request, response);
                     return;
                 }
 
@@ -59,6 +59,8 @@ public class StudentController extends HttpServlet {
             request.setAttribute("error", "Lỗi khi lấy thông tin học viên: " + e.getMessage());
             request.getRequestDispatcher("/student_profile.jsp").forward(request, response);
         }
+
+
     }
 
 

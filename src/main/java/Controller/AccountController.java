@@ -72,6 +72,7 @@ public class AccountController extends HttpServlet {
                             session.setAttribute("userName", student.getName());
                             session.setAttribute("studentId", student.getId()); // Thêm studentId
                             session.setAttribute("role", "student");
+                            session.setAttribute("id_st", student.getId()); // ✅ gán ngay khi đăng nhập
                         }
                     } else if (acc.getRole() == 2) { // Tutor
                         Tutor tutor = tutorDAO.getTutorByAccountId(acc.getId());
