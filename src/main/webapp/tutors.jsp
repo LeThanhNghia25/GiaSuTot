@@ -42,13 +42,11 @@
                     <div class="text-center p-4">
                         <h5 class="mb-0">${tutor.name}</h5>
                         <small>${tutor.specialization}</small>
-                        <!-- Nút trái tim "Quan tâm" -->
-                        <div class="mt-2">
-                            <button class="btn btn-outline-primary btn-sm btn-like"
-                                data-tutor-id="${tutor.id}">
-                                <i class="fas fa-heart"></i> Quan tâm
-                            </button>
+
+                        <div class="mt-3">
+                            <a href="tutor?id=${tutor.id}" class="btn btn-sm btn-outline-primary">Xem thông tin</a>
                         </div>
+
 
                     </div>
                 </div>
@@ -62,37 +60,6 @@
     </div>
 </div>
 <!-- Team End -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".btn-like").forEach(function (btn) {
-            btn.addEventListener("click", function () {
-                const tutorId = btn.getAttribute("data-tutor-id");
-
-                fetch("add-interest", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "tutorId=" + encodeURIComponent(tutorId)
-                })
-                    .then(res => res.text())
-                    .then(data => {
-                        if (data === 'success') {
-                            // Đổi màu nút
-                            btn.classList.remove("btn-outline-primary");
-                            btn.classList.add("btn-primary");
-                            btn.innerHTML = '<i class="fas fa-heart"></i> Đã quan tâm';
-                        } else if (data === 'not_logged_in') {
-                            alert("Vui lòng đăng nhập để sử dụng chức năng này.");
-                        } else {
-                            alert("Có lỗi xảy ra khi lưu quan tâm.");
-                        }
-                    });
-            });
-        });
-    });
-</script>
-
 <script>
     let currentVisible = 0;
     const batchSize = 4;

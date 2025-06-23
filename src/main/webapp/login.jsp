@@ -19,6 +19,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
+
     <link href="css/style.css" rel="stylesheet">
     <link href="css/login-signup.css" rel="stylesheet">
     <link href="css/modal.css" rel="stylesheet">
@@ -31,28 +32,33 @@
 <!-- Content-->
 <div class="content">
     <div class="container" id="container">
-        <div class="form-container sign-up">
+        <div class="form-container sign-up active " style="display:block;">
             <form id="register-form" action="${pageContext.request.contextPath}/signup-user" method="post">
                 <input type="hidden" name="action" value="register">
                 <h1>Tạo tài khoản</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon-logo"><i class="fab fa-google g"></i></a>
-                    <a href="#" class="icon-logo"><i class="fab fa-facebook-f f"></i></a>
-                </div>
-                <span>Hoặc sử dụng email để đăng kí tài khoản</span>
-
                 <!-- Nhập Email -->
-                <input type="text" name="email" id="register-email" placeholder="Email" value="${email}" >
+                <%--<input type="email" name="email" id="register-email" placeholder="Email" value="${email}" required>
                 <div id="email-error" style="color: red; font-size: 10px;"></div>
 
-                <input type="text" name="name" id="register-username" placeholder="Tên đăng nhập" >
-                <div id="username-error" style="color: red; font-size: 10px;"></div>
+                <!-- Sửa id và placeholder để tránh nhầm lẫn với username -->
+                <input type="text" name="name" id="register-name" placeholder="Họ và tên" required>
+                <div id="name-error" style="color: red; font-size: 10px;"></div>
 
-                <input type="date" name="birth" id="register-birth" >
+                <input type="date" name="birth" id="register-birth" required>
                 <div id="birth-error" style="color: red; font-size: 10px;"></div>
 
-                <input type="password" name="password" id="register-password" placeholder="Mật khẩu" >
-                <div id="password-error" style="color: red; font-size: 10px;"></div>
+                <input type="text" name="description" id="register-description" placeholder="Mô tả"> <!-- Đổi từ describe -->
+                <div id="description-error" style="color: red; font-size: 10px;"></div> <!-- Đổi từ describeSt-error -->
+
+                <input type="password" name="password" id="register-password" placeholder="Mật khẩu" required>
+                <div id="password-error" style="color: red; font-size: 10px;"></div>--%>
+                <input name="email" value="test@gmail.com" id="register-email">
+                <div id="email-error" style="color: red; font-size: 10px;"></div>
+
+                <input type="text" name="name" value="Nam" id="register-name">
+                <div id="name-error" style="color: red; font-size: 10px;"></div>
+
+
 
                 <div id="error-server" style="color: red; font-size: 10px;">
                     <c:if test="${not empty error_register}">
@@ -155,6 +161,7 @@
     const registerBtn = document.getElementById('register');
     const loginBtn = document.getElementById('login');
 
+
     registerBtn.addEventListener('click', () => {
         container.classList.add('active');
     });
@@ -170,8 +177,8 @@
         container.classList.remove('active'); // chuyển sang form đăng nhập
     }
 </script>
-<script src="${pageContext.request.contextPath}/js/login-signup.js"></script>
-<script src="${pageContext.request.contextPath}/js/main.js"></script>
+<%--<script src="${pageContext.request.contextPath}/js/main.js"></script>--%>
+<script src="js/login-signup.js"></script>
 
 </body>
 

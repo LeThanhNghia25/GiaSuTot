@@ -31,29 +31,46 @@ public class TutorController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String tutorId = request.getParameter("id"); // người dùng muốn xem gia sư cụ thể?
         System.out.println("Handling GET request for /profile");
+        if (tutorId != null && !tutorId.trim().isEmpty()) {
+            // --- Trường hợp người dùng truy cập bằng /tutor?id=abc ---
+            Tutor tutor = tutorDAO.getTutorById(tutorId);
+            if (tutor != null) {
+                request.setAttribute("tutor", tutor);
+                request.setAttribute("editable", false); // chỉ xem
 
-        Account account = (Account) request.getSession().getAttribute("account");
-        if (account == null) {
-            System.out.println("No account found in session, redirecting to login.");
-            response.sendRedirect("login.jsp");
-            return;
-        }
+            } else {
+                request.setAttribute("error", "Không tìm thấy thông tin gia sư.");
+            }
+            RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+            dispatcher.forward(request, response);
 
-        String accountId = account.getId();
-        System.out.println("Fetching tutor with account id: " + accountId);
-
-        Tutor tutor = tutorDAO.getTutorByAccountId(accountId);
-        if (tutor == null) {
-            System.out.println("No tutor found with account id: " + accountId);
-            request.setAttribute("error", "Không tìm thấy thông tin gia sư.");
         } else {
-            System.out.println("Tutor found: " + tutor.getName());
-            request.setAttribute("tutor", tutor);
+            Account account = (Account) request.getSession().getAttribute("account");
+            if (account == null) {
+                System.out.println("No account found in session, redirecting to login.");
+                response.sendRedirect("login.jsp");
+                return;
+            }
+
+            String accountId = account.getId();
+            System.out.println("Fetching tutor with account id: " + accountId);
+
+            Tutor tutor = tutorDAO.getTutorByAccountId(accountId);
+            if (tutor == null) {
+                System.out.println("No tutor found with account id: " + accountId);
+                request.setAttribute("error", "Không tìm thấy thông tin gia sư.");
+            } else {
+                System.out.println("Tutor found: " + tutor.getName());
+                request.setAttribute("tutor", tutor);
+                request.setAttribute("editable", true); // ✅ BỔ SUNG DÒNG NÀY
+            }
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+            dispatcher.forward(request, response);
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("tutor_profile.jsp");
-        dispatcher.forward(request, response);
     }
 
     @Override

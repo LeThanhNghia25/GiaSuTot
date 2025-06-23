@@ -3,6 +3,7 @@ package DAO;
 import Utils.DBConnection;
 import model.Account;
 import model.Student;
+import model.Tutor;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAO {
+
     public StudentDAO() {}
 
     public String generateStudentId() throws SQLException {
@@ -38,7 +40,6 @@ public class StudentDAO {
             return rowsAffected > 0;
         }
     }
-
     public boolean insertggSt(Student student) throws SQLException {
         String sql = "INSERT INTO student (id, name, account_id) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -67,15 +68,16 @@ public class StudentDAO {
         String sql = "SELECT s.id, s.name, s.birth, s.description, a.email " +
                 "FROM student s JOIN account a ON s.account_id = a.id " +
                 "WHERE s.account_id = ?";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, accountId);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 String id = rs.getString("id");
                 String name = rs.getString("name");
-                Date birthDate = rs.getDate("birth");
-                LocalDate birth = (birthDate != null) ? birthDate.toLocalDate() : null;
+                LocalDate birth = rs.getDate("birth").toLocalDate();
                 String description = rs.getString("description");
                 String email = rs.getString("email");
 
@@ -99,6 +101,22 @@ public class StudentDAO {
             ps.setString(4, student.getId());
             return ps.executeUpdate() > 0;
         }
+    }
+
+    public Account getAccountByEmail(String email) throws SQLException {
+        String sql = "SELECT id FROM account WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Account acc = new Account();
+                acc.setId(rs.getString("id"));
+                acc.setEmail(email);
+                return acc;
+            }
+        }
+        return null;
     }
 
     public Student getStudentById(String id) throws SQLException {
@@ -127,4 +145,9 @@ public class StudentDAO {
         return null;
     }
 
+    public static void main(String[] args) throws SQLException {
+        StudentDAO dao = new StudentDAO();
+        Student student = dao.getStudentById("st001");
+        System.out.println(student);
+    }
 }

@@ -1,6 +1,16 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.Tutor" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%
+  Tutor tutor = (Tutor) request.getAttribute("tutor");
+  DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+  Boolean editable = (Boolean) request.getAttribute("editable");
+  if (editable == null) editable = false;
+%>
+<%@ page import="DAO.TutorDAO, model.Tutor, java.util.List" %>
+
 <html>
 <head>
   <title>Profile Tutor</title>
@@ -35,10 +45,8 @@
   </style>
 </head>
 <body>
-<%
-  Tutor tutor = (Tutor) request.getAttribute("tutor");
-  DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-%>
+
+
 <section style="background-color: #eee;">
   <div class="container py-5">
     <div class="row">
@@ -67,8 +75,14 @@
             <p class="text-muted mb-1">Gia sư <%= tutor.getSpecialization() %></p>
             <p class="text-muted mb-4"><%= tutor.getAddress() %></p>
             <div class="d-flex justify-content-center mb-2">
-              <button type="button" class="btn btn-primary">Theo dõi</button>
-              <button type="button" class="btn btn-primary">Nhắn tin</button>
+              <% if (!editable) { %>
+                <div class="mt-2">
+                  <button class="btn btn-outline-primary btn-sm btn-like" data-tutor-id="<%= tutor.getId() %>">
+                    <i class="fas fa-heart">Quan tâm</i>
+                  </button>
+                </div>
+              <% } else { %>
+              <% } %>
             </div>
           </div>
         </div>
@@ -89,8 +103,11 @@
         <div class="card mb-4" id="profileInfo">
           <div class="card-body">
             <div class="d-flex justify-content-between">
+              <h5>Thông tin gia sư</h5>
+              <% if (editable) { %>
               <h5>Thông tin cá nhân</h5>
               <button type="button" class="btn btn-warning btn-sm" onclick="toggleEditForm()">Chỉnh sửa</button>
+              <% } %>
             </div>
             <hr>
             <div class="row">
@@ -141,7 +158,7 @@
         </div>
 
         <!-- Mô tả thêm -->
-        <div class="card mb-4" id="profileInfo">
+        <div class="card mb-4" id="profileInfoDesc">
           <div class="card-body">
             <h5 class="mb-3">Mô tả thêm</h5>
             <p class="text-muted"><%= tutor.getDescription() %></p>
@@ -218,7 +235,7 @@
 <script>
   function toggleEditForm() {
     const editForm = document.getElementById("editForm");
-    const profileInfoElements = document.querySelectorAll("#profileInfo");
+    const profileInfoElements = document.querySelectorAll("#profileInfo, #profileInfoDesc");
     const backdrop = document.getElementById("backdrop");
 
     const isHidden = editForm.style.display === "none" || editForm.style.display === "";
@@ -230,6 +247,67 @@
       elem.style.display = isHidden ? "none" : "block";
     });
   }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".btn-like").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const tutorId = btn.getAttribute("data-tutor-id");
+
+        fetch("add-interest", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: "tutorId=" + encodeURIComponent(tutorId)
+        })
+                .then(res => res.text())
+                .then(data => {
+                  if (data === 'liked') {
+                    // Đã quan tâm
+                    btn.classList.remove("btn-outline-primary");
+                    btn.classList.add("btn-primary");
+                    btn.innerHTML = '<i class="fas fa-heart"></i> Hủy quan tâm';
+
+                  } else if (data === 'unliked') {
+                    // Hủy quan tâm
+                    btn.classList.remove("btn-primary");
+                    btn.classList.add("btn-outline-primary");
+                    btn.innerHTML = '<i class="fas fa-heart"></i> Quan tâm';
+
+                  } else if (data === 'not_logged_in') {
+                    alert("Vui lòng đăng nhập để sử dụng chức năng này.");
+
+                  } else {
+                    alert("Có lỗi xảy ra khi lưu quan tâm.");
+                  }
+                });
+      });
+    });
+  });
+</script>
+
+<script>
+  let currentVisible = 0;
+  const batchSize = 4;
+
+  function showMoreTutors() {
+    const cards = document.querySelectorAll('.tutor-card');
+    let shown = 0;
+    for (let i = currentVisible; i < cards.length && shown < batchSize; i++) {
+      cards[i].classList.add('visible');
+      shown++;
+      currentVisible++;
+    }
+    if (currentVisible >= cards.length) {
+      document.getElementById('showMoreBtn').style.display = 'none';
+    }
+  }
+
+  // Gọi tự động khi load xong
+  document.addEventListener('DOMContentLoaded', () => {
+    showMoreTutors();
+  });
 </script>
 </body>
 </html>
