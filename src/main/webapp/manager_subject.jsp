@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Quản lý môn học</title>
+    <title>Quản lý môn dạy</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -40,6 +40,9 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="mb-3">Danh sách môn học (Active)</h5>
+                <a href="${pageContext.request.contextPath}/registerSubject.jsp" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Đăng ký môn dạy
+                </a>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
