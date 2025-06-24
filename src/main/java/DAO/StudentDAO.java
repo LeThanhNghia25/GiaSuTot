@@ -3,12 +3,9 @@ package DAO;
 import Utils.DBConnection;
 import model.Account;
 import model.Student;
-import model.Tutor;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StudentDAO {
 
@@ -77,7 +74,11 @@ public class StudentDAO {
             if (rs.next()) {
                 String id = rs.getString("id");
                 String name = rs.getString("name");
-                LocalDate birth = rs.getDate("birth").toLocalDate();
+                LocalDate birth = null;
+                java.sql.Date sqlDate = rs.getDate("birth");
+                if (sqlDate != null) {
+                    birth = sqlDate.toLocalDate();
+                }
                 String description = rs.getString("description");
                 String email = rs.getString("email");
 

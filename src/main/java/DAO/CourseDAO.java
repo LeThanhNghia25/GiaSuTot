@@ -17,7 +17,8 @@ public class CourseDAO {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT c.*, s.name AS subject_name, s.level, s.fee, s.status, s.description, " +
                 "t.name AS tutor_name, t.specialization, t.address, t.evaluate, " +
-                "COUNT(rs.course_id) AS student_count " +
+                "COUNT(rs.course_id) AS student_count, " +
+                "COALESCE(MAX(rs.number_of_lessons), 12) AS number_of_lessons " + // Lấy giá trị lớn nhất hoặc mặc định 12
                 "FROM course c " +
                 "JOIN subject s ON c.subject_id = s.id " +
                 "JOIN tutor t ON c.tutor_id = t.id " +
@@ -52,6 +53,7 @@ public class CourseDAO {
                 tutor.setEvaluate(rs.getInt("evaluate"));
                 course.setTutor(tutor);
                 course.setStudentCount(rs.getInt("student_count"));
+                course.setNumberOfLessons(rs.getInt("number_of_lessons")); // Thêm số buổi học
                 courses.add(course);
             }
             System.out.println("Fetched " + courses.size() + " courses from database.");

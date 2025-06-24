@@ -37,15 +37,13 @@ public class ActivateAccountServlet extends HttpServlet {
                 request.setAttribute("error", "Kích hoạt thất bại. Email không hợp lệ hoặc đã kích hoạt.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi máy chủ: không thể kích hoạt.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
-
-
     }
+
     private void setUserSession(HttpSession session, Account account) throws SQLException {
         session.setAttribute("account", account);
 
@@ -57,6 +55,10 @@ public class ActivateAccountServlet extends HttpServlet {
             if (student != null) {
                 session.setAttribute("userName", student.getName());
                 session.setAttribute("role", "student");
+                // Không cần kiểm tra birth vì đã xử lý null trong StudentDAO
+            } else {
+                // Trường hợp không tìm thấy student, có thể tạo mới hoặc báo lỗi
+                System.out.println("No student found for account ID: " + account.getId());
             }
         } else if (account.getRole() == 2) {
             Tutor tutor = tutorDAO.getTutorByAccountId(account.getId());
@@ -66,5 +68,4 @@ public class ActivateAccountServlet extends HttpServlet {
             }
         }
     }
-
 }

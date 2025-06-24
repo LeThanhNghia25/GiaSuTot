@@ -293,7 +293,8 @@
                                         </a>
                                     </small>
                                     <small><i class="fa fa-book text-primary"></i><c:out value="${course.tutor.specialization}"/></small>
-                                    <small><i class="fa fa-clock text-primary"></i>${requestScope['formattedTime_' += course.id]}</small>
+                                    <c:set var="lessonCount" value="${course.numberOfLessons != null ? course.numberOfLessons : 0}" />
+                                    <small><i class="fa fa-clock text-primary"></i>${lessonCount} buổi học</small>
                                     <small><i class="fa fa-users text-primary"></i>${course.studentCount} học viên</small>
                                 </div>
                             </div>
