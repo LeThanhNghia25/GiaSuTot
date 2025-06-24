@@ -18,7 +18,7 @@ public class AddLessonDao {
             stmt.setString(1, course_id);
             stmt.setString(2, student_id);
             stmt.setString(3, "scheduled");
-            stmt.setTimestamp(4, Timestamp.valueOf(time)); // Đảm bảo time là yyyy-MM-dd HH:mm:ss
+            stmt.setString(4,time); // Đảm bảo time là yyyy-MM-dd HH:mm:ss
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Lỗi khi chèn buổi học: " + e.getMessage(), e);
