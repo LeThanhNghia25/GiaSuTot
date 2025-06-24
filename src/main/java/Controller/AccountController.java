@@ -64,23 +64,23 @@ public class AccountController extends HttpServlet {
                 if (acc != null && acc.getPassword().equals(password) && "active".equalsIgnoreCase(acc.getStatus())) {
                     HttpSession session = request.getSession();
                     session.setAttribute("account", acc);
-                    session.setAttribute("accountId", acc.getId()); // Thêm dòng này để set accountId
+                    session.setAttribute("accountId", acc.getId());
 
                     // Thiết lập userName và studentId/role dựa trên vai trò
                     if (acc.getRole() == 1) { // Student
                         Student student = studentDAO.getStudentByAccountId(acc.getId());
                         if (student != null) {
                             session.setAttribute("userName", student.getName());
-                            session.setAttribute("studentId", student.getId()); // Thêm studentId
+                            session.setAttribute("studentId", student.getId());
                             session.setAttribute("role", "student");
-                            session.setAttribute("id_st", student.getId()); // ✅ gán ngay khi đăng nhập
+                            session.setAttribute("id_st", student.getId());
                         }
                     } else if (acc.getRole() == 2) { // Tutor
                         Tutor tutor = tutorDAO.getTutorByAccountId(acc.getId());
                         if (tutor != null) {
                             session.setAttribute("userName", tutor.getName());
                             session.setAttribute("role", "tutor");
-                            session.setAttribute("tutor", tutor); // Thêm dòng này để set tutor vào session
+                            session.setAttribute("tutor", tutor);
                             System.out.println("Tutor set in session: " + tutor.getId());
                         } else {
                             System.err.println("No tutor found for account ID: " + acc.getId());
@@ -115,16 +115,24 @@ public class AccountController extends HttpServlet {
                     return;
                 }
 
+                // Tạo tài khoản với role = 1 (học sinh)
                 String idAcc = accountDAO.generateAccountId();
-                Account acc = new Account(idAcc, email, password, 1, "inactive");
+                Account acc = new Account(idAcc, email, password, 1, "active");
                 accountDAO.insertAccount(acc);
 
-                request.setAttribute("name", name);
-                request.setAttribute("birth", birth);
-                request.setAttribute("description", description);
-                request.setAttribute("account_id", idAcc);
+                // Tạo thông tin học sinh
+                String idSt = studentDAO.generateStudentId();
+                Student student = new Student(idSt, name, birth, description, acc);
+                boolean studentInserted = studentDAO.insertStudent(student);
 
-                request.getRequestDispatcher("/student").forward(request, response);
+                if (studentInserted) {
+                    // Đăng ký thành công, chuyển hướng đến trang đăng nhập
+                    request.getSession().setAttribute("registeredSuccess", true);
+                    response.sendRedirect(request.getContextPath() + "/login.jsp");
+                } else {
+                    request.setAttribute("error_register", "Đăng ký không thành công, vui lòng thử lại.");
+                    request.getRequestDispatcher("/login.jsp").forward(request, response);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

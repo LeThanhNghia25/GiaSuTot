@@ -15,6 +15,9 @@ public class Course {
     private LocalDate startDate;
     private LocalDate endDate;
     private int studentCount; // Số học viên từng học
+    private int numberOfLessons; // Thêm trường này
+
+    // Getters and Setters
 
     public Course() {}
 
@@ -24,6 +27,7 @@ public class Course {
         this.tutorId = tutorId;
         this.time = time;
     }
+
 
     public String getId() {
         return id;
@@ -111,6 +115,14 @@ public class Course {
 
     public void setStudentCount(int studentCount) {
         this.studentCount = studentCount;
+    }
+
+    public int getNumberOfLessons() {
+        return numberOfLessons;
+    }
+
+    public void setNumberOfLessons(int numberOfLessons) {
+        this.numberOfLessons = numberOfLessons;
     }
 
     @Override
